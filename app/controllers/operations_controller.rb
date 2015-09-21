@@ -497,12 +497,16 @@ class OperationsController < ApplicationController
     end
   end
 
+  def arcgis_services_folder
+    ENV['TOPOLOGY_CHECKING_SERVICES_FOLDER']
+  end
+
   def unzip_and_prepare
-    'http://qwerty-3:6080/arcgis/rest/services/TopologyChecking/UnzipAndPrepare/GPServer/UnzipAndPrepare'
+    "#{arcgis_services_folder}/UnzipAndPrepare/GPServer/UnzipAndPrepare" unless arcgis_services_folder.nil?
   end
 
   def validate_and_zip
-    'http://qwerty-3:6080/arcgis/rest/services/TopologyChecking/ValidateAndZip/GPServer/ValidateAndZip'
+    "#{arcgis_services_folder}/ValidateAndZip/GPServer/ValidateAndZip" unless arcgis_services_folder.nil?
   end
 
 end

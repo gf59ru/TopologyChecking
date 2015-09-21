@@ -5,6 +5,7 @@ en:
   imperative:
     add: "add"
   project_name: "Spatial operations"
+  warning_demo_mode: "Sorry, service is under construction. Topology validation is currently unavailable."
   hello: "Hello"
   hello_unregistered: "Hello!"
   welcome_unregistered: "Welcome to Topology Validating Service!"

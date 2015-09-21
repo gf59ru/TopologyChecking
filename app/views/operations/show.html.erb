@@ -1,4 +1,7 @@
 <h1><%= "#{(t 'activerecord.models.operation.one').mb_chars.capitalize} #{@operation.description == '' ? (l @operation.created_at) : "«#{@operation.description}»"}" %></h1>
+<% if arcgis_services_folder.nil? %>
+    <div class="alert alert-warning"><%= t 'warning_demo_mode' %></div>
+<% end %>
 <h2><span class="<%= @operation.state_css_class %>">
   <%= @operation.state_name %>
   <%
