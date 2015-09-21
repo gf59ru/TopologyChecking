@@ -4,24 +4,44 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # before_filter :configure_account_update_params, only: [:update]
 
 # GET /resource/sign_up
-# def new
-#   super
-# end
+def new
+  begin
+    super
+  rescue Exception => e
+    puts "new registration error: #{e}"
+    raise e
+  end
+end
 
 # POST /resource
-# def create
-#   super
-# end
+def create
+  begin
+    super
+  rescue Exception => e
+    puts "create registration error: #{e}"
+    raise e
+  end
+end
 
 # GET /resource/edit
-# def edit
-#   super
-# end
+def edit
+  begin
+    super
+  rescue Exception => e
+    puts "edit registration error: #{e}"
+    raise e
+  end
+end
 
 # PUT /resource
-# def update
-#   super
-# end
+def update
+  begin
+    super
+  rescue Exception => e
+    puts e
+    raise e
+  end
+end
 
 # DELETE /resource
   def destroy
