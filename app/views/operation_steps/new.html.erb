@@ -1,0 +1,11 @@
+<% provide(:title, 'Новый шаг операции') %>
+<h1><%= "Новый шаг операции #{@operation_type.name}" %></h1>
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(@operation_step, :operation_type_id => @operation_step.operation_type_id) do |f| %>
+        <%= render 'shared/error_messages', :obj => @operation_step %>
+        <%= render 'form', :f => f %>
+        <%= f.submit 'Создать шаг операции', class: 'btn btn-large btn-primary' %>
+    <% end %>
+  </div>
+</div>

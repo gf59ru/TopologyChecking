@@ -1,0 +1,58 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <!--span class="sr-only">Toggle navigation</span-->
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav pull-left navbar-nav">
+        <li><%= link_to (t 'project_name'), root_path, id: 'logo', :class => 'navbar-brand' %></li>
+      </ul>
+      <ul class="nav navbar-nav pull-right">
+        <% if current_user.nil? %>
+            <li id="fat-menu" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <%= t 'language' %><b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to 'English', select_locale_path(:locale => :en) %></li>
+                <li><%= link_to 'Russian (русский)', select_locale_path(:locale => :ru) %></li>
+              </ul>
+            </li>
+            <li><%= link_to (t 'person.sign_in'), new_user_session_path %></li>
+        <% else %>
+            <li>
+              <p class="navbar-text">
+                  <%= t 'balance.your_balance_is' %>
+                  <span class="<%= current_user.balance < 0 ? 'label label-danger' : 'badge' %>"><%= current_user.balance %></span>
+                  <% if current_user.reserved > 0 %>
+                      , <%= t 'balance.reserved_balance' %>
+                      <span class="badge"><%= current_user.reserved %></span>
+                  <% end %>
+              </p>
+
+            </li>
+            <!--li><!--%= link_to 'Пользователи', users_path %></li-->
+            <li id="fat-menu" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <%= current_user.email %> <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to (t 'person.profile'), user_root_path %></li>
+                <!--li><!--%= link_to 'Настройки', edit_user_root_path %></li-->
+                <li class="divider"></li>
+                <li>
+                  <%= link_to (t 'person.sign_out'), destroy_user_session_path, method: 'delete' %>
+                </li>
+              </ul>
+            </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  </header>
+</nav>

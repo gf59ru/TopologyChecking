@@ -1,0 +1,31 @@
+<h1><%= "Тип операции «#{@operation_type.name}»" %></h1>
+<h3><%= @operation_type.description %></h3>
+
+<% if @operation_type.operation_steps.count >0 %>
+    <table class="table table-bordered table-hover table-striped table-condensed">
+      <tr>
+        <th>Шаг</th>
+        <th>Папка сервиса</th>
+        <th>Асинхронный</th>
+        <th>Множественный</th>
+        <th>Автоматический</th>
+        <th></th>
+      </tr>
+      <% @operation_type.operation_steps.each do |step| %>
+          <tr>
+            <td><%= step.name %></td>
+            <td><%= step.service_folder %></td>
+            <td><%= step.async %></td>
+            <td><%= step.multiple %></td>
+            <td><%= step.auto %></td>
+            <td></td>
+          </tr>
+      <% end %>
+      <tr>
+        <td colspan="6"><%= link_to 'Добавить шаг', new_operation_step_path(:operation_type_id => @operation_type.id) %></td>
+      </tr>
+    </table>
+<% else %>
+    <p>Операция не имеет
+      шагов, <%= link_to 'добавить', new_operation_step_path(:operation_type_id => @operation_type.id) %></p>
+<% end %>

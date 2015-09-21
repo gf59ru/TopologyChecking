@@ -1,0 +1,15 @@
+<div class="<%= is_expanded ? 'collapse in' : 'collapse' %>" id="<%= id %>">
+  <p><%= "#{t 'state'}: #{t "job_state_#{value}"}" %></p>
+  <% unless job_url.nil? %>
+      <p><%= link_to (t 'operations.look_job_directly'), job_url, :target => '_blank' %></p>
+  <% end %>
+  <p>
+    <% if messages.count > 0 %>
+      <h5><%= t 'messages' %></h5>
+      <% messages.each do |message| %>
+          <small><%= message.value %></small>
+          <br/>
+      <% end %>
+  <% end %>
+  </p>
+</div>

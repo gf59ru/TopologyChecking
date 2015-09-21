@@ -1,0 +1,7 @@
+<p><%= "#{t 'hello'} #{@resource.email}!" %></p>
+
+<p><%= t 'person.account_locked_due_unsuccessful_sign_in_attempts' %></p>
+
+<p><%= t 'person.unlock_link_hint' %></p>
+
+<p><%= link_to (t 'person.unlock_account'), unlock_url(@resource, unlock_token: @token) %></p>

@@ -1,0 +1,15 @@
+<% unless current_user.nil? %>
+    <h1><%= current_user.email %></h1>
+    <p>
+      <%= t 'balance.your_balance_is' %> <b><%= current_user.balance %></b>
+      <% if current_user.reserved > 0 %>
+          (<%= t 'balance.reserved_balance' %> <b><%= current_user.reserved %></b>)
+      <% end %>
+    </p>
+    <p><%= t 'operations.operations', :count => current_user.operations.count %></p>
+    <p><%= t 'person.signed_in_count', :count => current_user.sign_in_count %></p>
+    <p><%= "#{t 'person.last_sign_in'}: #{l current_user.last_sign_in_at}" %></p>
+    <p><%= "#{t 'person.language'}: #{current_user.locale.nil? ? (t 'does_not_selected') : PersonsHelper::LOCALES[current_user.locale]}" %></p>
+    <hr/>
+    <%= link_to (t 'person.edit_profile'), edit_user_registration_path, :class => 'btn btn-default' %>
+<% end %>

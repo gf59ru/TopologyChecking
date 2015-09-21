@@ -1,0 +1,5 @@
+<p><%= "#{t 'hello'} #{@email}!" %></p>
+
+<p><%= t 'person.confirm_account_link_hint' %>:</p>
+
+<p><%= link_to (t 'person.confirm_account'), confirmation_url(@resource, confirmation_token: @token) %></p>

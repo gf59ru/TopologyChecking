@@ -1,0 +1,9 @@
+<%
+   gdb = operation_value @operation, OperationParameter::PARAM_UPLOADED_GDB_PATH
+   gdb = gdb.split(/[\\, \/]/).last unless gdb.nil?
+%>
+<%= content_tag :span, nil, :class => 'glyphicon glyphicon-ok' %>
+<%= "#{t 'step'} 1. #{t 'received'} #{(t 'activerecord.attributes.operation.gdb').mb_chars.downcase}" %>
+<% unless gdb.nil? %>
+    <strong><%= ": #{gdb}" %></strong>
+<% end %>

@@ -1,0 +1,11 @@
+<% provide(:title, 'Новый тип операции') %>
+<h1>Новый тип операции</h1>
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(@operation_type) do |f| %>
+        <%= render 'shared/error_messages', :obj => @operation_type %>
+        <%= render 'form', :f => f %>
+        <%= f.submit 'Создать тип операции', class: 'btn btn-large btn-primary' %>
+    <% end %>
+  </div>
+</div>

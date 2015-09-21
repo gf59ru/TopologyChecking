@@ -1,0 +1,29 @@
+<%= content_tag :span, nil, :class => 'glyphicon glyphicon-ok' %>
+<%= "#{t 'step'} 3. #{t 'operations.rules_ready'}" %>
+<table class="table table-striped table-bordered table-hover table-condensed">
+  <tr>
+    <th class="info"><%= t 'order' %></th>
+    <th class="info"><%= t 'operations.class_set' %></th>
+    <th class="info"><%= t 'operations.first_feature_class' %></th>
+    <th class="info"><%= t 'operations.rule' %></th>
+    <th class="info"><%= t 'operations.second_feature_class' %></th>
+  </tr>
+  <%
+     rules = operation_values @operation, OperationParameter::PARAM_RULE_JSON
+     rule_order = 0
+     rules.each do |saved_rule|
+       rule_order += 1
+       rule = saved_rule.value
+       if rule_is_filled rule
+         rule = JSON.parse rule unless rule.nil?
+  %>
+          <tr>
+            <td><%= "#{rule_order}." %></td>
+            <td><%= rule['class_set'] %></td>
+            <td><%= rule['fc1'] %></td>
+            <td><%= rule['rule'] %></td>
+            <td><%= rule['fc2'] %></td>
+          </tr>
+      <% end %>
+  <% end %>
+</table>

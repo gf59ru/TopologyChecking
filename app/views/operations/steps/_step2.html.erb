@@ -1,0 +1,21 @@
+<meta http-equiv="refresh" content="10">
+<h3><%= t 'operations.unzipping_and_preparing' %></h3>
+<%= button_tag (t 'check'), :class => 'btn btn-primary', :type => 'button', :onclick => 'location.reload();' %>
+<%
+   value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', @operation.id, OperationParameter::PARAM_UNZIP_JOB_STATE).first
+   value = value.value unless value.nil?
+   messages = operation_values @operation, [OperationParameter::PARAM_UNZIP_JOB_MESSAGE, OperationParameter::PARAM_UNZIP_JOB_WARNING, OperationParameter::PARAM_UNZIP_JOB_ERROR, OperationParameter::PARAM_UNZIP_JOB_EMPTY, OperationParameter::PARAM_UNZIP_JOB_ABORT]
+   job_url = operation_value @operation, OperationParameter::PARAM_UNZIP_JOB_URL
+%>
+<hr/>
+<div class="well well-sm">
+  <%
+     element_id = 'unzip_log'
+     cookie_name = "expanded_#{@operation.id}_#{element_id}"
+  %>
+  <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= element_id %>', '<%= @operation.id %>');">
+    <%= t 'operations.show_logs' %>
+    <span class="caret"/>
+  </button>
+  <%= render 'operations/job', :value => value, :messages => messages, :job_url => job_url, :id => element_id, :is_expanded => (cookies[cookie_name] != '') %>
+</div>

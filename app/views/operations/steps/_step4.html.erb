@@ -1,0 +1,51 @@
+<% if @operation.state == Operation::STATE_RULES_ACCEPTING.to_s %>
+    <%
+       rules = (operation_values @operation, OperationParameter::PARAM_RULE_JSON).select('value').to_a.select { |rule| rule_is_filled rule.value }
+       rules.map! { |rule| JSON.parse rule.value }
+       classes = []
+       rules.each do |rule|
+         classes << rule['fc1']
+         classes << rule['fc2'] unless rule['fc2'].nil?
+       end
+    %>
+    <h3><%= simple_format(t 'operations.check_topology_rules') %></h3>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title"><%= t 'operations.checking_operation_params' %></h4>
+      </div>
+      <div class="panel-body">
+        <p><%= "#{t 'activerecord.attributes.operation.cost'}: #{@operation.cost}" %></p>
+        <p><%= t 'operations.rules_added', :count => rules.count %></p>
+        <p><%= t 'operations.feature_classes_used', :count => classes.uniq.count %></p>
+      </div>
+    </div>
+
+    <%= submit_tag (t 'return'), :class => 'btn btn-default', :name => 'return_rules_editing' %>
+    <%= submit_tag (t 'validate_topology'), :class => 'btn btn-success', :data => {:confirm => (t 'are_you_sure')} %>
+<% else %>
+    <meta http-equiv="refresh" content="100">
+    <h3><%= t 'operations.validating_and_results_preparing' %></h3>
+    <%= button_tag (t 'check'), :class => 'btn btn-primary', :type => 'button', :onclick => 'location.reload();' %>
+    <%
+       value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', @operation.id, OperationParameter::PARAM_VALIDATE_JOB_STATE).first
+       value = value.value unless value.nil?
+       messages = operation_values @operation, [OperationParameter::PARAM_VALIDATE_JOB_MESSAGE, OperationParameter::PARAM_VALIDATE_JOB_WARNING, OperationParameter::PARAM_VALIDATE_JOB_ERROR, OperationParameter::PARAM_VALIDATE_JOB_EMPTY, OperationParameter::PARAM_VALIDATE_JOB_ABORT]
+       job_url = operation_value @operation, OperationParameter::PARAM_VALIDATE_JOB_URL
+    %>
+    <hr/>
+    <div class="well well-sm">
+      <%
+         element_id = 'validate_log'
+         cookie_name = "expanded_#{@operation.id}_#{element_id}"
+      %>
+      <!--button type="button" class="btn btn-link" onclick="$('#validate_log').collapse('toggle');"-->
+      <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= element_id %>', '<%= @operation.id %>');">
+        <%= t 'operations.show_logs' %>
+        <span class="caret"/>
+      </button>
+      <%= render 'operations/job', :value => value, :messages => messages, :job_url => job_url, :id => element_id, :is_expanded => (cookies[cookie_name] != '') %>
+    </div>
+    <% if current_user.balance < 0 && @operation.cost >= Operation::FREE_THRESHOLD %>
+        <h4 class="alert alert-warning"><%= t 'operations.warning_balance' %></h4>
+    <% end %>
+<% end %>

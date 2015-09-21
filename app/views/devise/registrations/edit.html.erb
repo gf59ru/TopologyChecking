@@ -1,0 +1,71 @@
+<h2><%= "#{t 'edit'} #{resource_name.to_s.humanize}" %></h2>
+
+<%= form_tag persons_update_path do %>
+    <div class="form-group">
+      <%= label_tag :locale, (t 'person.language') %>
+      <%= select_tag :locale, options_for_select(PersonsHelper::LOCALES.map { |locale| [locale[1], locale[0]] }, current_user.locale), autofocus: true, :class => 'form-control' %>
+    </div>
+
+    <%= submit_tag (t 'save'), :class => 'btn btn-primary' %>
+<% end %>
+
+<h3><%= t 'person.change_password_and_email' %></h3>
+<div class="well well-sm">
+  <% element_id = 'change_password_and_email' %>
+  <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= element_id %>');">
+    <%= t 'person.change_password_and_email' %>
+    <span class="caret"/>
+  </button>
+  <div class="collapse" id="<%= element_id %>">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {method: :put}) do |f| %>
+        <%= devise_error_messages! %>
+
+        <div class="form-group">
+          <%= f.label :email %><br/>
+          <%= f.email_field :email, :class => 'form-control' %>
+        </div>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <div><%= "#{t 'person.currently_waiting_confirmation_for'}: #{resource.unconfirmed_email}" %></div>
+        <% end %>
+
+        <div class="form-group">
+          <%= f.label :password %> <i>(<%= t 'person.leave_blank_if_do_not_want_change' %>)</i><br/>
+          <%= f.password_field :password, autocomplete: 'off', :class => 'form-control' %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :password_confirmation %><br/>
+          <%= f.password_field :password_confirmation, autocomplete: 'off', :class => 'form-control' %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :current_password %> <i>(<%= t 'person.need_current_password_to_confirm_changes' %>)</i><br/>
+          <%= f.password_field :current_password, autocomplete: 'off', :class => 'form-control' %>
+        </div>
+
+        <%= f.submit (t 'update'), :class => 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>
+
+<h3><%= t 'person.account_removing' %></h3>
+<div class="well well-sm">
+  <% element_id = 'remove_account' %>
+  <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= element_id %>');">
+    <%= t 'person.remove_my_account' %>
+    <span class="caret"/>
+  </button>
+  <div class="collapse" id="<%= element_id %>">
+    <%= form_tag registration_path(resource_name), method: :delete do %>
+        <div class="form-group">
+          <%= label_tag :email, (t 'person.enter_email_for_account_remove') %>
+          <%= text_field_tag :email, nil, :class => 'form-control' %>
+        </div>
+        <%= submit_tag (t 'person.remove_my_account'), data: {confirm: (t 'are_you_sure')}, :class => 'btn btn-danger' %>
+    <% end %>
+  </div>
+</div>
+
+
+<%= link_to (t 'back'), :back %>

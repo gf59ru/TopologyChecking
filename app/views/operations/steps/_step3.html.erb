@@ -1,0 +1,151 @@
+<h3><%= t 'operations.topology_rules' %></h3>
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th class="info"><%= t 'order' %></th>
+    <th class="info"><%= t 'operations.class_set' %></th>
+    <th class="info"><%= t 'operations.first_feature_class' %></th>
+    <th class="info"><%= t 'operations.rule' %></th>
+    <th class="info"><%= t 'operations.second_feature_class' %></th>
+    <th class="info"></th>
+  </tr>
+  <%
+     classes = begin
+       JSON.parse(operation_value @operation, OperationParameter::PARAM_CLASSES)
+     rescue
+       []
+     end
+     class_sets = classes.map { |cs| cs['class_set'] }
+     rules = operation_values @operation, OperationParameter::PARAM_RULE_JSON
+     rule_order = 0
+     filled_rules_count = 0
+     has_unfilled_rule = false
+     unless rules.nil?
+       rules.each do |saved_rule|
+  %>
+          <%
+             rule_order += 1
+             rule = saved_rule.value
+             is_filled = rule_is_filled rule
+             if is_filled
+               filled_rules_count += 1
+               if has_unfilled_rule
+                 puts 'wtf'
+               end
+             else
+               if has_unfilled_rule
+                 puts 'wtf'
+               end
+               has_unfilled_rule = true
+             end
+             rule = JSON.parse rule unless rule.nil?
+
+             first_class_list = nil
+             selected_class_set = rule['class_set'] unless rule.nil?
+             selected_rule = rule['rule'] unless rule.nil?
+             selected_fc1 = rule['fc1'] unless rule.nil?
+
+             class_set = classes.select { |cs| cs['class_set'] == selected_class_set }
+             first_class_list = class_set[0]['fcs'].map { |fc| fc['fc'] } if class_set.length > 0
+             # Если первый класс уже выбран, фильтруем список правил
+             fc1_type = unless selected_fc1.nil?
+                          selected_fc1_type = class_set[0]['fcs'].select { |fc| fc['fc'] == selected_fc1 }
+                          if selected_fc1_type.length > 0
+                            case selected_fc1_type[0]['shapeType']
+                              when 'Polygon'
+                                'Area'
+                              when 'Polyline'
+                                'Line'
+                              when 'Point'
+                                'Point'
+                            end
+                          end
+                        end
+             suitable_rule_types = rule_types.select { |rt| rule_types[rt][:first_class] == fc1_type } unless fc1_type.nil?
+             # Если правило уже выбрано фильтруем список классов для второго класса правила (или вообще убираем, если правило для одного класса)
+             second_class_list = nil
+             selected_fc2 = nil
+             unless selected_rule.nil?
+               second_class_type = case rule_types.map { |rt| rt[1] }.select { |rt| rt[:rule] == selected_rule }[0][:second_class]
+                                     when 'Area'
+                                       'Polygon'
+                                     when 'Line'
+                                       'Polyline'
+                                     when 'Point'
+                                       'Point'
+                                   end
+               second_class_list = unless second_class_type.nil?
+                                     class_set[0]['fcs'].select { |fc| fc['shapeType'] == second_class_type }.map { |fc| fc['fc'] }
+                                   end
+               selected_rule = rule_types.to_a.map { |rt| rt[1][:rule] }.index selected_rule
+             end
+          %>
+          <% if is_filled %>
+              <tr>
+                <td><%= "#{rule_order}." %></td>
+                <td><%= rule['class_set'] %></td>
+                <td><%= rule['fc1'] %></td>
+                <td><%= rule['rule'] %></td>
+                <td><%= rule['fc2'] %></td>
+                <td><%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-trash', :title => (t 'operations.remove_rule')), delete_rule_path(:id => @operation.id, :order => saved_rule.value_order), :data => {:confirm => (t 'are_you_sure')} %></td>
+              </tr>
+          <% else %>
+              <tr>
+                <td colspan="6">
+                  <%= submit_tag (t 'validate_topology'), :class => 'btn btn-primary', :name => 'force_next_step' %>
+                </td>
+              </tr>
+              <%= hidden_field_tag :rule_order, saved_rule.value_order %>
+              <tr>
+                <td colspan="5">
+                  <p>
+                    <%= label_tag :class_set, (t 'operations.class_set') %>
+                    <%= select_tag :class_set, options_for_select(class_sets, selected_class_set), {:include_blank => selected_class_set.nil?, :class => 'form-control', :onchange => '$("form").submit();'} %>
+                  </p>
+                  <% unless first_class_list.nil? %>
+                      <p>
+                        <%= label_tag :fc1, (second_class_list.nil? ? (t 'operations.feature_class') : (t 'operations.first_feature_class')) %>
+                        <%= select_tag :fc1, options_for_select(first_class_list, selected_fc1), {:include_blank => true, :class => 'form-control', :onchange => '$("form").submit();'} %>
+                      </p>
+                  <% end %>
+                  <% unless suitable_rule_types.nil? %>
+                      <p>
+                        <%= label_tag :rule_type, (t 'operations.rule') %>
+                        <%= select_tag :rule_type, options_for_select(suitable_rule_types.map { |rule| [rule[1][:rule], rule[0], {'data-has-second-class' => !rule[1][:second_class].nil?}] }, selected_rule), {:include_blank => true, :class => 'form-control', :onchange => 'rule_selected(this);'} %>
+                      </p>
+                  <% end %>
+                  <% unless second_class_list.nil? %>
+                      <p id="p_fc2">
+                        <%= label_tag :fc2, (t 'operations.second_feature_class') %>
+                        <%= select_tag :fc2, options_for_select(second_class_list, selected_fc2), {:include_blank => true, :class => 'form-control'} %>
+                      </p>
+                  <% end %>
+                </td>
+                <td style="vertical-align: middle"><%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-trash', :title => (t 'operations.remove_rule')), delete_rule_path(:id => @operation.id, :order => saved_rule.value_order), :data => {:confirm => (t 'are_you_sure')} %></td>
+              </tr>
+          <% end %>
+      <% end %>
+  <% end %>
+  <% unless has_unfilled_rule %>
+      <tr>
+        <td colspan="6">
+          <%= submit_tag (t 'validate_topology'), :class => 'btn btn-primary', :name => 'force_next_step' %>
+        </td>
+      </tr>
+  <% end %>
+  <tr>
+    <% if rules.count == 0 %>
+      <tr>
+        <td colspan="6" class="warning">
+          <%= "#{t 'operations.no_rules_yet'} #{t 'please'}" %>
+          <%= submit_tag (t 'imperative.add'), :name => 'add_topology_rule', :class => 'btn-link', :style => 'padding: 0; border: 0' %>
+          <%= t 'operations.add_at_least_one_rule' %>
+        </td>
+      </tr>
+  <% else %>
+      <tr>
+        <td colspan="6" style="text-align: right">
+          <%= submit_tag (t 'operations.add_rule'), :class => 'btn btn-info', :name => 'add_topology_rule' %>
+        </td>
+      </tr>
+  <% end %>
+</table>

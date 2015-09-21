@@ -1,0 +1,19 @@
+<%
+   value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', @operation.id, OperationParameter::PARAM_VALIDATE_JOB_STATE).first
+   value = value.value unless value.nil?
+   messages = operation_values @operation, [OperationParameter::PARAM_VALIDATE_JOB_MESSAGE, OperationParameter::PARAM_VALIDATE_JOB_WARNING, OperationParameter::PARAM_VALIDATE_JOB_ERROR, OperationParameter::PARAM_VALIDATE_JOB_EMPTY, OperationParameter::PARAM_VALIDATE_JOB_ABORT]
+%>
+<%= content_tag :span, nil, :class => 'glyphicon glyphicon-ok' %>
+<%= "#{t 'step'} 4. #{t 'operations.topology_validated_and_exported'}" %>
+<div class="well well-sm">
+  <%
+     element_id = 'validate_log'
+     cookie_name = "expanded_#{@operation.id}_#{element_id}"
+  %>
+  <!--button type="button" class="btn btn-link" onclick="$('#validate_log').collapse('toggle');"-->
+  <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= element_id %>', '<%= @operation.id %>');">
+    <%= t 'operations.show_logs' %>
+    <span class="caret"/>
+  </button>
+  <%= render 'operations/job', :value => value, :messages => messages, :job_url => nil, :id => 'validate_log', :is_expanded => (cookies[cookie_name] != '') %>
+</div>

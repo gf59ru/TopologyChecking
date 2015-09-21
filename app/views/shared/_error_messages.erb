@@ -1,0 +1,10 @@
+<% if obj.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+      <%= t 'form_errors', :count => obj.errors.count %>
+      <ul>
+        <% obj.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+<% end %>

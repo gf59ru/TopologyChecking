@@ -1,0 +1,48 @@
+ru:
+  activerecord:
+    models:
+      user:
+        one: "пользователь"
+        few: "пользователя"
+        other: "пользователей"
+      operation:
+        one: "операция"
+        few: "операции"
+        other: "операций"
+      operation_type:
+        one: "тип операции"
+        few: "типа операций"
+        other: "типов операций"
+    attributes:
+      user:
+        email: "Email"
+        password: "Пароль"
+        password_confirmation: "Подтверждение пароля"
+        remember_me: "Запомнить пароль"
+        current_password: "Текущий пароль"
+      operation:
+        description: "Описание"
+        state: "Статус"
+        cost: "Стоимость"
+        operation_type_id: "Тип операции"
+        created_at: "Создана"
+        gdb: "Архив с базой геоданных"
+      operation_type:
+        name: "Наименование"
+        description: "Описание"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "не должен быть пустым"
+              invalid: "неверный"
+            password:
+              blank: "не должен быть пустым"
+              too_short: "слишком короткий"
+            password_confirmation:
+              confirmation: "должно совпадать с паролем"
+        operation:
+          attributes:
+            description:
+             blank: "не должно быть пустым"

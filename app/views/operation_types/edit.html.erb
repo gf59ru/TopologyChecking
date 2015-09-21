@@ -1,0 +1,11 @@
+<% provide(:title, 'Редактирование типа операции') %>
+<h1>Редактирование типа операции</h1>
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(@operation_type) do |f| %>
+        <%= render 'shared/error_messages', :obj => @operation_type %>
+        <%= render 'form', :f => f %>
+        <%= f.submit 'Сохранить', class: 'btn btn-large btn-primary' %>
+    <% end %>
+  </div>
+</div>

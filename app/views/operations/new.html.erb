@@ -1,0 +1,15 @@
+<% provide(:title, (t 'operations.create_new_operation')) %>
+<h1><%= "#{t 'operations.create_new_operation'} #{@operation_type}" %></h1>
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(@operation) do |f| %>
+        <%= f.hidden_field :operation_type_id, :value => @operation_type %>
+        <%= render 'shared/error_messages', :obj => @operation %>
+        <%= render 'form', :f => f %>
+        <div class="btn-toolbar">
+          <%= button_tag (t 'back'), class: 'btn btn-default', :type => 'button', :onclick => 'history.back();' %>
+          <%= f.submit (t 'next'), class: 'btn btn-primary' %>
+        </div>
+    <% end %>
+  </div>
+</div>

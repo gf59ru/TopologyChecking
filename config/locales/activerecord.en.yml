@@ -1,0 +1,28 @@
+en:
+  activerecord:
+    models:
+      user:
+        one: "user"
+        other: "users"
+      operation:
+        one: "operation"
+        other: "operations"
+      operation_type:
+        one: "operation type"
+        other: "operation types"
+    attributes:
+      user:
+        email: "Email"
+        password: "Password"
+        password_confirmation: "Confirm password"
+        remember_me: "Remember me"
+      operation:
+        gdb: "Archive with geodatabase"
+        description: "Description"
+        state: "State"
+        cost: "Cost"
+        operation_type_id: "Operation type"
+        created_at: "Created"
+      operation_type:
+        name: "Name"
+        description: "Description"
