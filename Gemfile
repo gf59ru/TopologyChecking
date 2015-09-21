@@ -6,7 +6,7 @@ gem 'rails', '4.2.1'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 gem 'pg'
-gem 'activerecord-jdbcpostgresql-adapter'
+# gem 'activerecord-jdbcpostgresql-adapter'
 
 # Use SCSS for stylesheets
 gem 'bootstrap-sass'
