@@ -3,7 +3,7 @@
 <ul class="list-group">
   <% %w(services_description payment_methods support_contacts payment_currency refunds delivery_conditions company_location information_security_info secure_data_transfer_info).each do |info| %>
       <li class="list-group-item">
-        <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= info %>');">
+        <button type="button" class="btn btn-link btn-block" style="text-align: left; outline: none" onclick="this.blur();expand_or_collapse( '<%= info %>');">
           <%= t "services.#{info}" %>
           <span class="caret"/>
         </button>
