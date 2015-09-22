@@ -315,7 +315,7 @@ class OperationsController < ApplicationController
         # http.ssl_version = 'SSLv3'
         # http.ssl_version = 'SSLv2'
         http.ssl_version = 'SSLv23_client'
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         response = http.get uri.request_uri
         puts "acquiro pay response body:\n#{response.body}"
         redirect_to @operation
