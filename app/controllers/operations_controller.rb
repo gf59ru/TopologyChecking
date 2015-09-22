@@ -1,4 +1,4 @@
-require 'net/https'
+require 'net/http'
 require 'json'
 require 'fileutils'
 # require 'zip'
@@ -310,12 +310,10 @@ class OperationsController < ApplicationController
         uri = URI.encode "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost.nil? ? 0 : @operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"
         uri = URI uri
         # json = nil
-        request = Net::HTTP::Get.new uri.request_uri
-
         https = Net::HTTP.new uri.host, uri.port
         https.use_ssl = true
         https.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        response = https.start { |http| http.request request }
+        response = https.get uri.request_uri
         puts "acquiro pay response body:\n#{response.body}"
         redirect_to @operation
         # if json.nil?
