@@ -310,13 +310,12 @@ class OperationsController < ApplicationController
         uri = URI.encode "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"
         uri = URI uri
         # json = nil
+        request = Net::HTTP::Get.new uri.request_uri
+
         http = Net::HTTP.new uri.host, uri.port
         http.use_ssl = true
-        http.start do
-          request = Net::HTTP::Get.new uri.request_uri
-          response = http.request request
-          puts "acquiro pay response body:\n#{response.body}"
-        end
+        response = http.start { |http| http.request request }
+        puts "acquiro pay response body:\n#{response.body}"
         redirect_to @operation
         # if json.nil?
         #   flash[:warning] = 'pay is nil'
