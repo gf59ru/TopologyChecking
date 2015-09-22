@@ -317,8 +317,8 @@ class OperationsController < ApplicationController
         http.ssl_version = 'SSLv23_client'
         # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         response = http.get uri.request_uri
-        puts "acquiro pay response body:\n#{response.body}"
-        redirect_to @operation
+        # puts "acquiro pay response body:\n#{response.body}"
+        render response.body
         # if json.nil?
         #   flash[:warning] = 'pay is nil'
         #   redirect_to root_url
@@ -334,17 +334,17 @@ class OperationsController < ApplicationController
   end
 
   def pay_callback
-    puts params
+    puts "callback parameters: #{params}"
     redirect_to root_url
   end
 
   def pay_ok
-    puts params
+    puts "pay_ok parameters: #{params}"
     redirect_to root_url
   end
 
   def pay_ko
-    puts params
+    puts "pay_ko parameters: #{params}"
     redirect_to root_url
   end
 
