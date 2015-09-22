@@ -313,8 +313,8 @@ class OperationsController < ApplicationController
         http = Net::HTTP.new uri.host, uri.port
         http.use_ssl = true
         # http.ssl_version = 'SSLv3'
-        http.ssl_version = 'SSLv2'
-        # http.ssl_version = 'SSLv23_client'
+        # http.ssl_version = 'SSLv2'
+        http.ssl_version = 'SSLv23_client'
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         response = http.get uri.request_uri
         puts "acquiro pay response body:\n#{response.body}"
