@@ -303,7 +303,7 @@ class OperationsController < ApplicationController
   def pay
     @operation = Operation.find_by_id params[:id]
     if !current_user.nil? && current_user.id == @operation.user_id
-      if @operation.cost < Operation::FREE_THRESHOLD
+      if @operation.cost.nil? || @operation.cost < Operation::FREE_THRESHOLD
         flash[:warning] = 'operation is free'
         redirect_to @operation
       else
