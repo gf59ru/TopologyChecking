@@ -318,7 +318,7 @@ class OperationsController < ApplicationController
         # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         response = http.get uri.request_uri
         puts "acquiro pay response body:\n#{response.body}"
-        # render response.body
+        redirect_to @operation
         # if json.nil?
         #   flash[:warning] = 'pay is nil'
         #   redirect_to root_url
