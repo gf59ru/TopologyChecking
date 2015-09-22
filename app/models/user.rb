@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   end
 
   def reserved
-    self.operations.where('state = ? and cost > ?', Operation::STATE_STARTED, Operation::FREE_THRESHOLD).sum('cost')
+    self.operations.where('state = ? and cost > ?', Operation::STATE_STARTED.to_s, Operation::FREE_THRESHOLD).sum('cost')
   end
 
 end
