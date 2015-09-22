@@ -304,7 +304,7 @@ class OperationsController < ApplicationController
     @operation = Operation.find_by_id params[:id]
     if !current_user.nil? && current_user.id == @operation.user_id
       if @operation.cost.nil? || @operation.cost < Operation::FREE_THRESHOLD
-        flash[:warning] = 'operation is free'
+        flash[:warning] = t 'operation_is_free'
         redirect_to @operation
       else
         uri = URI.encode "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"

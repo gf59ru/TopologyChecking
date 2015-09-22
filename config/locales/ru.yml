@@ -37,6 +37,7 @@ ru:
   state: "Статус"
   cost: "Стоимость"
   free: "Бесплатно"
+  operation_is_free: "Операция бесплатна"
   order: "№"
   step: "Шаг"
   received: "Получен"

@@ -27,6 +27,7 @@ en:
   next: "Next"
   check: "Check"
   free: "Free"
+  operation_is_free: "Operation is free"
   order: "#"
   step: "Step"
   received: "Received"
