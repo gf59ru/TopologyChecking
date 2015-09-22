@@ -497,10 +497,6 @@ class OperationsController < ApplicationController
     end
   end
 
-  def arcgis_services_folder
-    ENV['TOPOLOGY_CHECKING_SERVICES_FOLDER']
-  end
-
   def unzip_and_prepare
     "#{arcgis_services_folder}/UnzipAndPrepare/GPServer/UnzipAndPrepare" unless arcgis_services_folder.nil?
   end

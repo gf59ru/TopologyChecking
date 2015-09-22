@@ -260,4 +260,8 @@ module OperationsHelper
     (OperationValue.where 'operation_id = ? and operation_parameter_id in (?)', operation.id, param_types)
   end
 
+  def arcgis_services_folder
+    ENV['TOPOLOGY_CHECKING_SERVICES_FOLDER']
+  end
+
 end
