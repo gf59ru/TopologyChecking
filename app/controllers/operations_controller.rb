@@ -303,7 +303,7 @@ class OperationsController < ApplicationController
   def pay
     @operation = Operation.find_by_id params[:id]
     if !current_user.nil? && current_user.id == @operation.user_id
-      if @operation.cost.nil? || @operation.cost < Operation::FREE_THRESHOLD
+      if !arcgis_services_folder.nil? && (@operation.cost.nil? || @operation.cost < Operation::FREE_THRESHOLD)
         flash[:warning] = t 'operation_is_free'
         redirect_to @operation
       else
@@ -313,8 +313,9 @@ class OperationsController < ApplicationController
         Net::HTTP.start uri.host, uri.port do |http|
           request = Net::HTTP::Get.new uri.request_uri
           response = http.request request
-          render response.body
+          puts response.body
         end
+        redirect_to @operation
         # if json.nil?
         #   flash[:warning] = 'pay is nil'
         #   redirect_to root_url
