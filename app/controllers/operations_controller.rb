@@ -313,7 +313,7 @@ class OperationsController < ApplicationController
         Net::HTTP.start uri.host, uri.port do |http|
           request = Net::HTTP::Get.new uri.request_uri
           response = http.request request
-          puts response.body
+          puts "acquiro pay response body:\n#{response.body}"
         end
         redirect_to @operation
         # if json.nil?
