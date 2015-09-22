@@ -6,7 +6,7 @@ class HomeController < ApplicationController
   def index
     unless current_user.nil?
       @operation_types = OperationType.all
-      @operations = Operation.where 'user_id = ?', current_user.id
+      @operations = current_user.operations
     end
   end
 end
