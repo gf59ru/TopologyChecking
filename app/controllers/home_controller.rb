@@ -9,4 +9,11 @@ class HomeController < ApplicationController
       @operations = current_user.operations
     end
   end
+
+  def contacts
+  end
+
+  def service_info
+  end
+
 end

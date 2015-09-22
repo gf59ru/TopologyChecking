@@ -9,10 +9,11 @@
   <%
      element_id = 'unzip_log'
      cookie_name = "expanded_#{@operation.id}_#{element_id}"
+     is_expanded = !cookies[cookie_name].nil? && cookies[cookie_name] != ''
   %>
   <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= element_id %>', '<%= @operation.id %>');">
     <%= t 'operations.show_logs' %>
     <span class="caret"/>
   </button>
-  <%= render 'operations/job', :value => value, :messages => messages, :job_url => nil, :id => element_id, :is_expanded => (cookies[cookie_name] != '') %>
+  <%= render 'operations/job', :value => value, :messages => messages, :job_url => nil, :id => element_id, :is_expanded => is_expanded %>
 </div>

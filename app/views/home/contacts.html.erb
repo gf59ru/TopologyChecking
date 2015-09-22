@@ -1,0 +1,27 @@
+<h3><%= t 'contacts.contacts' %></h3>
+<hr/>
+<table class="table table-condensed table-bordered table-striped table-hover">
+  <tr>
+    <th colspan="2"><h1><%= t 'jsc_mobile' %></h1></th>
+  </tr>
+  <tr>
+    <td><%= t 'contacts.address' %></td>
+    <td><%= t 'contacts.address_value' %></td>
+  </tr>
+  <tr>
+    <td><%= t 'contacts.email' %></td>
+    <td><%= mail_to (t 'contacts.email_value') %></td>
+  </tr>
+  <tr>
+    <td><%= t 'contacts.support_email' %></td>
+    <td><%= mail_to (t 'contacts.support_email_value') %></td>
+  </tr>
+  <tr>
+    <td><%= t 'contacts.phone' %></td>
+    <td><%= t 'contacts.phone_value' %></td>
+  </tr>
+  <tr>
+    <td><%= t 'contacts.fax' %></td>
+    <td><%= t 'contacts.fax_value' %></td>
+  </tr>
+</table>

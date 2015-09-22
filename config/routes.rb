@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   resources :operation_steps
 
   get 'home/index'
+  get 'home/contacts'
+  get 'home/service_info'
 
   devise_for :users, :controllers => {:omniauth_callbacks => 'users/omniauth_callbacks', :sessions => 'users/sessions', :registrations => 'users/registrations'}
   devise_scope :user do
