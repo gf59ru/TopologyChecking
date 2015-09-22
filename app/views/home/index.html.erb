@@ -54,6 +54,8 @@
               </tr>
           <% end %>
         </table>
+    <% else %>
+        <p><%= t 'operations.no_operations' %></p>
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title"><%= t 'operations.create_new_operation' %></h3>
@@ -62,7 +64,7 @@
               <div class="panel-body">
                 <div class="form-group">
                   <%= label_tag :operation_type_id, (t 'activerecord.attributes.operation.operation_type_id') %>
-                  <%= select_tag :operation_type_id, options_for_select(['Проверка топологии']), :include_blank => false, :class => 'form-control' %>
+                  <%= select_tag :operation_type_id, options_for_select([(t 'topology_validation')]), :include_blank => false, :class => 'form-control' %>
                 </div>
                 <p>
                   <!--%= link_to (t 'create'), new_operation_path, :class => 'btn btn-success' %-->
@@ -71,8 +73,6 @@
               </div>
           <% end %>
         </div>
-    <% else %>
-        <p><%= t 'operations.no_operations' %>, <%= link_to (t 'create'), new_operation_path %></p>
     <% end %>
 <% else %>
     <h2><%= t 'hello_unregistered' %></h2>

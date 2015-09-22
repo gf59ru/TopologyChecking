@@ -91,7 +91,7 @@
           <% else %>
               <tr>
                 <td colspan="6">
-                  <%= submit_tag (t 'validate_topology'), :class => 'btn btn-primary', :name => 'force_next_step' %>
+                  <%= submit_tag (t 'topology_validation'), :class => 'btn btn-primary', :name => 'force_next_step' %>
                 </td>
               </tr>
               <%= hidden_field_tag :rule_order, saved_rule.value_order %>
@@ -128,7 +128,7 @@
   <% unless has_unfilled_rule %>
       <tr>
         <td colspan="6">
-          <%= submit_tag (t 'validate_topology'), :class => 'btn btn-primary', :name => 'force_next_step' %>
+          <%= submit_tag (t 'topology_validation'), :class => 'btn btn-primary', :name => 'force_next_step' %>
         </td>
       </tr>
   <% end %>
