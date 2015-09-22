@@ -312,9 +312,9 @@ class OperationsController < ApplicationController
         # json = nil
         request = Net::HTTP::Get.new uri.request_uri
 
-        http = Net::HTTP.new uri.host, uri.port
-        http.use_ssl = true
-        response = http.start { |http| http.request request }
+        https = Net::HTTP.new uri.host, uri.port
+        https.use_ssl = true
+        response = https.start { |http| http.request request }
         puts "acquiro pay response body:\n#{response.body}"
         redirect_to @operation
         # if json.nil?
