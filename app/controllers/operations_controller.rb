@@ -307,18 +307,19 @@ class OperationsController < ApplicationController
         flash[:warning] = t 'operation_is_free'
         redirect_to @operation
       else
-        uri = URI.encode "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost.nil? ? 0 : @operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"
-        uri = URI uri
-        # json = nil
-        http = Net::HTTP.new uri.host, uri.port
-        http.use_ssl = true
-        # http.ssl_version = 'SSLv3'
-        # http.ssl_version = 'SSLv2'
-        http.ssl_version = 'SSLv23_client'
-        # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        response = http.get uri.request_uri
-        puts "acquiro pay response body:\n#{response.body}"
-        redirect_to @operation
+        redirect_to "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost.nil? ? 0 : @operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"
+        # uri = URI.encode "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost.nil? ? 0 : @operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"
+        # uri = URI uri
+        # # json = nil
+        # http = Net::HTTP.new uri.host, uri.port
+        # http.use_ssl = true
+        # # http.ssl_version = 'SSLv3'
+        # # http.ssl_version = 'SSLv2'
+        # http.ssl_version = 'SSLv23_client'
+        # # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        # response = http.get uri.request_uri
+        # puts "acquiro pay response body:\n#{response.body}"
+        # redirect_to @operation
         # if json.nil?
         #   flash[:warning] = 'pay is nil'
         #   redirect_to root_url
