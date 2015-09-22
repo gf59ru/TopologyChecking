@@ -1,7 +1,4 @@
 <h1><%= "#{(t 'activerecord.models.operation.one').mb_chars.capitalize} #{@operation.description == '' ? (l @operation.created_at) : "«#{@operation.description}»"}" %></h1>
-<% if arcgis_services_folder.nil? %>
-    <div class="alert alert-warning"><%= t 'warning_demo_mode' %></div>
-<% end %>
 <h2><span class="<%= @operation.state_css_class %>">
   <%= @operation.state_name %>
   <%
@@ -14,95 +11,99 @@
 </h2>
 <h2><%= link_to 'pay', pay_for_operation_path(:id => @operation) %></h2>
 <hr/>
-<%
-   step = @operation.step
-   step = 0 if step.nil?
-   error_msg = operation_value @operation, OperationParameter::PARAM_ERROR_MESSAGE
-   details = operation_values @operation, OperationParameter::PARAM_ERROR_DETAILS
-%>
-<%= form_tag({:controller => :operations, :action => :next_step, :method => :post}, {:multipart => true}) do %>
-    <% if !@operation.step.nil? && @operation.step > 0 %>
-        <% @operation.step.times do |i| %>
-            <%= render "operations/passed_steps/passed_step#{i + 1}" %>
-            <hr/>
+<% if arcgis_services_folder.nil? %>
+    <div class="alert alert-warning"><%= t 'warning_demo_mode' %></div>
+<% else %>
+    <%
+       step = @operation.step
+       step = 0 if step.nil?
+       error_msg = operation_value @operation, OperationParameter::PARAM_ERROR_MESSAGE
+       details = operation_values @operation, OperationParameter::PARAM_ERROR_DETAILS
+    %>
+    <%= form_tag({:controller => :operations, :action => :next_step, :method => :post}, {:multipart => true}) do %>
+        <% if !@operation.step.nil? && @operation.step > 0 %>
+            <% @operation.step.times do |i| %>
+                <%= render "operations/passed_steps/passed_step#{i + 1}" %>
+                <hr/>
+            <% end %>
         <% end %>
-    <% end %>
-    <%= hidden_field_tag :id, @operation.id %>
-    <% case step when 0 %>
-        <%= render 'operations/steps/step1' %>
-        <%= submit_tag (t 'next'), :class => 'btn btn-primary' %>
-    <% when 1 %>
-        <%= render 'operations/steps/step2' %>
-    <% when 2 %>
-        <%= render 'operations/steps/step3' %>
-    <% when 3 %>
-        <%= render 'operations/steps/step4' %>
-    <% when 4 %>
-        <%= render 'operations/steps/step5' %>
-    <% end %>
-    <% if error_msg.nil? %>
-        <!--%= submit_tag(submit_title, :class => 'btn btn-primary') unless submit_title.nil? %-->
-    <% else %>
-        <p><%= error_msg %></p>
-        <% details.each do |detail| %>
-            <p><%= detail.value %></p>
+        <%= hidden_field_tag :id, @operation.id %>
+        <% case step when 0 %>
+            <%= render 'operations/steps/step1' %>
+            <%= submit_tag (t 'next'), :class => 'btn btn-primary' %>
+        <% when 1 %>
+            <%= render 'operations/steps/step2' %>
+        <% when 2 %>
+            <%= render 'operations/steps/step3' %>
+        <% when 3 %>
+            <%= render 'operations/steps/step4' %>
+        <% when 4 %>
+            <%= render 'operations/steps/step5' %>
         <% end %>
-    <% end %>
-<% end %>
-<!-- Конец дубового режима -->
-
-
-
-<% if false && @operation.launched.nil? %>
-    <%= form_tag run_operation_path(:id => @operation.id) do %>
-        <p>Операция пока не была запущена</p>
-        <% if @operation_type.operation_parameters.count > 0 %>
-            <table class="table table-condensed table-bordered table-striped table-hover">
-              <tr>
-                <th>Параметр</th>
-                <th>Значение</th>
-              </tr>
-              <% @operation_type.operation_parameters.each do |param| %>
-                  <tr>
-                    <td><%= param.name %></td>
-                    <td><%= text_field_tag param.name, param.default_value, :class => 'form-control' %></td>
-                  </tr>
-              <% end %>
-            </table>
+        <% if error_msg.nil? %>
+            <!--%= submit_tag(submit_title, :class => 'btn btn-primary') unless submit_title.nil? %-->
         <% else %>
-            <h5>Операция не имеет параметров</h5>
+            <p><%= error_msg %></p>
+            <% details.each do |detail| %>
+                <p><%= detail.value %></p>
+            <% end %>
         <% end %>
-        <%= submit_tag 'Запустить', :class => 'btn btn-default' %>
     <% end %>
-<% elsif false && (['esriJobSubmitted', 'esriJobExecuting'].include? @operation.state) %>
-    <p>Операция не завершена, <%= link_to 'проверить', check_operation_path(:id => @operation.id) %></p>
-<% end %>
-<hr/>
-<% if false %>
-    <table class="table table-striped table-bordered table-hover table-condensed">
-      <tr>
-        <td>Тип операции</td>
-        <td><%= @operation_type.name %></td>
-      </tr>
-      <tr>
-        <td>Создана</td>
-        <td><%= @operation.created %></td>
-      </tr>
-      <tr>
-        <td>Запущена</td>
-        <td><%= @operation.launched %></td>
-      </tr>
-      <tr>
-        <td>Завершена</td>
-        <td><%= @operation.completed %></td>
-      </tr>
-      <tr>
-        <td>Состояние</td>
-        <td><%= @operation.state %></td>
-      </tr>
-      <tr>
-        <td>Результат</td>
-        <td><%= @operation.result %></td>
-      </tr>
-    </table>
+    <!-- Конец дубового режима -->
+
+
+
+    <% if false && @operation.launched.nil? %>
+        <%= form_tag run_operation_path(:id => @operation.id) do %>
+            <p>Операция пока не была запущена</p>
+            <% if @operation_type.operation_parameters.count > 0 %>
+                <table class="table table-condensed table-bordered table-striped table-hover">
+                  <tr>
+                    <th>Параметр</th>
+                    <th>Значение</th>
+                  </tr>
+                  <% @operation_type.operation_parameters.each do |param| %>
+                      <tr>
+                        <td><%= param.name %></td>
+                        <td><%= text_field_tag param.name, param.default_value, :class => 'form-control' %></td>
+                      </tr>
+                  <% end %>
+                </table>
+            <% else %>
+                <h5>Операция не имеет параметров</h5>
+            <% end %>
+            <%= submit_tag 'Запустить', :class => 'btn btn-default' %>
+        <% end %>
+    <% elsif false && (['esriJobSubmitted', 'esriJobExecuting'].include? @operation.state) %>
+        <p>Операция не завершена, <%= link_to 'проверить', check_operation_path(:id => @operation.id) %></p>
+    <% end %>
+    <hr/>
+    <% if false %>
+        <table class="table table-striped table-bordered table-hover table-condensed">
+          <tr>
+            <td>Тип операции</td>
+            <td><%= @operation_type.name %></td>
+          </tr>
+          <tr>
+            <td>Создана</td>
+            <td><%= @operation.created %></td>
+          </tr>
+          <tr>
+            <td>Запущена</td>
+            <td><%= @operation.launched %></td>
+          </tr>
+          <tr>
+            <td>Завершена</td>
+            <td><%= @operation.completed %></td>
+          </tr>
+          <tr>
+            <td>Состояние</td>
+            <td><%= @operation.state %></td>
+          </tr>
+          <tr>
+            <td>Результат</td>
+            <td><%= @operation.result %></td>
+          </tr>
+        </table>
+    <% end %>
 <% end %>
