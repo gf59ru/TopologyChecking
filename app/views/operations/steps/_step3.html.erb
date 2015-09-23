@@ -39,42 +39,32 @@
              end
              rule = JSON.parse rule unless rule.nil?
 
-             first_class_list = nil
              selected_class_set = rule['class_set'] unless rule.nil?
              selected_rule = rule['rule'] unless rule.nil?
              selected_fc1 = rule['fc1'] unless rule.nil?
 
              class_set = classes.select { |cs| cs['class_set'] == selected_class_set }
-             first_class_list = class_set[0]['fcs'].map { |fc| fc['fc'] } if class_set.length > 0
+             class_set = class_set.length > 0 ? class_set[0] : nil
+             first_class_list = class_set['fcs'].map { |fc| fc['fc'] } unless class_set.nil?
              # Если первый класс уже выбран, фильтруем список правил
-             fc1_type = unless selected_fc1.nil?
-                          selected_fc1_type = class_set[0]['fcs'].select { |fc| fc['fc'] == selected_fc1 }
+             fc1_type = unless selected_fc1.nil? || class_set.nil?
+                          selected_fc1_type = class_set['fcs'].select { |fc| fc['fc'] == selected_fc1 }
                           if selected_fc1_type.length > 0
-                            case selected_fc1_type[0]['shapeType']
-                              when 'Polygon'
-                                'Area'
-                              when 'Polyline'
-                                'Line'
-                              when 'Point'
-                                'Point'
-                            end
+                            shape_type_for_rule selected_fc1_type[0]['shapeType']
                           end
                         end
-             suitable_rule_types = rule_types.select { |rt| rule_types[rt][:first_class] == fc1_type } unless fc1_type.nil?
+             second_types = class_set['fcs'].select { |fc| fc['fc'] != selected_fc1 }.map { |fc| fc['shapeType'] }.uniq unless class_set.nil?
+             second_types.map! { |shape_type| shape_type_for_rule shape_type } unless second_types.nil?
+
+             # suitable_rules = rule_types.select { |rt| rule_types[rt][:first_class] == fc1_type } unless fc1_type.nil?
+             suitable_rules = rule_types.select { |rt| rule_types[rt][:first_class] == fc1_type && (rule_types[rt][:second_class].nil? || (second_types.include? rule_types[rt][:second_class]))} unless fc1_type.nil?
              # Если правило уже выбрано фильтруем список классов для второго класса правила (или вообще убираем, если правило для одного класса)
              second_class_list = nil
              selected_fc2 = nil
              unless selected_rule.nil?
-               second_class_type = case rule_types.map { |rt| rt[1] }.select { |rt| rt[:rule] == selected_rule }[0][:second_class]
-                                     when 'Area'
-                                       'Polygon'
-                                     when 'Line'
-                                       'Polyline'
-                                     when 'Point'
-                                       'Point'
-                                   end
-               second_class_list = unless second_class_type.nil?
-                                     class_set[0]['fcs'].select { |fc| fc['shapeType'] == second_class_type }.map { |fc| fc['fc'] }
+               second_class_type = shape_type_from_rule(rule_types.map { |rt| rt[1] }.select { |rt| rt[:rule] == selected_rule }[0][:second_class])
+               second_class_list = unless second_class_type.nil? || class_set.nil?
+                                     class_set['fcs'].select { |fc| fc['shapeType'] == second_class_type && fc['fc'] != selected_fc1 }.map { |fc| fc['fc'] }
                                    end
                selected_rule = rule_types.to_a.map { |rt| rt[1][:rule] }.index selected_rule
              end
@@ -107,10 +97,10 @@
                         <%= select_tag :fc1, options_for_select(first_class_list, selected_fc1), {:include_blank => true, :class => 'form-control', :onchange => '$("form").submit();'} %>
                       </p>
                   <% end %>
-                  <% unless suitable_rule_types.nil? %>
+                  <% unless suitable_rules.nil? %>
                       <p>
                         <%= label_tag :rule_type, (t 'operations.rule') %>
-                        <%= select_tag :rule_type, options_for_select(suitable_rule_types.map { |rule| [rule[1][:rule], rule[0], {'data-has-second-class' => !rule[1][:second_class].nil?}] }, selected_rule), {:include_blank => true, :class => 'form-control', :onchange => 'rule_selected(this);'} %>
+                        <%= select_tag :rule_type, options_for_select(suitable_rules.map { |rule| [(t rule[1][:rule_i18n_name]), rule[0], {'data-has-second-class' => !rule[1][:second_class].nil?}] }, selected_rule), {:include_blank => true, :class => 'form-control', :onchange => 'rule_selected(this);'} %>
                       </p>
                   <% end %>
                   <% unless second_class_list.nil? %>

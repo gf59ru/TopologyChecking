@@ -13,10 +13,10 @@
   $('#' + id).collapse('toggle')
   cookie_name = "expanded_#{operation_id}_#{id}"
   unless operation_id == null
-    if getCookie(cookie_name) == ''
-      document.cookie = "#{cookie_name}=expanded"
+    if getCookie(cookie_name) == 'expanded'
+      document.cookie = "#{cookie_name}=collaped"
     else
-      document.cookie = "#{cookie_name}="
+      document.cookie = "#{cookie_name}=expanded"
 
 
 @getCookie = (cname) ->
@@ -26,4 +26,4 @@
     c = c.substring(1) while c.charAt(0) == ' '
     if c.indexOf(name) == 0
       return c.substring(name.length, c.length)
-    return ''
+  return ''

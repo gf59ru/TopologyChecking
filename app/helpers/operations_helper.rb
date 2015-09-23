@@ -264,4 +264,26 @@ module OperationsHelper
     ENV['TOPOLOGY_CHECKING_SERVICES_FOLDER']
   end
 
+  def shape_type_for_rule(shape_type)
+    case shape_type
+      when 'Polygon'
+        'Area'
+      when 'Polyline'
+        'Line'
+      when 'Point'
+        'Point'
+    end
+  end
+
+  def shape_type_from_rule(shape_type)
+    case shape_type
+      when 'Area'
+        'Polygon'
+      when 'Line'
+        'Polyline'
+      when 'Point'
+        'Point'
+    end
+  end
+
 end

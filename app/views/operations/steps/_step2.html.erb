@@ -12,7 +12,7 @@
   <%
      element_id = 'unzip_log'
      cookie_name = "expanded_#{@operation.id}_#{element_id}"
-     is_expanded = !cookies[cookie_name].nil? && cookies[cookie_name] != ''
+     is_expanded = cookies[cookie_name] == 'expanded'
   %>
   <button type="button" class="btn btn-link" onclick="expand_or_collapse( '<%= element_id %>', '<%= @operation.id %>');">
     <%= t 'operations.show_logs' %>

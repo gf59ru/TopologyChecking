@@ -8,9 +8,9 @@ Rails.application.routes.draw do
   get 'operations/download', :to => 'operations#download', :as => 'download'
   get 'operations/delete_rule', :to => 'operations#delete_rule', :as => 'delete_rule'
   get 'operations/pay', :to => 'operations#pay', :as => 'pay_for_operation'
-  get 'operations/pay_callback', :to => 'operations#pay_callback', :as => 'pay_callback'
-  get 'operations/pay_ok', :to => 'operations#pay_ok', :as => 'pay_ok'
-  get 'operations/pay_ko', :to => 'operations#pay_ko', :as => 'pay_ko'
+  post 'operations/pay_callback', :to => 'operations#pay_callback', :as => 'pay_callback'
+  post 'operations/pay_ok', :to => 'operations#pay_ok', :as => 'pay_ok'
+  post 'operations/pay_ko', :to => 'operations#pay_ko', :as => 'pay_ko'
 
   resources :operations
   resources :operation_types

@@ -164,7 +164,7 @@ en:
     state_failed: "Operation failed"
     state_cancelled: "Operation cancelled"
     show_logs: "Show logs"
-    look_job_directly: "Look job progress directly at server"
+    look_job_directly: "Look job progress directly at geoprocessing server"
     reserved: "reserved"
     preliminary: "preliminary"
     no_operations: "You have no operations yet"
