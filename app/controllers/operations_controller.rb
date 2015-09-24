@@ -234,7 +234,7 @@ class OperationsController < ApplicationController
     unless current_user.nil?
       @operation = Operation.new operation_params
       @operation.user_id = current_user.id
-      @operation.created = DateTime.now
+      @operation.created = Time.now
       @operation.state = Operation::STATE_CREATED
       if @operation.save
         flash[:success] = I18n.t 'operations.operation_created'
@@ -297,7 +297,7 @@ class OperationsController < ApplicationController
         flash[:warning] = t 'operation_is_free'
         redirect_to @operation
       else
-        redirect_to "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost.nil? ? 0 : @operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"
+        # redirect_to "https://secure.acquiropay.com?product_id=#{@operation.id}&amount=#{@operation.cost.nil? ? 0 : @operation.cost}&cf=sandbox_pay&cb_url=#{pay_callback_url}&ok_url=#{pay_ok_url}&ko_url=#{pay_ko_url}"
       end
     else
       flash[:danger] = I18n.t 'operations.only_owner_can_work'
@@ -306,18 +306,31 @@ class OperationsController < ApplicationController
   end
 
   def pay_callback
-    puts "callback parameters: #{params}"
+    # puts "callback parameters: #{params}"
     redirect_to root_url
   end
 
   def pay_ok
-    puts "pay_ok parameters: #{params}"
+    # puts "pay_ok parameters: #{params}"
+    if params[:recharge].to_i > 0
+      Recharge.create user_id: current_user.id, date: Time.now, sum: params[:recharge].to_i
+      flash[:success] = "Your balance was successfully recharged to #{params[:recharge]}"
+    else
+      flash[:success] = 'Recharge was emulated successfully'
+    end
     redirect_to root_url
   end
 
   def pay_ko
-    puts "pay_ko parameters: #{params}"
+    flash[:warning] = 'Recharge failure was emulated successfully'
+    # puts "pay_ko parameters: #{params}"
     redirect_to root_url
+  end
+
+  def requisites
+  end
+
+  def invoice
   end
 
   private

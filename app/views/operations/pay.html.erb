@@ -1,0 +1,37 @@
+<h1>Payment using card (emulation mode)</h1>
+<p class="alert alert-warning">
+  Service is under construction! Any payments are emulates, <b class="text text-danger">don't enter real cards data!!!</b>
+  <br/>
+  Instead that You can enter nothing, just click emulate payment buttons (success or failure)
+</p>
+<div class="row">
+  <div class="input-group">
+    <span class="input-group-addon">Card number</span>
+    <input type="text" class="form-control"/>
+    <span class="input-group-addon">-</span>
+    <input type="text" class="form-control"/>
+    <span class="input-group-addon">-</span>
+    <input type="text" class="form-control"/>
+    <span class="input-group-addon">-</span>
+    <input type="text" class="form-control"/>
+  </div>
+</div>
+
+<table class="table">
+  <tr>
+    <td>
+      <h3>Operation cost is <span class="text text-info"><%= @operation.cost %></span></h3>
+    </td>
+    <td>
+      <%= form_tag pay_ok_path do %>
+          <%= hidden_field_tag :recharge, @operation.cost %>
+          <%= submit_tag 'Emulate success payment', :class => 'btn btn-primary' %>
+      <% end %>
+    </td>
+    <td>
+      <%= form_tag pay_ko_path do %>
+          <%= submit_tag 'Emulate payment failure', :class => 'btn btn-danger' %>
+      <% end %>
+    </td>
+  </tr>
+</table>

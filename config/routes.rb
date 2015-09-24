@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   post 'operations/pay_callback', :to => 'operations#pay_callback', :as => 'pay_callback'
   post 'operations/pay_ok', :to => 'operations#pay_ok', :as => 'pay_ok'
   post 'operations/pay_ko', :to => 'operations#pay_ko', :as => 'pay_ko'
+  get 'operations/requisites', :to => 'operations#requisites', :as => 'requisites'
+  get 'operations/invoice', :to => 'operations#invoice', :as => 'invoice'
 
   resources :operations
   resources :operation_types
