@@ -56,8 +56,18 @@
              second_types = class_set['fcs'].select { |fc| fc['fc'] != selected_fc1 }.map { |fc| fc['shapeType'] }.uniq unless class_set.nil?
              second_types.map! { |shape_type| shape_type_for_rule shape_type } unless second_types.nil?
 
-             # suitable_rules = rule_types.select { |rt| rule_types[rt][:first_class] == fc1_type } unless fc1_type.nil?
-             suitable_rules = rule_types.select { |rt| rule_types[rt][:first_class] == fc1_type && (rule_types[rt][:second_class].nil? || (second_types.include? rule_types[rt][:second_class]))} unless fc1_type.nil?
+             suitable_rules = unless fc1_type.nil?
+                                rule_types.select do |rt|
+                                  if rule_types[rt][:first_class] == fc1_type
+                                    second_class = rule_types[rt][:second_class]
+                                    if second_class.nil?
+                                      true
+                                    else
+                                      second_types.include? second_class
+                                    end
+                                  end
+                                end
+                              end
              # Если правило уже выбрано фильтруем список классов для второго класса правила (или вообще убираем, если правило для одного класса)
              second_class_list = nil
              selected_fc2 = nil

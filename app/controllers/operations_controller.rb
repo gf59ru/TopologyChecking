@@ -214,6 +214,7 @@ class OperationsController < ApplicationController
   end
 
   def show
+    # puts (arcgis_message_has_i18n '<i18n dd="ddd" date="01.05.2013 15:20" n="5" aaa="ererg">ty_hjn34534r{dd}tjhn{date}erth [n,aaa]</i18n>')
     @operation = Operation.find_by_id params[:id]
     if !current_user.nil? && current_user.id == @operation.user_id
       if @operation.state == Operation::STATE_DONE_BUT_NOT_ACCESSIBLE && current_user.balance >= 0

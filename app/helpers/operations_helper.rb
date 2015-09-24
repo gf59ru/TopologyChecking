@@ -286,4 +286,8 @@ module OperationsHelper
     end
   end
 
+  def arcgis_message_has_i18n(message)
+    %r{/<i18n[ a-z0-9.,:_=\"]*>[ a-z0-9_\{\}\[\],]+<\/i18n>/ig}.match message
+  end
+
 end
