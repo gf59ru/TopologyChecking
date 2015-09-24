@@ -19,7 +19,11 @@
         <p><%= t 'operations.feature_classes_used', :count => classes.uniq.count %></p>
       </div>
     </div>
-
+    <% if @operation.cost > Operation::FREE_THRESHOLD && @operation.cost > current_user.balance %>
+        <div class="alert alert-danger">
+          <%= t 'operations.warning_balance_in_rules_accepting', :cost => @operation.cost, :balance => current_user.balance, :sum => @operation.cost - current_user.balance %>
+        </div>
+    <% end %>
     <%= submit_tag (t 'return'), :class => 'btn btn-default', :name => 'return_rules_editing' %>
     <%= submit_tag (t 'topology_validation'), :class => 'btn btn-success', :data => {:confirm => (t 'are_you_sure')} %>
 <% else %>

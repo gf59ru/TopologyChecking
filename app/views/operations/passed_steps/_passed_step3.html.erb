@@ -16,12 +16,13 @@
        rule = saved_rule.value
        if rule_is_filled rule
          rule = JSON.parse rule unless rule.nil?
+         rule_i18n_name = rule_types.select{|rt| rule_types[rt][:rule] == rule['rule']}.first[1][:rule_i18n_name]
   %>
           <tr>
             <td><%= "#{rule_order}." %></td>
             <td><%= rule['class_set'] %></td>
             <td><%= rule['fc1'] %></td>
-            <td><%= rule['rule'] %></td>
+            <td><%= t rule_i18n_name %></td>
             <td><%= rule['fc2'] %></td>
           </tr>
       <% end %>

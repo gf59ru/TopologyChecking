@@ -112,17 +112,6 @@ class OperationsController < ApplicationController
             rules = (operation_values @operation, OperationParameter::PARAM_RULE_JSON).select('value')
             rules = rules.to_a.select { |rule| rule_is_filled rule.value }
             if rules.count > 0
-              # rules = rules.to_a.map { |rule| JSON.parse rule.value }
-              # run_op = run_operation validate_and_zip,
-              #                        {
-              #                            :gdb => operation_value(@operation, OperationParameter::PARAM_UPLOADED_GDB_PATH),
-              #                            :rules => rules.to_json
-              #                        }
-              # job_id = run_op[:job_id]
-              # set_operation_value @operation, run_op[:status], OperationParameter::PARAM_VALIDATE_JOB_STATE
-              # set_operation_value @operation, job_id, OperationParameter::PARAM_VALIDATE_JOB_ID
-              # set_operation_value @operation, "#{validate_and_zip}/jobs/#{job_id}", OperationParameter::PARAM_VALIDATE_JOB_URL
-              #
               @operation.state = Operation::STATE_RULES_ACCEPTING
               @operation.step = 3
               @operation.save
@@ -214,7 +203,6 @@ class OperationsController < ApplicationController
   end
 
   def show
-    # puts (arcgis_message_has_i18n '<i18n dd="ddd" date="01.05.2013 15:20" n="5" aaa="ererg">ty_hjn34534r{dd}tjhn{date}erth [n,aaa]</i18n>')
     @operation = Operation.find_by_id params[:id]
     if !current_user.nil? && current_user.id == @operation.user_id
       if @operation.state == Operation::STATE_DONE_BUT_NOT_ACCESSIBLE && current_user.balance >= 0

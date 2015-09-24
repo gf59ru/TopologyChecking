@@ -197,6 +197,10 @@ en:
     checking_operation_params: "Operation parameters"
     validating_and_results_preparing: "Performed topology validating and results preparing"
     topology_validated_and_exported: "Topology rules was validated and validating results was exported"
+    warning_balance_in_rules_accepting: |+
+      Warning! You have insufficient funds for execute operation!
+      You can run it, but can't get results until recharging.
+      Operation cost is %{cost}, your balance is %{balance}. Needs to recharge at %{sum} for operations results availability.
     warning_balance: "Warning! You have negative balance! You can't get operation result until recharging."
     sorry_balance: "Sorry, but You have negative balance. You can't get operation result until recharging."
     download_results: "Download results"

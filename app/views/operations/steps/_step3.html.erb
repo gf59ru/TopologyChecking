@@ -77,6 +77,7 @@
                                      class_set['fcs'].select { |fc| fc['shapeType'] == second_class_type && fc['fc'] != selected_fc1 }.map { |fc| fc['fc'] }
                                    end
                selected_rule = rule_types.to_a.map { |rt| rt[1][:rule] }.index selected_rule
+               rule_i18n_name = rule_types.select{|rt| rule_types[rt][:rule] == rule['rule']}.first[1][:rule_i18n_name]
              end
           %>
           <% if is_filled %>
@@ -84,7 +85,7 @@
                 <td><%= "#{rule_order}." %></td>
                 <td><%= rule['class_set'] %></td>
                 <td><%= rule['fc1'] %></td>
-                <td><%= rule['rule'] %></td>
+                <td><%= t rule_i18n_name %></td>
                 <td><%= rule['fc2'] %></td>
                 <td><%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-trash', :title => (t 'operations.remove_rule')), delete_rule_path(:id => @operation.id, :order => saved_rule.value_order), :data => {:confirm => (t 'are_you_sure')} %></td>
               </tr>

@@ -287,6 +287,7 @@ module OperationsHelper
   end
 
   def arcgis_message_has_i18n(message)
+    # puts (arcgis_message_has_i18n '<i18n dd="ddd" date="01.05.2013 15:20" n="5" aaa="ererg">ty_hjn34534r{dd}tjhn{date}erth [n,aaa]</i18n>')
     %r{/<i18n[ a-z0-9.,:_=\"]*>[ a-z0-9_\{\}\[\],]+<\/i18n>/ig}.match message
   end
 
