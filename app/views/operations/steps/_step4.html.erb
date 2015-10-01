@@ -1,3 +1,4 @@
+<meta http-equiv="refresh" content="10">
 <% if @operation.state == Operation::STATE_RULES_ACCEPTING.to_s %>
     <%
        rules = (operation_values @operation, OperationParameter::PARAM_RULE_JSON).select('value').to_a.select { |rule| rule_is_filled rule.value }

@@ -34,12 +34,12 @@ class OperationsController < ApplicationController
           date_stamp = "#{DateTime.now.strftime '%y%m%d%H%M%S'}"
           filename = "#{current_user.id}#{date_stamp}.zip"
 
-          arcgis_folder = '\\\\qwerty-3\\AGS\\'
-          user_arcgis_folder = "#{arcgis_folder}#{current_user.id}"
+          arcgis_folder = ENV['ARCGIS_REGISTERED_FOLDER']
+          user_arcgis_folder = "#{arcgis_folder}#{File::Separator}#{current_user.id}"
           FileUtils.mkdir_p user_arcgis_folder unless File.directory? user_arcgis_folder
-          gdb_arcgis_folder = "#{user_arcgis_folder}\\#{date_stamp}"
+          gdb_arcgis_folder = "#{user_arcgis_folder}#{File::Separator}#{date_stamp}"
           FileUtils.mkdir_p gdb_arcgis_folder unless File.directory? gdb_arcgis_folder
-          arcgis_zip = "#{gdb_arcgis_folder}\\#{filename}"
+          arcgis_zip = "#{gdb_arcgis_folder}#{File::Separator}#{filename}"
           FileUtils.copy gdb.tempfile, arcgis_zip
           set_operation_value @operation, arcgis_zip, OperationParameter::PARAM_UPLOADED_GDB_ZIP
 
