@@ -58,5 +58,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # gem 'rubyzip'
 
 gem 'devise'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', '0.2.6'
 gem 'omniauth-linkedin-oauth2'

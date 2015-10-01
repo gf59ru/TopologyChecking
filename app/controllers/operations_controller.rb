@@ -31,7 +31,7 @@ class OperationsController < ApplicationController
       case step
         when 0
           gdb = params[:gdb]
-          date_stamp = "#{DateTime.now.strftime '%y%m%d%H%M%S'}"
+          date_stamp = "#{Time.zone.now.strftime '%y%m%d%H%M%S'}"
           filename = "#{current_user.id}#{date_stamp}.zip"
 
           arcgis_folder = ENV['ARCGIS_REGISTERED_FOLDER']
@@ -234,7 +234,7 @@ class OperationsController < ApplicationController
     unless current_user.nil?
       @operation = Operation.new operation_params
       @operation.user_id = current_user.id
-      @operation.created = Time.now
+      @operation.created = Time.zone.now
       @operation.state = Operation::STATE_CREATED
       if @operation.save
         flash[:success] = I18n.t 'operations.operation_created'
@@ -313,7 +313,7 @@ class OperationsController < ApplicationController
   def pay_ok
     # puts "pay_ok parameters: #{params}"
     if params[:recharge].to_i > 0
-      Recharge.create user_id: current_user.id, date: Time.now, sum: params[:recharge].to_i
+      Recharge.create user_id: current_user.id, date: Time.zone.now, sum: params[:recharge].to_i
       flash[:success] = "Your balance was successfully recharged to #{params[:recharge]}"
     else
       flash[:success] = 'Recharge was emulated successfully'
