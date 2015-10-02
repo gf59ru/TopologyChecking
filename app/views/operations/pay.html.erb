@@ -1,12 +1,13 @@
-<h1>Payment using card (emulation mode)</h1>
+<h1><%= t 'payment.payment_using_card' %></h1>
 <p class="alert alert-warning">
-  Service is under construction! Any payments are emulates, <b class="text text-danger">don't enter real cards data!!!</b>
+  <%= t 'payment.service_is_under_construction' %>
+  <b class="text text-danger"><%= t 'payment.do_not_enter_real_cards_data' %></b>
   <br/>
-  Instead that You can enter nothing, just click emulate payment buttons (success or failure)
+  <%= t 'payment.instead_that_click_emulate_payment_buttons' %>
 </p>
 <div class="row">
   <div class="input-group">
-    <span class="input-group-addon">Card number</span>
+    <span class="input-group-addon"><%= t 'payment.card_number' %></span>
     <input type="text" class="form-control"/>
     <span class="input-group-addon">-</span>
     <input type="text" class="form-control"/>
@@ -20,17 +21,17 @@
 <table class="table">
   <tr>
     <td>
-      <h3>Operation cost is <span class="text text-info"><%= @operation.cost %></span></h3>
+      <h3><%= t 'operations.operation_cost_is' %> <span class="text text-info"><%= @operation.cost %></span></h3>
     </td>
     <td>
       <%= form_tag pay_ok_path do %>
           <%= hidden_field_tag :recharge, @operation.cost %>
-          <%= submit_tag 'Emulate success payment', :class => 'btn btn-primary' %>
+          <%= submit_tag (t 'payment.emulate_success'), :class => 'btn btn-primary' %>
       <% end %>
     </td>
     <td>
       <%= form_tag pay_ko_path do %>
-          <%= submit_tag 'Emulate payment failure', :class => 'btn btn-danger' %>
+          <%= submit_tag (t 'payment.emulate_failure'), :class => 'btn btn-danger' %>
       <% end %>
     </td>
   </tr>

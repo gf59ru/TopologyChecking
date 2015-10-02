@@ -48,7 +48,7 @@
                   <% if operation.can_remove %>
                       <%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-trash', :title => (t 'operations.remove')), operation_path(:id => operation.id), :method => :delete, :data => {:confirm => (t 'are_you_sure')} %>
                   <% elsif operation.state == Operation::STATE_DONE.to_s %>
-                      <%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-download', :title => (t 'operations.download_results')), download_path(:operation => operation.id, :file_param_id => OperationParameter::PARAM_RESULT_ZIP_PATH) %>
+                      <%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-download', :title => (t 'operations.download_results')), download_operation_result_path(:operation => operation.id, :file_param_id => OperationParameter::PARAM_RESULT_ZIP_PATH) %>
                   <% end %>
                 </td>
               </tr>

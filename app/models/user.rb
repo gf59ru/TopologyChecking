@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   has_many :operations, :dependent => :delete_all
   has_many :recharges, :dependent => :delete_all
+  has_many :user_files, :dependent => :delete_all
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -27,6 +28,10 @@ class User < ActiveRecord::Base
 
   def reserved
     self.operations.where('state = ? and cost > ?', Operation::STATE_STARTED.to_s, Operation::FREE_THRESHOLD).sum('cost')
+  end
+
+  def requisites_files
+    user_files.where 'file_type = ?', UserFile::FILE_TYPE_REQUISITES
   end
 
 end

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'application/select_locale', :to => 'application#select_locale', :as => 'select_locale'
 
   post 'operations/next_step', :to => 'operations#next_step', :as => 'next_step'
-  get 'operations/download', :to => 'operations#download', :as => 'download'
+  get 'operations/download', :to => 'operations#download', :as => 'download_operation_result'
   get 'operations/delete_rule', :to => 'operations#delete_rule', :as => 'delete_rule'
   get 'operations/pay', :to => 'operations#pay', :as => 'pay_for_operation'
   post 'operations/pay_callback', :to => 'operations#pay_callback', :as => 'pay_callback'
@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   post 'operations/pay_ko', :to => 'operations#pay_ko', :as => 'pay_ko'
   get 'operations/requisites', :to => 'operations#requisites', :as => 'requisites'
   get 'operations/invoice', :to => 'operations#invoice', :as => 'invoice'
+  post 'operations/invoice', :to => 'operations#invoice', :as => 'post_invoice'
 
   resources :operations
   resources :operation_types
@@ -28,11 +29,12 @@ Rails.application.routes.draw do
     # get 'revoke_google_oauth', :to => 'users/omniauth_callbacks#revoke_google_oauth2', :as => 'revoke_google_oauth'
   end
 
-
   root to: 'home#index'
 
   get 'persons/profile', as: 'user_root'
   post 'persons/update'
+  get 'persons/download_user_file', :to => 'persons#download_user_file', :as => 'download_user_file'
+  delete 'persons/destroy_user_file', :to => 'persons#destroy_user_file', :as => 'delete_user_file'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

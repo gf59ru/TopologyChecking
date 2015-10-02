@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915045827) do
+ActiveRecord::Schema.define(version: 20151002043554) do
 
   create_table "operation_parameters", force: :cascade do |t|
     t.integer  "operation_step_id", null: false
@@ -73,6 +73,15 @@ ActiveRecord::Schema.define(version: 20150915045827) do
     t.integer  "sum",        null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_files", force: :cascade do |t|
+    t.integer  "user_id",     null: false
+    t.integer  "file_type",   null: false
+    t.string   "file_path",   null: false
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "users", force: :cascade do |t|

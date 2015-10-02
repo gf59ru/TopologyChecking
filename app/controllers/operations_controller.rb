@@ -314,23 +314,75 @@ class OperationsController < ApplicationController
     # puts "pay_ok parameters: #{params}"
     if params[:recharge].to_i > 0
       Recharge.create user_id: current_user.id, date: Time.zone.now, sum: params[:recharge].to_i
-      flash[:success] = "Your balance was successfully recharged to #{params[:recharge]}"
+      flash[:success] = I18n.t 'payment.balance_was_successfully_recharged_to', :sum => params[:recharge]
     else
-      flash[:success] = 'Recharge was emulated successfully'
+      flash[:success] = I18n.t 'payment.recharge_was_emulated_successfully'
     end
     redirect_to root_url
   end
 
   def pay_ko
-    flash[:warning] = 'Recharge failure was emulated successfully'
-    # puts "pay_ko parameters: #{params}"
-    redirect_to root_url
+    if current_user.nil?
+      redirect_to root_url
+    else
+      flash[:warning] = t 'payment.recharge_failure_was_emulated_successfully'
+      # puts "pay_ko parameters: #{params}"
+      redirect_to root_url
+    end
   end
 
   def requisites
+    if current_user.nil?
+      redirect_to root_url
+    end
   end
 
   def invoice
+    if current_user.nil?
+      redirect_to root_url
+    else
+      @operation = Operation.find_by_id params[:id]
+      @tab = params[:tab]
+      if request.method == 'POST'
+        root_with_sep = "#{Rails.root}#{File::Separator}"
+        if @tab.nil? || @tab == ''
+          @tab = current_user.requisites_files.count > 0 ? '1' : '2'
+        end
+        if @tab == '1'
+          if params[:select_requisites_file].nil? || params[:select_requisites_file] == ''
+            flash[:warning] = I18n.t 'payment.requisites_file_not_selected'
+          else
+            file = UserFile.find_by_id params[:select_requisites_file].to_i
+            flash[:success] = I18n.t 'payment.you_will_receive_invoice_by_email'
+            puts "Selected file #{root_with_sep}#{file.file_path} will be used"
+          end
+        elsif @tab == '2'
+          requisites = params[:customer_requisites]
+          if params[:save_customer_requisites] == '1'
+            dir = 'user_files'
+            FileUtils.mkdir_p "#{root_with_sep}#{dir}" unless File.directory? "#{root_with_sep}#{dir}"
+            dir = "#{dir}#{File::Separator}#{current_user.id}"
+            FileUtils.mkdir_p "#{root_with_sep}#{dir}" unless File.directory? "#{root_with_sep}#{dir}"
+            dir = "#{dir}#{File::Separator}#{Time.zone.now.strftime '%y%m%d%H%M%S'}"
+            FileUtils.mkdir_p "#{root_with_sep}#{dir}" unless File.directory? "#{root_with_sep}#{dir}"
+            user_file = "#{dir}#{File::Separator}#{requisites.original_filename}"
+            FileUtils.copy requisites.tempfile, user_file
+
+            file = UserFile.new
+            file.user = current_user
+            file.file_type = UserFile::FILE_TYPE_REQUISITES
+            file.file_path = user_file
+            file.description = params[:requisites_file_description]
+            file.save
+            puts "Uploaded file #{root_with_sep}#{user_file} saved and will be used"
+          else
+            puts "Uploaded file #{requisites.tempfile} will be used without saving"
+          end
+          flash[:success] = I18n.t 'payment.you_will_receive_invoice_by_email'
+        end
+        redirect_to @operation
+      end
+    end
   end
 
   private

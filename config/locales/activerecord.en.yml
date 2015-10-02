@@ -26,3 +26,7 @@ en:
       operation_type:
         name: "Name"
         description: "Description"
+      user_file:
+        file_type: "File type"
+        description: "Description"
+

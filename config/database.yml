@@ -19,9 +19,23 @@ test:
   timeout: 5000
   database: db/test.sqlite3
 
+#production:
+#  adapter: mysql2
+#  database: mysql
+#  host: 192.168.48.128
+#  username: root
+#  password: spatops
+
 production:
   adapter: postgresql
-  database: topocheck
+  database: spatops
   host: localhost
-  username: postgres
-  password: "postgres"
+  username: spatops
+  password: "spatops"
+
+#production:
+#  adapter: postgresql
+#  database: topocheck
+#  host: localhost
+#  username: postgres
+#  password: "postgres"

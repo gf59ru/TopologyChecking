@@ -30,6 +30,9 @@ ru:
       operation_type:
         name: "Наименование"
         description: "Описание"
+      user_file:
+        file_type: "Тип файла"
+        description: "Описание"
     errors:
       models:
         user:

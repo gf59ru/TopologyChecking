@@ -1,1 +1,58 @@
-<h1>Invoice</h1>
+<h1><%= t 'payment.invoicing' %></h1>
+<hr/>
+<p>
+  <%= form_tag post_invoice_path, {:multipart => true} do %>
+    <%= hidden_field_tag :tab, @tab %>
+    <%= hidden_field_tag :id, @operation.id %>
+    <h4 class="text text-info">
+      <%= case current_user.requisites_files.count
+            when 0
+              t 'payment.no_requisites_yet_must_upload_requisites_file'
+            when 1
+              t 'payment.has_one_requisites_file'
+            else
+              t 'payment.has_requisites_files'
+          end %>
+    </h4>
+    <% if current_user.requisites_files.count > 0 %>
+        <ul class="nav nav-tabs">
+          <li role="presentation" class="<%= 'active' if @tab.nil? || @tab == '1' %>">
+            <%= link_to "#{current_user.requisites_files.count > 1 ? (t 'payment.select_existing_requisites') : (t 'payment.use_existing_requisites')}", invoice_path(:id => @operation.id, :tab => '1') %>
+          </li>
+          <li role="presentation" class="<%= 'active' if @tab == '2' %>">
+            <%= link_to (t 'payment.upload_new_requisites'), invoice_path(:id => @operation.id, :tab => '2') %>
+          </li>
+        </ul>
+    <% end %>
+    <% if current_user.requisites_files.count == 0 || @tab == '2' %>
+        <div class="form-group">
+          <%= label_tag :customer_requisites, (t 'payment.customer_requisites') %>
+          <%= file_field_tag :customer_requisites %>
+        </div>
+        <div class="form-group">
+          <%= check_box_tag :save_customer_requisites, '1', true %>
+          <%= label_tag :save_customer_requisites, (t 'payment.save_customer_requisites') %>
+        </div>
+        <div class="form-group">
+          <%= label_tag :requisites_file_description, (t 'payment.requisites_file_description') %>
+          <%= text_field_tag :requisites_file_description, '', :class => 'form-control' %>
+        </div>
+    <% else %>
+        <div class="form-group">
+          <%= label_tag :select_requisites_file, (t 'payment.select_requisites_file') %>
+          <%
+             files = {}
+             current_user.requisites_files.each do |file|
+               files.merge!({file.humanized_name_with_creation_date => file.id})
+             end
+          %>
+          <%= select_tag :select_requisites_file, options_for_select(files), :include_blank => (current_user.requisites_files.count > 1 ? (t 'payment.select_requisites_file') : false), :class => 'form-control' %>
+        </div>
+    <% end %>
+    <p>
+      <%= submit_tag (t 'next'), :class => 'btn btn-primary' %>
+    </p>
+    <% if current_user.requisites_files.count > 0 %>
+    <% end %>
+<% end %>
+</p>
