@@ -9,7 +9,7 @@
     <th class="info"><%= t 'operations.second_feature_class' %></th>
   </tr>
   <%
-     rules = operation_values @operation, OperationParameter::PARAM_RULE_JSON
+     rules = @operation.values OperationParameter::PARAM_RULE_JSON
      rule_order = 0
      rules.each do |saved_rule|
        rule_order += 1

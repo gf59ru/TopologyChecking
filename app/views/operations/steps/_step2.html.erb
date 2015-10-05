@@ -4,8 +4,8 @@
 <%
    value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', @operation.id, OperationParameter::PARAM_UNZIP_JOB_STATE).first
    value = value.value unless value.nil?
-   messages = operation_values @operation, [OperationParameter::PARAM_UNZIP_JOB_MESSAGE, OperationParameter::PARAM_UNZIP_JOB_WARNING, OperationParameter::PARAM_UNZIP_JOB_ERROR, OperationParameter::PARAM_UNZIP_JOB_EMPTY, OperationParameter::PARAM_UNZIP_JOB_ABORT]
-   job_url = operation_value @operation, OperationParameter::PARAM_UNZIP_JOB_URL
+   messages = @operation.values [OperationParameter::PARAM_UNZIP_JOB_MESSAGE, OperationParameter::PARAM_UNZIP_JOB_WARNING, OperationParameter::PARAM_UNZIP_JOB_ERROR, OperationParameter::PARAM_UNZIP_JOB_EMPTY, OperationParameter::PARAM_UNZIP_JOB_ABORT]
+   job_url = @operation.value OperationParameter::PARAM_UNZIP_JOB_URL
 %>
 <hr/>
 <div class="well well-sm">

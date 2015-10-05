@@ -27,8 +27,8 @@
     <%
        step = @operation.step
        step = 0 if step.nil?
-       error_msg = operation_value @operation, OperationParameter::PARAM_ERROR_MESSAGE
-       details = operation_values @operation, OperationParameter::PARAM_ERROR_DETAILS
+       error_msg = @operation.value OperationParameter::PARAM_ERROR_MESSAGE
+       details = @operation.values OperationParameter::PARAM_ERROR_DETAILS
     %>
     <%= form_tag({:controller => :operations, :action => :next_step, :method => :post}, {:multipart => true}) do %>
         <% if !@operation.step.nil? && @operation.step > 0 %>

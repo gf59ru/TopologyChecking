@@ -74,4 +74,48 @@ class Operation < ActiveRecord::Base
     step.nil? || step < 3 || (!state.nil? && ([Operation::STATE_FAILED, Operation::STATE_CANCELLED].include? state.to_i))
   end
 
+  def add_value(param_value, param_id, order = nil)
+    value = OperationValue.new
+    value.operation_id = id
+    value.operation_parameter_id = param_id
+    value.value_order = order
+    value.value = param_value
+    value.save
+  end
+
+  def set_value(new_value, param_id, order = nil)
+    if order.nil?
+      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', id, param_id).first
+    else
+      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ? and value_order = ?', id, param_id, order).first
+    end
+    if value.nil?
+      add_value new_value, param_id, order
+    else
+      value.value = new_value
+      value.save
+    end
+  end
+
+  def remove_value(param_id, order = nil)
+    if order.nil?
+      OperationValue.delete_all ['operation_id = ? and operation_parameter_id = ?', id, param_id]
+    else
+      OperationValue.delete_all ['operation_id = ? and operation_parameter_id = ? and value_order = ?', id, param_id, order]
+    end
+  end
+
+  def value(param_id, order = nil)
+    if order.nil?
+      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', id, param_id).first
+    else
+      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ? and value_order = ?', id, param_id, order).first
+    end
+    value.value unless value.nil?
+  end
+
+  def values(param_types)
+    (OperationValue.where 'operation_id = ? and operation_parameter_id in (?)', id, param_types)
+  end
+
 end

@@ -1,5 +1,5 @@
 <%
-   gdb = operation_value @operation, OperationParameter::PARAM_UPLOADED_GDB_PATH
+   gdb = @operation.value OperationParameter::PARAM_UPLOADED_GDB_PATH
    gdb = gdb.split(/[\\, \/]/).last unless gdb.nil?
 %>
 <%= content_tag :span, nil, :class => 'glyphicon glyphicon-ok' %>

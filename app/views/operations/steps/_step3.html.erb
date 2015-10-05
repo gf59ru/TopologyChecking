@@ -10,12 +10,12 @@
   </tr>
   <%
      classes = begin
-       JSON.parse(operation_value @operation, OperationParameter::PARAM_CLASSES)
+       JSON.parse(@operation.value OperationParameter::PARAM_CLASSES)
      rescue
        []
      end
      class_sets = classes.map { |cs| cs['class_set'] }
-     rules = operation_values @operation, OperationParameter::PARAM_RULE_JSON
+     rules = @operation.values OperationParameter::PARAM_RULE_JSON
      rule_order = 0
      filled_rules_count = 0
      has_unfilled_rule = false

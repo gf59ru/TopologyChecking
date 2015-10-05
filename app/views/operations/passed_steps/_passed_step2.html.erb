@@ -1,7 +1,7 @@
 <%
    value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', @operation.id, OperationParameter::PARAM_UNZIP_JOB_STATE).first
    value = value.value unless value.nil?
-   messages = operation_values @operation, [OperationParameter::PARAM_UNZIP_JOB_MESSAGE, OperationParameter::PARAM_UNZIP_JOB_WARNING, OperationParameter::PARAM_UNZIP_JOB_ERROR, OperationParameter::PARAM_UNZIP_JOB_EMPTY, OperationParameter::PARAM_UNZIP_JOB_ABORT]
+   messages = @operation.values [OperationParameter::PARAM_UNZIP_JOB_MESSAGE, OperationParameter::PARAM_UNZIP_JOB_WARNING, OperationParameter::PARAM_UNZIP_JOB_ERROR, OperationParameter::PARAM_UNZIP_JOB_EMPTY, OperationParameter::PARAM_UNZIP_JOB_ABORT]
 %>
 <%= content_tag :span, nil, :class => 'glyphicon glyphicon-ok' %>
 <%= "#{t 'step'} 2. #{t 'operations.gdb_unzipped_and_prepared'}" %>

@@ -216,50 +216,6 @@ module OperationsHelper
     end
   end
 
-  def add_operation_value(operation, param_value, param_id, order = nil)
-    value = OperationValue.new
-    value.operation_id = operation.id
-    value.operation_parameter_id = param_id
-    value.value_order = order
-    value.value = param_value
-    value.save
-  end
-
-  def set_operation_value(operation, new_value, param_id, order = nil)
-    if order.nil?
-      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', operation.id, param_id).first
-    else
-      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ? and value_order = ?', operation.id, param_id, order).first
-    end
-    if value.nil?
-      add_operation_value operation, new_value, param_id, order
-    else
-      value.value = new_value
-      value.save
-    end
-  end
-
-  def remove_operation_value(operation, param_id, order = nil)
-    if order.nil?
-      OperationValue.delete_all ['operation_id = ? and operation_parameter_id = ?', operation.id, param_id]
-    else
-      OperationValue.delete_all ['operation_id = ? and operation_parameter_id = ? and value_order = ?', operation.id, param_id, order]
-    end
-  end
-
-  def operation_value(operation, param_id, order = nil)
-    if order.nil?
-      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', operation.id, param_id).first
-    else
-      value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ? and value_order = ?', operation.id, param_id, order).first
-    end
-    value.value unless value.nil?
-  end
-
-  def operation_values(operation, param_types)
-    (OperationValue.where 'operation_id = ? and operation_parameter_id in (?)', operation.id, param_types)
-  end
-
   def arcgis_services_folder
     ENV['TOPOLOGY_CHECKING_SERVICES_FOLDER']
   end
