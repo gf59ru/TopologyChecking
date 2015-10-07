@@ -3,6 +3,7 @@
   <tr>
     <th class="info"><%= t 'order' %></th>
     <th class="info"><%= t 'operations.class_set' %></th>
+    <th class="info"><%= t 'operations.cluster_tolerance' %></th>
     <th class="info"><%= t 'operations.first_feature_class' %></th>
     <th class="info"><%= t 'operations.rule' %></th>
     <th class="info"><%= t 'operations.second_feature_class' %></th>
@@ -19,6 +20,7 @@
      rule_order = 0
      filled_rules_count = 0
      has_unfilled_rule = false
+     clustered_tolerances = Hash.new
      unless rules.nil?
        rules.each do |saved_rule|
   %>
@@ -40,6 +42,17 @@
              rule = JSON.parse rule unless rule.nil?
 
              selected_class_set = rule['class_set'] unless rule.nil?
+             cluster_tolerance = rule['cluster_tolerance'] unless rule.nil?
+             if !rule.nil? && rule['added']
+               unless selected_class_set.nil? && cluster_tolerance.nil?
+                 if clustered_tolerances[selected_class_set].nil?
+                   clustered_tolerances.merge!({selected_class_set => cluster_tolerance})
+                 end
+               end
+             end
+             if cluster_tolerance.nil?
+               cluster_tolerance = clustered_tolerances[selected_class_set].nil? ? 0.001 : clustered_tolerances[selected_class_set]
+             end
              selected_rule = rule['rule'] unless rule.nil?
              selected_fc1 = rule['fc1'] unless rule.nil?
 
@@ -77,13 +90,14 @@
                                      class_set['fcs'].select { |fc| fc['shapeType'] == second_class_type && fc['fc'] != selected_fc1 }.map { |fc| fc['fc'] }
                                    end
                selected_rule = rule_types.to_a.map { |rt| rt[1][:rule] }.index selected_rule
-               rule_i18n_name = rule_types.select{|rt| rule_types[rt][:rule] == rule['rule']}.first[1][:rule_i18n_name]
+               rule_i18n_name = rule_types.select { |rt| rule_types[rt][:rule] == rule['rule'] }.first[1][:rule_i18n_name]
              end
           %>
           <% if is_filled %>
               <tr>
                 <td><%= "#{rule_order}." %></td>
                 <td><%= rule['class_set'] %></td>
+                <td><%= rule['cluster_tolerance'] %></td>
                 <td><%= rule['fc1'] %></td>
                 <td><%= t rule_i18n_name %></td>
                 <td><%= rule['fc2'] %></td>
@@ -91,34 +105,43 @@
               </tr>
           <% else %>
               <tr>
-                <td colspan="6">
+                <td colspan="100%">
                   <%= submit_tag (t 'topology_validation'), :class => 'btn btn-primary', :name => 'force_next_step' %>
                 </td>
               </tr>
               <%= hidden_field_tag :rule_order, saved_rule.value_order %>
               <tr>
-                <td colspan="5">
-                  <p>
+                <td colspan="6">
+                  <div class="form-group">
                     <%= label_tag :class_set, (t 'operations.class_set') %>
                     <%= select_tag :class_set, options_for_select(class_sets, selected_class_set), {:include_blank => selected_class_set.nil?, :class => 'form-control', :onchange => '$("form").submit();'} %>
-                  </p>
+                  </div>
+                  <% unless selected_class_set.nil? %>
+                      <div class="form-group">
+                        <%= label_tag :cluster_tolerance, (t 'operations.cluster_tolerance_optional') %>
+                        <%= number_field_tag :cluster_tolerance, cluster_tolerance, :step => 20, :class => 'form-control' %>
+                      </div>
+                      <% unless clustered_tolerances[selected_class_set].nil? %>
+                          <p class="alert alert-warning"><%= t 'operations.cluster_tolerance_warning', :class_set => selected_class_set %></p>
+                      <% end %>
+                  <% end %>
                   <% unless first_class_list.nil? %>
-                      <p>
+                      <div class="form-group">
                         <%= label_tag :fc1, (second_class_list.nil? ? (t 'operations.feature_class') : (t 'operations.first_feature_class')) %>
                         <%= select_tag :fc1, options_for_select(first_class_list, selected_fc1), {:include_blank => true, :class => 'form-control', :onchange => '$("form").submit();'} %>
-                      </p>
+                      </div>
                   <% end %>
                   <% unless suitable_rules.nil? %>
-                      <p>
+                      <div class="form-group">
                         <%= label_tag :rule_type, (t 'operations.rule') %>
                         <%= select_tag :rule_type, options_for_select(suitable_rules.map { |rule| [(t rule[1][:rule_i18n_name]), rule[0], {'data-has-second-class' => !rule[1][:second_class].nil?}] }, selected_rule), {:include_blank => true, :class => 'form-control', :onchange => 'rule_selected(this);'} %>
-                      </p>
+                      </div>
                   <% end %>
                   <% unless second_class_list.nil? %>
-                      <p id="p_fc2">
+                      <div id="p_fc2" class="form-group">
                         <%= label_tag :fc2, (t 'operations.second_feature_class') %>
                         <%= select_tag :fc2, options_for_select(second_class_list, selected_fc2), {:include_blank => true, :class => 'form-control'} %>
-                      </p>
+                      </div>
                   <% end %>
                 </td>
                 <td style="vertical-align: middle"><%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-trash', :title => (t 'operations.remove_rule')), delete_rule_path(:id => @operation.id, :order => saved_rule.value_order), :data => {:confirm => (t 'are_you_sure')} %></td>
@@ -128,7 +151,7 @@
   <% end %>
   <% unless has_unfilled_rule %>
       <tr>
-        <td colspan="6">
+        <td colspan="100%">
           <%= submit_tag (t 'topology_validation'), :class => 'btn btn-primary', :name => 'force_next_step' %>
         </td>
       </tr>
@@ -136,7 +159,7 @@
   <tr>
     <% if rules.count == 0 %>
       <tr>
-        <td colspan="6" class="warning">
+        <td colspan="100%" class="warning">
           <%= "#{t 'operations.no_rules_yet'} #{t 'please'}" %>
           <%= submit_tag (t 'imperative.add'), :name => 'add_topology_rule', :class => 'btn-link', :style => 'padding: 0; border: 0' %>
           <%= t 'operations.add_at_least_one_rule' %>
@@ -144,7 +167,7 @@
       </tr>
   <% else %>
       <tr>
-        <td colspan="6" style="text-align: right">
+        <td colspan="100%" style="text-align: right">
           <%= submit_tag (t 'operations.add_rule'), :class => 'btn btn-info', :name => 'add_topology_rule' %>
         </td>
       </tr>

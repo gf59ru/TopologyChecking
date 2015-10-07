@@ -4,6 +4,7 @@
   <tr>
     <th class="info"><%= t 'order' %></th>
     <th class="info"><%= t 'operations.class_set' %></th>
+    <th class="info"><%= t 'operations.cluster_tolerance' %></th>
     <th class="info"><%= t 'operations.first_feature_class' %></th>
     <th class="info"><%= t 'operations.rule' %></th>
     <th class="info"><%= t 'operations.second_feature_class' %></th>
@@ -21,6 +22,7 @@
           <tr>
             <td><%= "#{rule_order}." %></td>
             <td><%= rule['class_set'] %></td>
+            <td><%= rule['cluster_tolerance'] %></td>
             <td><%= rule['fc1'] %></td>
             <td><%= t rule_i18n_name %></td>
             <td><%= rule['fc2'] %></td>

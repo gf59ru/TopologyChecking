@@ -60,6 +60,7 @@ class OperationsController < ApplicationController
           Delayed::Job.enqueue UnzipAndPrepareJob.new(@operation.id)
         when 2
           class_set = params[:class_set]
+          cluster_tolerance = params[:cluster_tolerance]
           rule_type = params[:rule_type]
           fc1 = params[:fc1]
           fc2 = params[:fc2]
@@ -74,6 +75,7 @@ class OperationsController < ApplicationController
           else
             rule_order = rule_order.to_i
           end
+          cluster_tolerance = nil if cluster_tolerance == ''
           fc1 = nil if fc1 == ''
           fc2 = nil if fc2 == ''
           saved_rule = @operation.value OperationParameter::PARAM_RULE_JSON, rule_order
@@ -96,6 +98,7 @@ class OperationsController < ApplicationController
             rule = {
                 :class_set => class_set
             }
+            rule.merge!({:cluster_tolerance => cluster_tolerance}) unless cluster_tolerance.nil?
             rule.merge!({:fc1 => fc1}) unless fc1.nil?
             rule.merge!({:rule => rule_str[:rule]}) unless rule_str.nil?
             rule.merge!({:fc2 => fc2}) unless fc2.nil?
@@ -104,6 +107,20 @@ class OperationsController < ApplicationController
               rule.merge!({:added => true})
             end
             @operation.set_value rule.to_json, OperationParameter::PARAM_RULE_JSON, rule_order
+
+            if rule[:added]
+              rules = @operation.values OperationParameter::PARAM_RULE_JSON
+              rules.each do |saved_rule|
+                sr = saved_rule.value
+                unless sr.nil?
+                  sr = JSON.parse sr
+                  if sr['class_set'] == class_set
+                    sr.merge!({:cluster_tolerance => cluster_tolerance})
+                    @operation.set_value sr.to_json, OperationParameter::PARAM_RULE_JSON, saved_rule.value_order
+                  end
+                end
+              end
+            end
           end
           unless params[:add_topology_rule].nil?
             if is_filled
@@ -149,8 +166,8 @@ class OperationsController < ApplicationController
               @operation.step = 2
               @operation.save
             end
-          # else
-          #   Delayed::Job.enqueue ValidateAndZipJob.new(@operation.id)
+            # else
+            #   Delayed::Job.enqueue ValidateAndZipJob.new(@operation.id)
           end
       end
       redirect_to @operation
