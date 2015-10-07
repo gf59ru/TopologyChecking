@@ -2,7 +2,7 @@
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
 
-  config.omniauth :google_oauth2, ENV['CHECK_TOPOLOGY_GOOGLE_CLIENT_ID'], ENV['CHECK_TOPOLOGY_GOOGLE_CLIENT_SECRET']
+  config.omniauth :google_oauth2, ENV['CHECK_TOPOLOGY_GOOGLE_CLIENT_ID'], ENV['CHECK_TOPOLOGY_GOOGLE_CLIENT_SECRET'], { :skip_jwt => true }
   config.omniauth :linkedin, ENV['CHECK_TOPOLOGY_LINKEDIN_KEY'], ENV['CHECK_TOPOLOGY_LINKEDIN_SECRET']
 
   # The secret key used by Devise. Devise uses this key to generate

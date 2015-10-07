@@ -15,7 +15,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def linkedin_oauth2
+  def linkedin
     if user = User.from_omniauth(request.env['omniauth.auth'])
       cookies.delete :linkedin_oauth2_approval_prompt
       flash[:notice] = I18n.t( 'devise.omniauth_callbacks.success', kind: 'Linkedin')

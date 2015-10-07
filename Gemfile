@@ -47,6 +47,9 @@ group :production do
   # gem 'mysql2'
   gem 'pg'
   gem 'rails_12factor'
+
+  gem 'daemons'
+  gem 'foreman'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -58,8 +61,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # gem 'rubyzip'
 
 gem 'delayed_job_active_record'
-gem 'daemons'
 
 gem 'devise'
-gem 'omniauth-google-oauth2'#, '0.2.6'
+gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
