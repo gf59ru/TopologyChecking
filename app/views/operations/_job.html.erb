@@ -7,7 +7,29 @@
     <% if messages.count > 0 %>
       <h5><%= t 'messages' %></h5>
       <% messages.each do |message| %>
-          <small><%= message.value %></small>
+          <small>
+            <%
+               if /<i18n.*>[\s\w\d]+<\/i18n>/i.match message.value
+                 translation_template = (/\b[ a-z0-9_\{\}\[\],]+\b<\/i18n>/i.match message.value)
+                 unless translation_template.nil?
+                   translation_template = "script_messages.#{translation_template.to_s.gsub '</i18n>', ''}"
+                   value_params = message.value.scan(/[\w]*=\"[^\"]*\"/i)
+                   translation_params = Hash.new
+                   value_params.each do |param|
+                     name = (/.*=\"/i.match param).to_s[0..-3]
+                     value = (/\"[^"]*\"/i.match param).to_s[1..-2]
+                     value = value.to_i if name == 'count'
+                     translation_params.merge!({name.to_sym => value})
+                   end
+            %>
+                    <%= t translation_template, translation_params %>
+                <%
+                   end
+                   else
+                %>
+                <%= message.value %>
+            <% end %>
+          </small>
           <br/>
       <% end %>
   <% end %>

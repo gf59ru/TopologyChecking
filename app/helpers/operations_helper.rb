@@ -201,21 +201,6 @@ module OperationsHelper
     end
   end
 
-  def rule_class_list(operation, class_name)
-    OperationValue.where('operation_id = ? and operation_parameter_id = ?', operation.id, rule_class_id(class_name)).to_a
-  end
-
-  def rule_class_id(class_name)
-    case class_name
-      when 'Area'
-        OperationParameter::PARAM_FEATURE_CLASS_POLYGON
-      when 'Line'
-        OperationParameter::PARAM_FEATURE_CLASS_LINE
-      when 'Point'
-        OperationParameter::PARAM_FEATURE_CLASS_POINT
-    end
-  end
-
   def arcgis_services_folder
     ENV['TOPOLOGY_CHECKING_SERVICES_FOLDER']
   end
@@ -242,9 +227,12 @@ module OperationsHelper
     end
   end
 
-  def arcgis_message_has_i18n(message)
+  def arcgis_message_has_i18n(s)
     # puts (arcgis_message_has_i18n '<i18n dd="ddd" date="01.05.2013 15:20" n="5" aaa="ererg">ty_hjn34534r{dd}tjhn{date}erth [n,aaa]</i18n>')
-    %r{/<i18n[ a-z0-9.,:_=\"]*>[ a-z0-9_\{\}\[\],]+<\/i18n>/ig}.match message
+    # /<i18n[ a-z0-9.,:_=\"\\\/]*>[ a-z0-9_\{\}\[\],]+<\/i18n>/i.match s
+    # s.scan /[a-z]*=\"[ a-z0-9.,:_]*\"/i # выбрать значения параметров в открывашке тега - dd="ddd" date="01.05.2013 15:20" n="5" aaa="ererg"
+    # s.scan /{[a-z]*}/i # выбрать параметры в теле тега - {dd}, {date}
+    # s.scan /\[[a-z]*,[a-z]*\]/i # выбрать двойные параметры в теле тега - [n,aaa] ()
   end
 
 end
