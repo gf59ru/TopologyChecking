@@ -17,7 +17,8 @@
 /tmp
 .idea
 .svn
-misc
+misc/*/.idea
+misc/*.*
 doc
 cert
 user_files/

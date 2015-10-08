@@ -227,12 +227,4 @@ module OperationsHelper
     end
   end
 
-  def arcgis_message_has_i18n(s)
-    # puts (arcgis_message_has_i18n '<i18n dd="ddd" date="01.05.2013 15:20" n="5" aaa="ererg">ty_hjn34534r{dd}tjhn{date}erth [n,aaa]</i18n>')
-    # /<i18n[ a-z0-9.,:_=\"\\\/]*>[ a-z0-9_\{\}\[\],]+<\/i18n>/i.match s
-    # s.scan /[a-z]*=\"[ a-z0-9.,:_]*\"/i # выбрать значения параметров в открывашке тега - dd="ddd" date="01.05.2013 15:20" n="5" aaa="ererg"
-    # s.scan /{[a-z]*}/i # выбрать параметры в теле тега - {dd}, {date}
-    # s.scan /\[[a-z]*,[a-z]*\]/i # выбрать двойные параметры в теле тега - [n,aaa] ()
-  end
-
 end
