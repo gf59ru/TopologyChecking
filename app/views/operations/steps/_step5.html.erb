@@ -1,6 +1,10 @@
 <p>
-<% if current_user.balance < 0 && @operation.cost >= Operation::FREE_THRESHOLD && @operation.state.to_i == Operation::STATE_DONE_BUT_NOT_ACCESSIBLE %>
-    <h4 class="alert alert-danger"><%= t 'operations.sorry_balance' %></h4>
+  <% if @operation.state.to_i == Operation::STATE_NEED_PAYMENT %>
+      <% if @operation.state == Operation::STATE_NEED_PAYMENT.to_s %>
+          <%= render 'operations/payment', :operation => @operation %>
+      <% end %>
+    <h4 class="alert alert-info"><%= t 'operations.payment_required' %></h4>
+    <!--<h4 class="alert alert-danger"><%= t 'operations.sorry_balance' %></h4>-->
 <% else %>
     <%= link_to (t 'operations.download_results'), download_operation_result_path(:operation => @operation.id, :file_param_id => OperationParameter::PARAM_RESULT_ZIP_PATH), :class => 'btn btn-success' %>
 <% end %>

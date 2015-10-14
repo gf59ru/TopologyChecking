@@ -22,12 +22,12 @@ class User < ActiveRecord::Base
 
   def balance
     recharges = self.recharges.sum('sum')
-    done_consumption = self.operations.where('state in (?) and cost > ?', [Operation::STATE_DONE.to_s, Operation::STATE_DONE_BUT_NOT_ACCESSIBLE.to_s], Operation::FREE_THRESHOLD).sum('cost')
+    done_consumption = self.operations.where('state in (?) and cost > ?', [Operation::STATE_DONE.to_s], Operation::FREE_THRESHOLD).sum('cost')
     recharges - done_consumption - reserved
   end
 
   def reserved
-    self.operations.where('state = ? and cost > ?', Operation::STATE_STARTED.to_s, Operation::FREE_THRESHOLD).sum('cost')
+    self.operations.where('state in (?) and cost > ?', [Operation::STATE_STARTED.to_s, Operation::STATE_NEED_PAYMENT], Operation::FREE_THRESHOLD).sum('cost')
   end
 
   def requisites_files

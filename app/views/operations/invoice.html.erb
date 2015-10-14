@@ -2,8 +2,21 @@
 <hr/>
 <p>
   <%= form_tag post_invoice_path, {:multipart => true} do %>
-    <%= hidden_field_tag :tab, @tab %>
-    <%= hidden_field_tag :id, @operation.id %>
+      <%= hidden_field_tag :tab, @tab %>
+    <div class="form-group">
+      <%= label_tag :sum, (t 'payment.sum') %>
+      <%= number_field_tag :sum, '', :class => 'form-control' %>
+    </div>
+    <!--<div class="form-group">-->
+      <!--<%= label_tag :currency, (t 'payment.currency') %>-->
+      <!--<%= number_field_tag :currency, '', :class => 'form-control' %>-->
+    <!--</div>-->
+      <%
+         operation_id = @operation.id unless @operation.nil?
+         if operation_id.nil? %>
+      <% else %>
+          <%= hidden_field_tag :id, operation_id %>
+      <% end %>
     <h4 class="text text-info">
       <%= case current_user.requisites_files.count
             when 0
@@ -17,10 +30,20 @@
     <% if current_user.requisites_files.count > 0 %>
         <ul class="nav nav-tabs">
           <li role="presentation" class="<%= 'active' if @tab.nil? || @tab == '1' %>">
-            <%= link_to "#{current_user.requisites_files.count > 1 ? (t 'payment.select_existing_requisites') : (t 'payment.use_existing_requisites')}", invoice_path(:id => @operation.id, :tab => '1') %>
+            <% path = if operation_id.nil?
+                        invoice_path :tab => '1'
+                      else
+                        invoice_path :id => operation_id, :tab => '1'
+                      end %>
+            <%= link_to "#{current_user.requisites_files.count > 1 ? (t 'payment.select_existing_requisites') : (t 'payment.use_existing_requisites')}", path %>
           </li>
           <li role="presentation" class="<%= 'active' if @tab == '2' %>">
-            <%= link_to (t 'payment.upload_new_requisites'), invoice_path(:id => @operation.id, :tab => '2') %>
+            <% path = if operation_id.nil?
+                        invoice_path :tab => '2'
+                      else
+                        invoice_path :id => operation_id, :tab => '2'
+                      end %>
+            <%= link_to (t 'payment.upload_new_requisites'), path %>
           </li>
         </ul>
     <% end %>

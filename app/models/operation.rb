@@ -9,7 +9,7 @@ class Operation < ActiveRecord::Base
   STATE_RULES_ACCEPTING = 11
   STATE_STARTED = 30
   STATE_DONE = 40
-  STATE_DONE_BUT_NOT_ACCESSIBLE = 41
+  STATE_NEED_PAYMENT = 41
   STATE_FAILED = 42
   STATE_CANCELLED = 43
 
@@ -28,7 +28,7 @@ class Operation < ActiveRecord::Base
           I18n.t 'operations.state_rules_accepting'
         when Operation::STATE_STARTED
           I18n.t 'operations.state_started'
-        when Operation::STATE_DONE, Operation::STATE_DONE_BUT_NOT_ACCESSIBLE
+        when Operation::STATE_DONE, Operation::STATE_NEED_PAYMENT
           I18n.t 'operations.state_done'
         when Operation::STATE_FAILED
           I18n.t 'operations.state_failed'
@@ -49,7 +49,7 @@ class Operation < ActiveRecord::Base
           'text text-info'
         when Operation::STATE_DONE
           'text text-success'
-        when Operation::STATE_DONE_BUT_NOT_ACCESSIBLE, Operation::STATE_CANCELLED
+        when Operation::STATE_NEED_PAYMENT, Operation::STATE_CANCELLED
           'text text-warning'
         when Operation::STATE_FAILED
           'text text-danger'

@@ -16,4 +16,7 @@ class HomeController < ApplicationController
   def service_info
   end
 
+  def operation_types_help
+  end
+
 end

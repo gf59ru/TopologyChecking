@@ -1,0 +1,22 @@
+<%= form_tag payment_path do %>
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" id="pay_dropdown_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <% if defined? operation %>
+            <%= hidden_field_tag :operation_id, operation.id %>
+            <%= t 'payment.pay_for_operation' %>
+        <% else %>
+            <%= t 'payment.recharge_balance' %>
+        <% end %>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pay_dropdown_menu">
+        <% if defined? operation %>
+            <li><%= submit_tag (t 'payment.from_balance'), :name => OperationsController::PAYMENT_FROM_BALANCE, :class => 'btn btn-link', :data => {:confirm => (t 'are_you_sure')} %></li>
+        <% else %>
+            <!--<li><%= submit_tag (t 'payment.from_card'), :name => OperationsController::PAYMENT_FROM_CARD, :class => 'btn btn-link' %></li>-->
+            <li><%= submit_tag (t 'payment.get_requisites_for_bank_transfer'), :name => OperationsController::PAYMENT_SHOW_REQUISITES, :class => 'btn btn-link' %></li>
+            <li><%= submit_tag (t 'payment.invoicing'), :name => OperationsController::PAYMENT_INVOICE_REQUEST, :class => 'btn btn-link' %></li>
+        <% end %>
+      </ul>
+    </div>
+<% end %>

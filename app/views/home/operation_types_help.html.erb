@@ -1,0 +1,10 @@
+<h1><%= t 'help.operation_types.operations' %></h1>
+<hr/>
+<h3><%= t 'help.operation_types.validate_topology.name' %></h3>
+<h4><%= t 'help.operation_types.validate_topology.short_description' %></h4>
+<p><%= t 'help.operation_types.validate_topology.full_description' %></p>
+<ul>
+<% for i in 1..17 %>
+  <li><%= t "help.operation_types.validate_topology.action_#{i.to_s}" %></li>
+<% end %>
+</ul>

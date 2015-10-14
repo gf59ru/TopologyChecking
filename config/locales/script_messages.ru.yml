@@ -37,8 +37,8 @@ ru:
     rule_added_for_class: "%{timestamp}: Добавлено правило %{rule} для класса %{class} в наборе %{class_set}"
     cannot_add_rule_for_class: "%{timestamp}: Ошибка при добавлении правила %{rule} для класса %{class} в наборе %{class_set}"
     n_topologies_will_validate_and_export:
-      one: "%{timestamp}: %{count} топология будет проверено и экспортировано"
-      few: "%{timestamp}: %{count} топологии будет проверено и экспортировано"
+      one: "%{timestamp}: %{count} топология будет проверена и экспортирована"
+      few: "%{timestamp}: %{count} топологии будут проверены и экспортированы"
       many: "%{timestamp}: %{count} топологий будет проверено и экспортировано"
     creating_results_gdb: "%{timestamp}: Содаётся база геоданных для экспорта результатов"
     results_gdb_created: "%{timestamp}: База геоданных для экспорта результатов создана"

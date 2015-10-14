@@ -11,6 +11,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav pull-left navbar-nav">
         <li><%= link_to (t 'project_name'), root_path, id: 'logo', :class => 'navbar-brand' %></li>
+        <li><%= link_to (t 'help.help'), home_operation_types_help_path, id: 'help' %></li>
       </ul>
       <ul class="nav navbar-nav pull-right">
         <% if current_user.nil? %>

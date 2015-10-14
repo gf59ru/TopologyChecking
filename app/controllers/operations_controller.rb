@@ -7,6 +7,11 @@ class OperationsController < ApplicationController
 
   JOB_IS_STILL_RUNNING = 1
 
+  PAYMENT_FROM_CARD = 'from_card'
+  PAYMENT_FROM_BALANCE = 'from_balance'
+  PAYMENT_SHOW_REQUISITES = 'show_requisites'
+  PAYMENT_INVOICE_REQUEST = 'invoice_request'
+
   skip_before_action :verify_authenticity_token, :only => [:pay_callback, :pay_ok, :pay_ko]
   # options = {}
   # options.merge!({:port => Rails.application.config.ssl_port}) if defined? Rails.application.config.ssl_port
@@ -201,10 +206,10 @@ class OperationsController < ApplicationController
   def show
     @operation = Operation.find_by_id params[:id]
     if !current_user.nil? && current_user.id == @operation.user_id
-      if @operation.state == Operation::STATE_DONE_BUT_NOT_ACCESSIBLE && current_user.balance >= 0
-        @operation.state = Operation::STATE_DONE
-        @operation.save
-      end
+      # if @operation.state == Operation::STATE_NEED_PAYMENT && current_user.balance >= 0
+      #   @operation.state = Operation::STATE_DONE
+      #   @operation.save
+      # end
       @operation_type = OperationType.find_by_id @operation.operation_type_id
     else
       flash[:danger] = I18n.t 'operations.only_owner_can_open'
@@ -277,7 +282,25 @@ class OperationsController < ApplicationController
     end
   end
 
-  def pay
+  def payment
+    if current_user.nil?
+      redirect_to root_url
+    else
+      # redirect_params = Hash.new
+      # redirect_params.merge!({:operation_id => params[:operation_id]}) unless params[:operation_id].nil?
+      if !params[PAYMENT_SHOW_REQUISITES].nil?
+        redirect_to :controller => :operations, :action => :requisites, :operation_id => params[:operation_id] # requisites_url
+      elsif !params[PAYMENT_INVOICE_REQUEST].nil?
+        redirect_to :controller => :operations, :action => :invoice, :operation_id => params[:operation_id] #  invoice_url, redirect_params
+      elsif !params[PAYMENT_FROM_CARD].nil?
+        redirect_to :controller => :operations, :action => :pay_from_card, :operation_id => params[:operation_id] #  pay_from_card_url, redirect_params
+      elsif !params[PAYMENT_FROM_BALANCE].nil?
+        redirect_to :controller => :operations, :action => :pay_from_balance, :operation_id => params[:operation_id] #  pay_from_balance_url, redirect_params
+      end
+    end
+  end
+
+  def pay_from_card
     @operation = Operation.find_by_id params[:id]
     if !current_user.nil? && current_user.id == @operation.user_id
       if !arcgis_services_folder.nil? && (@operation.cost.nil? || @operation.cost < Operation::FREE_THRESHOLD)
@@ -289,6 +312,34 @@ class OperationsController < ApplicationController
     else
       flash[:danger] = I18n.t 'operations.only_owner_can_work'
       redirect_to root_url
+    end
+  end
+
+  def pay_from_balance
+    if params[:operation_id].nil?
+      flash[:warning] = I18n.t 'payment.operation_not_specified'
+      redirect_to root_url
+    else
+      @operation = Operation.find_by_id params[:operation_id]
+      if current_user.nil?
+        flash[:warning] = I18n.t 'payment.must_login_for_pay'
+      else
+        if current_user.id == @operation.user_id
+          if !arcgis_services_folder.nil? && (@operation.cost.nil? || @operation.cost == 0)
+            flash[:warning] = t 'operation_is_free'
+          elsif current_user.balance < @operation.cost
+            flash[:warning] = t 'payment.balance_low'
+          else
+            @operation.state = Operation::STATE_DONE
+            @operation.save
+            flash[:success] = t 'payment.operation_paid'
+          end
+          redirect_to @operation
+        else
+          flash[:danger] = I18n.t 'operations.only_owner_can_work'
+          redirect_to root_url
+        end
+      end
     end
   end
 
@@ -331,6 +382,14 @@ class OperationsController < ApplicationController
       @operation = Operation.find_by_id params[:id]
       @tab = params[:tab]
       if request.method == 'POST'
+        if @operation.nil?
+          sum = params[:sum].to_f
+          if sum <= 0
+            flash[:danger] = I18n.t 'payment.sum_missed'
+            render :invoice
+            return
+          end
+        end
         root_with_sep = "#{Rails.root}#{File::Separator}"
         if @tab.nil? || @tab == ''
           @tab = current_user.requisites_files.count > 0 ? '1' : '2'
@@ -340,6 +399,7 @@ class OperationsController < ApplicationController
             flash[:warning] = I18n.t 'payment.requisites_file_not_selected'
           else
             file = UserFile.find_by_id params[:select_requisites_file].to_i
+            CommonMailer.invoice_request(current_user, @operation.nil? ? sum : @operation, file.file_path).deliver_now
             flash[:success] = I18n.t 'payment.you_will_receive_invoice_by_email'
             puts "Selected file #{root_with_sep}#{file.file_path} will be used"
           end
@@ -365,9 +425,14 @@ class OperationsController < ApplicationController
           else
             puts "Uploaded file #{requisites.tempfile} will be used without saving"
           end
+          CommonMailer.invoice_request(current_user, @operation, nil).deliver_later
           flash[:success] = I18n.t 'payment.you_will_receive_invoice_by_email'
         end
-        redirect_to @operation
+        if @operation.nil?
+          redirect_to user_root_url
+        else
+          redirect_to @operation
+        end
       end
     end
   end
@@ -387,8 +452,6 @@ class OperationsController < ApplicationController
     else
       job_uri = operation.value OperationParameter::PARAM_UNZIP_JOB_URL
       result = check_operation OperationsController.unzip_and_prepare, (operation.value OperationParameter::PARAM_UNZIP_JOB_ID), job_uri
-      # job_result = Delayed::Job.enqueue CheckOperationJob.new(OperationsController.unzip_and_prepare, (operation.value OperationParameter::PARAM_UNZIP_JOB_ID), job_url)
-      # return
       read_messages result, operation, OperationParameter::PARAM_UNZIP_JOB_MESSAGE, OperationParameter::PARAM_UNZIP_JOB_WARNING, OperationParameter::PARAM_UNZIP_JOB_ERROR, OperationParameter::PARAM_UNZIP_JOB_EMPTY, OperationParameter::PARAM_UNZIP_JOB_ABORT
 
       job_state = result['jobStatus']
@@ -417,15 +480,22 @@ class OperationsController < ApplicationController
                 end
               end
             end
-            operation.cost = polygons_count + lines_count + points_count
+            cost = polygons_count + lines_count + points_count
+            operation.cost = case cost
+                               when 0..Operation::FREE_THRESHOLD - 1
+                                 0
+                               when Operation::FREE_THRESHOLD..999
+                                 10
+                               when 1000..9999
+                                 100
+                               when 10000..99999
+                                 1000
+                               else
+                                 10000
+                             end
             operation.step = 2
             operation.state = Operation::STATE_RULES_CREATING
             operation.save
-          # if cost > Operation::FREE_THRESHOLD
-          #   flash[:success] = I18n.t 'operations.gdb_unzipped_and_checked_with_reserve', :cost => cost
-          # else
-          # flash[:success] = I18n.t 'operations.gdb_unzipped_and_checked'
-          # end
           when 'esriJobFailed'
             operation.step = 0
             operation.state = Operation::STATE_CREATED
@@ -458,7 +528,8 @@ class OperationsController < ApplicationController
         when 'esriJobSucceeded'
           operation.set_value job_result['results_values']['zip_path'], OperationParameter::PARAM_RESULT_ZIP_PATH
           operation.step = 4
-          operation.state = (operation.user.balance >= 0 || operation.cost < Operation::FREE_THRESHOLD) ? Operation::STATE_DONE : Operation::STATE_DONE_BUT_NOT_ACCESSIBLE
+          operation.state = operation.cost < Operation::FREE_THRESHOLD ? Operation::STATE_DONE : Operation::STATE_NEED_PAYMENT
+          # operation.state = (operation.user.balance >= 0 || operation.cost < Operation::FREE_THRESHOLD) ? Operation::STATE_DONE : Operation::STATE_NEED_PAYMENT
           operation.save
         # flash[:success] = I18n.t 'operations.topology_validated'
         when 'esriJobFailed'

@@ -12,7 +12,7 @@ Rails.application.configure do
   config.eager_load = false
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
@@ -41,5 +41,35 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.action_mailer.default_url_options = { :host => 'www.example.com:3100' }
+  # config.action_mailer.default_url_options = {:host => 'www.example.com:3100'}
+  #
+  # config.action_mailer.perform_deliveries = true
+  # config.action_mailer.raise_delivery_errors = true
+  # config.action_mailer.default_options = {from: 'spatial.operations@yandex.ru'}
+
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #     address: 'smtp.yandex.ru',
+  #     port: '465',
+  #     domain: 'example.com',
+  #     user_name: 'spatial.operations',
+  #     password: 'SpatialOperations',
+  #     authentication: 'plain',
+  #     enable_starttls_auto: true,
+  #     ssl: true,
+  #     tls: true
+  # }
+
+  Mail.defaults do
+    delivery_method :smtp, {
+                             :address => 'smtp.yandex.ru',
+                             :port => '465',
+                             :user_name => 'spatial.operations',
+                             :password => 'SpatialOperations',
+                             :authentication => :plain,
+                             :enable_starttls_auto => true,
+                             :ssl => true,
+                             :tls => true
+                         }
+  end
 end

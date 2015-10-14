@@ -1,0 +1,13 @@
+<h1><%= t 'payment.payment_using_balance' %></h1>
+<table class="table">
+  <tr>
+    <td>
+      <h3><%= t 'operations.operation_cost_is' %> <span class="text text-info"><%= @operation.cost %></span></h3>
+    </td>
+    <td>
+      <%= hidden_field_tag :recharge, @operation.cost %>
+    </td>
+    <td>
+    </td>
+  </tr>
+</table>

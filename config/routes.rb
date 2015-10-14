@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   post 'operations/next_step', :to => 'operations#next_step', :as => 'next_step'
   get 'operations/download', :to => 'operations#download', :as => 'download_operation_result'
   get 'operations/delete_rule', :to => 'operations#delete_rule', :as => 'delete_rule'
-  get 'operations/pay', :to => 'operations#pay', :as => 'pay_for_operation'
+  post 'operations/payment', :to => 'operations#payment', :as => 'payment'
+  get 'operations/pay_from_card', :to => 'operations#pay_from_card', :as => 'pay_from_card'
+  get 'operations/pay_from_balance', :to => 'operations#pay_from_balance', :as => 'pay_from_balance'
   post 'operations/pay_callback', :to => 'operations#pay_callback', :as => 'pay_callback'
   post 'operations/pay_ok', :to => 'operations#pay_ok', :as => 'pay_ok'
   post 'operations/pay_ko', :to => 'operations#pay_ko', :as => 'pay_ko'
@@ -22,6 +24,7 @@ Rails.application.routes.draw do
   get 'home/index'
   get 'home/contacts'
   get 'home/service_info'
+  get 'home/operation_types_help'
 
   devise_for :users, :controllers => {:omniauth_callbacks => 'users/omniauth_callbacks', :sessions => 'users/sessions', :registrations => 'users/registrations'}
   devise_scope :user do
