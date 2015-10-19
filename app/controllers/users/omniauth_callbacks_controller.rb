@@ -10,7 +10,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def google_oauth2
-    oauth 'google'
+    oauth 'google_oauth2'
   end
 
   def linkedin
@@ -21,13 +21,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def oauth(provider)
     if user = User.from_omniauth(request.env['omniauth.auth'])
-      if User.where('email = ?', user.email).count > 0
+      if User.where('email = ? and provider <> ?', user.email, provider).count > 0
         cookies["#{provider}_approval_prompt"] = 'force'
         flash[:danger] = I18n.t('devise.omniauth_callbacks.failure', kind: provider, reason: (t 'devise.failure.email_already_exists'))
         redirect_to root_url
       else
         cookies.delete "#{provider}_approval_prompt"
-        flash[:notice] = I18n.t('devise.omniauth_callbacks.success', kind: provider)
+        flash[:success] = I18n.t('devise.omniauth_callbacks.success', kind: provider)
         sign_in_and_redirect user, event: :authentication
       end
     else
