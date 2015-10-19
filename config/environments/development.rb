@@ -45,27 +45,13 @@ Rails.application.configure do
   #
   # config.action_mailer.perform_deliveries = true
   # config.action_mailer.raise_delivery_errors = true
-  # config.action_mailer.default_options = {from: 'spatial.operations@yandex.ru'}
-
-  # config.action_mailer.delivery_method = :smtp
-  # config.action_mailer.smtp_settings = {
-  #     address: 'smtp.yandex.ru',
-  #     port: '465',
-  #     domain: 'example.com',
-  #     user_name: 'spatial.operations',
-  #     password: 'SpatialOperations',
-  #     authentication: 'plain',
-  #     enable_starttls_auto: true,
-  #     ssl: true,
-  #     tls: true
-  # }
 
   Mail.defaults do
     delivery_method :smtp, {
-                             :address => 'smtp.yandex.ru',
-                             :port => '465',
-                             :user_name => 'spatial.operations',
-                             :password => 'SpatialOperations',
+                             :address => ENV['TOPOLOGY_CHECKING_SMTP_ADDRESS'],
+                             :port => ENV['TOPOLOGY_CHECKING_SMTP_PORT'],
+                             :user_name => ENV['TOPOLOGY_CHECKING_SMTP_USERNAME'],
+                             :password => ENV['TOPOLOGY_CHECKING_SMTP_PASSWORD'],
                              :authentication => :plain,
                              :enable_starttls_auto => true,
                              :ssl => true,

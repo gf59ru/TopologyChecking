@@ -399,7 +399,7 @@ class OperationsController < ApplicationController
             flash[:warning] = I18n.t 'payment.requisites_file_not_selected'
           else
             file = UserFile.find_by_id params[:select_requisites_file].to_i
-            CommonMailer.invoice_request(current_user, @operation.nil? ? sum : @operation, file.file_path).deliver_now
+            CommonMailer.invoice_request(current_user, @operation.nil? ? sum : @operation, file.file_path).deliver_later
             flash[:success] = I18n.t 'payment.you_will_receive_invoice_by_email'
             puts "Selected file #{root_with_sep}#{file.file_path} will be used"
           end

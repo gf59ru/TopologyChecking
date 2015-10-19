@@ -2,14 +2,17 @@ en:
   help:
     help: "Help"
     operation_types:
+      help: "Operation types description"
       operations: "Operations"
-      validate_topology:
+      want_new: "Want another operation type?"
+      request_new: "Request it!"
+      topology_validation:
         name: "Topology validating"
         short_description: "Validate topology rules in geodatabase"
         full_description: "User uploads geodatabase, selects feature classes and topology rules. After topology validating and operation payment results can be downloaded as geodatabase. Topology errors creates in same spatial reference as validating feature classes."
         actions_order: "Topology validating actions order"
         action_1: "Check that geodatabase is correct: it must has gdb format, validating feature classes must be included in feature datasets. Only feature classes including in same feature dataset can be added to topology rule."
-        action_2: "Pack you geodatabase to zip archive."
+        action_2: "Pack your geodatabase to zip archive."
         action_3: "If You are not registered in Spatial Operations service, sign up and sign in to service."
         action_4: "Create Topology Validation operation, enter description for created operation."
         action_5: "Upload zip archive with geodatabase and wait when geodatabase will be analyzed (page reloads automatically every 10 seconds)."

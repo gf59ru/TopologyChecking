@@ -76,4 +76,18 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  Mail.defaults do
+    delivery_method :smtp, {
+                             :address => ENV['TOPOLOGY_CHECKING_SMTP_ADDRESS'],
+                             :port => ENV['TOPOLOGY_CHECKING_SMTP_PORT'],
+                             :user_name => ENV['TOPOLOGY_CHECKING_SMTP_USERNAME'],
+                             :password => ENV['TOPOLOGY_CHECKING_SMTP_PASSWORD'],
+                             :authentication => :plain,
+                             :enable_starttls_auto => true,
+                             :ssl => true,
+                             :tls => true
+                         }
+  end
+
 end

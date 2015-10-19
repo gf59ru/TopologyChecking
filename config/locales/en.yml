@@ -40,6 +40,7 @@ en:
   back: "Back"
   return: "Return"
   next: "Next"
+  send: "Send"
   check: "Check"
   free: "Free"
   operation_is_free: "Operation is free"
@@ -153,6 +154,17 @@ en:
   operation_types:
     create_operation_type: "Create operation type"
     no_operation_types: "There are no operation types yet"
+    request_new_operation_type: "Request for new operation type"
+    new_name: "Operation name"
+    new_name_placeholder: "Enter probable operation name"
+    new_description: "Description"
+    new_description_placeholder: "Describe expected operation behaviour: what actions with which inputs it should be perform and what result do You expect"
+    new_steps: "Operation steps (optional)"
+    new_steps_placeholder: "Enter probable operation steps"
+    feedback_email: "Feedback e-mail"
+    feedback_email_placeholder: "Enter your e-mail so we can clarify requirements and notify You of readiness"
+    request_fields_missed: "Please fill "
+    request_delivered: "Request for new operation type delivered"
   operations:
     operations:
       one: "%{count} operation"

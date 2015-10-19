@@ -1,10 +1,20 @@
-<h1><%= t 'help.operation_types.operations' %></h1>
+<h1><%= t 'help.operation_types.help' %></h1>
 <hr/>
-<h3><%= t 'help.operation_types.validate_topology.name' %></h3>
-<h4><%= t 'help.operation_types.validate_topology.short_description' %></h4>
-<p><%= t 'help.operation_types.validate_topology.full_description' %></p>
-<ul>
-<% for i in 1..17 %>
-  <li><%= t "help.operation_types.validate_topology.action_#{i.to_s}" %></li>
-<% end %>
+<ul class="list-group">
+  <% %w(topology_validation).each do |operation| %>
+      <li class="list-group-item">
+        <button type="button" class="btn btn-link btn-block" style="text-align: left; outline: none" onclick="this.blur();expand_or_collapse( '<%= operation %>');">
+          <%= t "help.operation_types.#{operation}.name" %>
+          <span class="caret"/>
+        </button>
+        <div class="collapse" id="<%= operation %>">
+          <%= render "home/operation_types/#{operation}" %>
+        </div>
+      </li>
+  <% end %>
 </ul>
+<hr/>
+<h3>
+  <%= t 'help.operation_types.want_new' %>
+  <%= link_to (t 'help.operation_types.request_new'), home_request_new_operation_type_path %>
+</h3>

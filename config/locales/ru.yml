@@ -45,6 +45,7 @@ ru:
   back: "Назад"
   return: "Вернуться"
   next: "Далее"
+  send: "Отправить"
   check: "Проверить"
   validate_topology: "Проверить топологию"
   are_you_sure: "Вы уверены?"
@@ -167,6 +168,17 @@ ru:
   operation_types:
     create_operation_type: "Добавить тип операции"
     no_operation_types: "Типы операций пока не добавлены"
+    request_new_operation_type: "Запрос на новый тип операции"
+    new_name: "Наименование операции"
+    new_name_placeholder: "Введите предполагаемое наименование операции"
+    new_description: "Описание"
+    new_description_placeholder: "Опишите, что должна делать новая операция - какие действия с какими входными данными, что должно получаться на выходе"
+    new_steps: "Шаги операции (необязательно)"
+    new_steps_placeholder: "Укажите предполагаемые шаги операции"
+    feedback_email: "E-mail для обратной связи"
+    feedback_email_placeholder: "Укажите свой e-mail, чтобы мы могли связаться с вами для уточнения требований или уведомить вас о готовности нового типа операции"
+    request_fields_missed: "Пожалуйста, заполните поля"
+    request_delivered: "Запрос на создание нового типа операции отправлен"
   operations:
     operations:
       one: "%{count} операция"

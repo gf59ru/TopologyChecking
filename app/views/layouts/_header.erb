@@ -10,8 +10,19 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav pull-left navbar-nav">
-        <li><%= link_to (t 'project_name'), root_path, id: 'logo', :class => 'navbar-brand' %></li>
-        <li><%= link_to (t 'help.help'), home_operation_types_help_path, id: 'help' %></li>
+        <li>
+          <%= link_to root_path, id: 'logo', :class => 'navbar-brand' do %>
+              <%= image_tag 'logo.png', :alt => 'logo', :width => 20, :height => 20, :style => 'display: inline' %>
+              <%= t 'project_name' %>
+          <% end %>
+        </li>
+        <li id="fat-menu" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <%= t 'help.help' %> <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><%= link_to (t 'help.operation_types.help'), home_operation_types_help_path, id: 'help' %></li>
+          </ul>
       </ul>
       <ul class="nav navbar-nav pull-right">
         <% if current_user.nil? %>
@@ -28,12 +39,12 @@
         <% else %>
             <li>
               <p class="navbar-text">
-                  <%= t 'balance.your_balance_is' %>
-                  <span class="<%= current_user.balance < 0 ? 'label label-danger' : 'badge' %>"><%= current_user.balance %></span>
-                  <% if current_user.reserved > 0 %>
-                      , <%= t 'balance.reserved_balance' %>
-                      <span class="badge"><%= current_user.reserved %></span>
-                  <% end %>
+                <%= t 'balance.your_balance_is' %>
+                <span class="<%= current_user.balance < 0 ? 'label label-danger' : 'badge' %>"><%= current_user.balance %></span>
+                <% if current_user.reserved > 0 %>
+                    , <%= t 'balance.reserved_balance' %>
+                    <span class="badge"><%= current_user.reserved %></span>
+                <% end %>
               </p>
 
             </li>

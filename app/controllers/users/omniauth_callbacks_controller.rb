@@ -1,31 +1,38 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
-  def google_oauth2
-    if user = User.from_omniauth(request.env['omniauth.auth'])
-      cookies.delete :google_oauth2_approval_prompt
-      flash[:notice] = I18n.t( 'devise.omniauth_callbacks.success', kind: 'Google')
-      sign_in_and_redirect user, event: :authentication
-    else
-      # we are not supporting self-service registration, so although
-      # user has authenticated at Google and given consent to the app,
-      # we are not going to allow the user in
-      cookies[:google_oauth2_approval_prompt] = 'force'
-      flash[:error] = I18n.t( 'devise.omniauth_callbacks.failure', kind: 'Google', reason: 'account not provisioned')
-      redirect_to root_url
+  def self.provider_human_name(provider)
+    case provider
+      when 'google_oauth2'.to_sym
+        'google'
+      else
+        provider
     end
   end
 
+  def google_oauth2
+    oauth 'google'
+  end
+
   def linkedin
+    oauth 'linkedin'
+  end
+
+  private
+
+  def oauth(provider)
     if user = User.from_omniauth(request.env['omniauth.auth'])
-      cookies.delete :linkedin_oauth2_approval_prompt
-      flash[:notice] = I18n.t( 'devise.omniauth_callbacks.success', kind: 'Linkedin')
-      sign_in_and_redirect user, event: :authentication
+      if User.where('email = ?', user.email).count > 0
+        cookies["#{provider}_approval_prompt"] = 'force'
+        flash[:danger] = I18n.t('devise.omniauth_callbacks.failure', kind: provider, reason: (t 'devise.failure.email_already_exists'))
+        redirect_to root_url
+      else
+        cookies.delete "#{provider}_approval_prompt"
+        flash[:notice] = I18n.t('devise.omniauth_callbacks.success', kind: provider)
+        sign_in_and_redirect user, event: :authentication
+      end
     else
-      # we are not supporting self-service registration, so although
-      # user has authenticated at Google and given consent to the app,
-      # we are not going to allow the user in
-      cookies[:linkedin_oauth2_approval_prompt] = 'force'
-      flash[:error] = I18n.t( 'devise.omniauth_callbacks.failure', kind: 'Google', reason: 'account not provisioned')
+      cookies["#{provider}_approval_prompt"] = 'force'
+      flash[:danger] = I18n.t('devise.omniauth_callbacks.failure', kind: provider, reason: (t 'devise.failure.account_not_provisioned'))
       redirect_to root_url
     end
   end

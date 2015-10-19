@@ -3,8 +3,8 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable,
          :omniauth_providers => [
-             :google_oauth2 #,
-         # :linkedin
+             :google_oauth2,
+             :linkedin
          ]
 
   has_many :operations, :dependent => :delete_all
@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   end
 
   def reserved
-    self.operations.where('state in (?) and cost > ?', [Operation::STATE_STARTED.to_s, Operation::STATE_NEED_PAYMENT], Operation::FREE_THRESHOLD).sum('cost')
+    self.operations.where('state in (?) and cost > ?', [Operation::STATE_STARTED.to_s, Operation::STATE_NEED_PAYMENT.to_s], Operation::FREE_THRESHOLD).sum('cost')
   end
 
   def requisites_files

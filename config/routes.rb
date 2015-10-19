@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   get 'home/contacts'
   get 'home/service_info'
   get 'home/operation_types_help'
+  get 'home/request_new_operation_type'
+  post 'home/request_new_operation_type'
 
   devise_for :users, :controllers => {:omniauth_callbacks => 'users/omniauth_callbacks', :sessions => 'users/sessions', :registrations => 'users/registrations'}
   devise_scope :user do
