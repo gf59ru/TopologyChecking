@@ -1,3 +1,7 @@
 <h1><%= t 'help.about.about' %></h1>
 <hr/>
 <h3><%= t 'help.about.description' %></h3>
+<h4><%= link_to (t 'help.about.here'), home_operation_types_help_path %> <%= t 'help.about.tools_info' %></h4>
+<hr/>
+<h4><%= t 'help.operation_types.transformation_tool.description' %></h4>
+<%= link_to (t 'help.operation_types.transformation_tool.download'), '/SharedTools.zip', :class => 'btn btn-info' %>

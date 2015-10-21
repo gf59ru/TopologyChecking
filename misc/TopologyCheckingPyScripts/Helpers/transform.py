@@ -51,35 +51,38 @@ if __name__ == '__main__':
                 new_fc = arcpy.CreateFeatureclass_management(str(new_gdb) + os.sep + ds, fc, shape_type)
                 with arcpy.da.SearchCursor(fc, ["SHAPE@"]) as cursor:
                     for row in cursor:
-                        geometry = json.loads(row[0].JSON)
-                        geometry_type = row[0].type
-                        spatial_reference = geometry['spatialReference']
-                        if geometry_type == 'polygon':
-                            if 'rings' in geometry:
-                                rings = arcpy.Array()
-                                for ring in geometry['rings']:
-                                    new_ring = arcpy.Array()
-                                    for point in ring:
-                                        new_ring.append(create_point(point[0] + x_offset, point[1] + y_offset))
-                                    rings.append(new_ring)
+                        try:
+                            geometry = json.loads(row[0].JSON)
+                            geometry_type = row[0].type
+                            spatial_reference = geometry['spatialReference']
+                            if geometry_type == 'polygon':
+                                if 'rings' in geometry:
+                                    rings = arcpy.Array()
+                                    for ring in geometry['rings']:
+                                        new_ring = arcpy.Array()
+                                        for point in ring:
+                                            new_ring.append(create_point(point[0] + x_offset, point[1] + y_offset))
+                                        rings.append(new_ring)
+                                    with arcpy.da.InsertCursor(new_fc, ['SHAPE@JSON']) as ins_cursor:
+                                        ins_cursor.insertRow([arcpy.Polygon(rings, spatial_reference).JSON])
+                            elif geometry_type == 'polyline':
+                                if 'paths' in geometry:
+                                    paths = arcpy.Array()
+                                    for path in geometry['paths']:
+                                        new_path = arcpy.Array()
+                                        for point in path:
+                                            new_path.append(create_point(point[0] + x_offset, point[1] + y_offset))
+                                        paths.append(new_path)
+                                    with arcpy.da.InsertCursor(new_fc, ['SHAPE@JSON']) as ins_cursor:
+                                        ins_cursor.insertRow([arcpy.Polyline(paths, spatial_reference).JSON])
+                            elif geometry_type == 'point':
                                 with arcpy.da.InsertCursor(new_fc, ['SHAPE@JSON']) as ins_cursor:
-                                    ins_cursor.insertRow([arcpy.Polygon(rings, spatial_reference).JSON])
-                        elif geometry_type == 'polyline':
-                            if 'paths' in geometry:
-                                paths = arcpy.Array()
-                                for path in geometry['paths']:
-                                    new_path = arcpy.Array()
-                                    for point in path:
-                                        new_path.append(create_point(point[0] + x_offset, point[1] + y_offset))
-                                    paths.append(new_path)
-                                with arcpy.da.InsertCursor(new_fc, ['SHAPE@JSON']) as ins_cursor:
-                                    ins_cursor.insertRow([arcpy.Polyline(paths, spatial_reference).JSON])
-                        elif geometry_type == 'point':
-                            with arcpy.da.InsertCursor(new_fc, ['SHAPE@JSON']) as ins_cursor:
-                                p = create_point(geometry['x'] + x_offset, geometry['y'] + y_offset)
-                                ins_cursor.insertRow([arcpy.PointGeometry(p, spatial_reference).JSON])
-                        else:
-                            arcpy.AddMessage(geometry_type)
+                                    p = create_point(geometry['x'] + x_offset, geometry['y'] + y_offset)
+                                    ins_cursor.insertRow([arcpy.PointGeometry(p, spatial_reference).JSON])
+                            else:
+                                arcpy.AddMessage(geometry_type)
+                        except:
+                            arcpy.AddWarning('{} class has unknown type object'.format(fc))
 
 
     except:

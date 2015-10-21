@@ -4,12 +4,26 @@ en:
     about:
       about: "About service"
       description: "Service allows to process geometry - transformations, validation and other"
+      here: "Here"
+      tools_info: "You can see Spatial Operation service tools description"
     request_new_operation_type: "Request new operation type"
     operation_types:
       help: "Operation types description"
       operations: "Operations"
       want_new: "Want another operation type?"
       request_new: "Request it!"
+      transformation_tool:
+        name: "Geometry transform tool (still in development, only offset is available)"
+        description: "You can distort your geometry using transformation tool for prevent upload geometry explicitly, and after getting results You can remove distort in same tool."
+        short_actions: "User selects geodatabase and transformation parameters. Distorted geometry is uploads to Spatial Operations service. After getting results runs reverse transformation tool, selects result geodatabase and same transformation parameters."
+        actions_order: "Geometry transformation actions order"
+        action_1: "Download transformation tool, open it in ArcGIS Desktop and run."
+        action_2: "Select geodatabase for transformation, enter distorting parameters and run transformation. Warning! Remember entered transformation parameters! They will be needed for reverse transformation! Without them You can't return results to home state"
+        action_3: "Upload geodatabase with distorted geometry to Spatial operations service."
+        action_4: "Wait for service tool will end work and download results."
+        action_5: "Launch reverse transformation tool."
+        action_6: "Select results geodatabase, enter distorting parameters (same as You entered in straight transformation) and run tool."
+        download: "Download geometry transformation tool"
       topology_validation:
         name: "Geometric correctness validating"
         description: "Geometric correctness validating for defined rules and selected geometry classes in geodatabase"
