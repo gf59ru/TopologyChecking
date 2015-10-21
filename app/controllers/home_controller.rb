@@ -19,6 +19,9 @@ class HomeController < ApplicationController
   def operation_types_help
   end
 
+  def about
+  end
+
   def request_new_operation_type
     if request.method == 'POST'
       operation_name = params[:name]

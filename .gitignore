@@ -19,6 +19,7 @@
 .svn
 misc/*/.idea
 misc/*.*
+misc/ArcGIS service definitions/
 doc
 cert
 user_files/

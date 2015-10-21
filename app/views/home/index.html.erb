@@ -77,6 +77,12 @@
 <% else %>
     <h2><%= t 'hello_unregistered' %></h2>
     <h3><%= t 'welcome_unregistered' %></h3>
+    <h3><%= t 'help.about.description' %></h3>
+    <h4 class="alert alert-info">
+      <span class="text text-success"><%= t 'promo' %></span>
+      <%= link_to (t 'promo_register'), new_user_registration_path %>
+      <span class="text text-success"><%= t 'promo_bonus_for_register' %></span>
+    </h4>
     <hr/>
     <h4>
       <%= t 'please' %><%= link_to (t 'request_sign_in'), new_user_session_path %><%= t 'to_work_with_service' %>

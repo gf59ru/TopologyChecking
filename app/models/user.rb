@@ -12,11 +12,13 @@ class User < ActiveRecord::Base
   has_many :user_files, :dependent => :delete_all
 
   def self.from_omniauth(auth)
+    is_new = where(provider: auth.provider, uid: auth.uid).count == 0
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]
       # user.name = auth.info.name   # assuming the user model has a name
       # user.image = auth.info.image # assuming the user model has an image
+      Recharge.create :user => user, :sum => 100000, :date => Time.zone.now if is_new
     end
   end
 

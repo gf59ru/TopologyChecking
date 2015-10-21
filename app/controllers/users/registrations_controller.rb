@@ -17,6 +17,7 @@ end
 def create
   begin
     super
+    Recharge.create :user => current_user, :sum => 100000, :date => Time.zone.now
   rescue Exception => e
     puts "create registration error: #{e}"
     raise e

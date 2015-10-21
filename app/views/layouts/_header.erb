@@ -12,7 +12,7 @@
       <ul class="nav pull-left navbar-nav">
         <li>
           <%= link_to root_path, id: 'logo', :class => 'navbar-brand' do %>
-              <%= image_tag 'logo.png', :alt => 'logo', :width => 20, :height => 20, :style => 'display: inline' %>
+              <!--%= image_tag 'logo.png', :alt => 'logo', :width => 20, :height => 20, :style => 'display: inline' %-->
               <%= t 'project_name' %>
           <% end %>
         </li>
@@ -22,6 +22,9 @@
           </a>
           <ul class="dropdown-menu">
             <li><%= link_to (t 'help.operation_types.help'), home_operation_types_help_path, id: 'help' %></li>
+            <li><%= link_to (t 'help.request_new_operation_type'), home_request_new_operation_type_path, id: 'help' %></li>
+            <li role="separator" class="divider"></li>
+            <li><%= link_to (t 'help.about.about'), home_about_path, id: 'help' %></li>
           </ul>
       </ul>
       <ul class="nav navbar-nav pull-right">

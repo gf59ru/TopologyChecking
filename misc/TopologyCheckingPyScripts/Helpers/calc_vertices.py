@@ -1,40 +1,12 @@
 import arcpy
-import os
 import sys
 import traceback
-import zipfile
 import re
 import json
 import datetime
 
 class LicenseError(Exception):
     pass
-
-
-def unzip(zipFileName, folder=None):
-    try:
-        path = os.path.dirname(zipFileName)
-        if folder:
-            path += '/' + folder
-        zip = zipfile.ZipFile(zipFileName, 'r')
-        gdb_name = None
-        for name in zip.namelist():
-            if '.gdb' in name.lower():
-                gdb_index = name.lower().index('.gdb') + 4
-                gdb_name = name[0:gdb_index]
-                break
-        if not gdb_name:
-            arcpy.AddError('<i18n timestamp="{}">zip_archive_without_gdb</i18n>'.decode('utf-8').format(now(), zipFile))
-            # raise Exception('{}: zip file has no gdb'.format(now()))
-        zip.extractall(path)
-        zip.close()
-        if path.endswith('/'):
-            return path + gdb_name
-        else:
-            return path + '/' + gdb_name
-    except RuntimeError:
-        zip.close()
-        arcpy.AddWarning(get_ID_message(86133))
 
 
 def get_ID_message(ID):
@@ -46,27 +18,18 @@ def now():
 
 if __name__ == '__main__':
     try:
-        zipFile = arcpy.GetParameterAsText(0)
-        arcpy.AddMessage('<i18n timestamp="{}" file="{}">file_received_and_unpacking</i18n>'.decode('utf-8').format(now(), zipFile))
-        # Распаковка
-        gdb = unzip(zipFile)
-        arcpy.SetParameterAsText(1, gdb)
-        gdb = gdb.replace('/', '/')
-        temp_gdb = unzip(zipFile, 'tmp')
-        os.remove(zipFile)
+        gdb = arcpy.GetParameterAsText(0)
 
-        arcpy.AddMessage('<i18n timestamp="{}" gdb="{}">gdb_unpacked</i18n>'.decode('utf-8').format(now(), gdb))
-
-        arcpy.env.workspace = temp_gdb
+        arcpy.env.workspace = gdb
         # Получение классов
         data_sets = arcpy.ListDatasets('*', 'Feature')
 
         res = []
+        total_count = 0
         for ds in data_sets:
 
             # Перечисление классов
             fcs = arcpy.ListFeatureClasses('*', 'All', ds)
-            arcpy.AddMessage('<i18n timestamp="{}" class_set="{}" count="{}">class_set_found</i18n>'.decode('utf-8').format(now(), ds, len(fcs)))
 
             res_ds = []
             for fc in fcs:
@@ -100,40 +63,27 @@ if __name__ == '__main__':
                             except:
                                 arcpy.AddWarning('{} class has unknown type object'.format(fc))
 
-                res_ds.append({'fc': fc.encode('utf-8'), 'count': count, 'shapeType': desc.shapeType})
+                total_count += count
 
-                try:
-                    arcpy.Delete_management(fc)
-                except:
-                    arcpy.AddWarning('<i18n timestamp="{}" class="{}">error_class_removing</i18n>'.format(now(), fc).decode('utf-8'))
+                res_ds.append({'fc': fc.encode('utf-8'), 'count': count, 'shapeType': desc.shapeType})
 
                 del fc
                 del desc
 
             res.append({'class_set': ds.encode('utf-8'), 'fcs': res_ds})
 
-            try:
-                arcpy.Delete_management(ds)
-            except:
-                arcpy.AddWarning('<i18n timestamp="{}" class_set="{}"></i18n>'.format(now(), ds).decode('utf-8'))
             del fcs
             del ds
 
         if len(res) > 0:
-            arcpy.SetParameterAsText(2, json.dumps(res))
+            arcpy.SetParameterAsText(1, json.dumps(res))
         else:
-            arcpy.AddWarning('<i18n timestamp="{}">gdb_has_no_class_sets</i18n>'.format(now()).decode('utf-8'))
+            arcpy.AddWarning('gdb has no class sets')
 
         del data_sets
-
-        try:
-            arcpy.Delete_management(temp_gdb)
-            os.removedirs(os.path.dirname(zipFile) + '/' + 'tmp')
-        except:
-            arcpy.AddWarning('<i18n timestamp="{}" gdb="{}">error_gdb_removing</i18n>'.format(now(), temp_gdb).decode('utf-8'))
-
-        del temp_gdb
         del gdb
+
+        arcpy.AddWarning('total vertices: {}'.format(total_count))
 
     except:
         tb = sys.exc_info()[2]

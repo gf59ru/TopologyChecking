@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :operation_steps
 
   get 'home/index'
+  get 'home/about'
   get 'home/contacts'
   get 'home/service_info'
   get 'home/operation_types_help'

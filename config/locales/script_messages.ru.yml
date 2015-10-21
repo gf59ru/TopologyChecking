@@ -15,9 +15,9 @@ ru:
     # validate and zip
     uses_gdb: "%{timestamp}: Используется база %{gdb}"
     n_rules_will_add:
-      one: "%{timestamp}: Будет добавлено %{count} правило топологии"
-      few: "%{timestamp}: Будет добавлено %{count} правила топологии"
-      many: "%{timestamp}: Будет добавлено %{count} правил топологии"
+      one: "%{timestamp}: Будет добавлено %{count} правило корректности геометрии"
+      few: "%{timestamp}: Будет добавлено %{count} правила корректности геометрии"
+      many: "%{timestamp}: Будет добавлено %{count} правил корректности геометрии"
     class_set: "%{timestamp}: Набор классов %{class_set}"
     rule_will_be_add_for_classes: "%{timestamp}: Будет добавлено правило %{rule} для классов %{class1} и %{class2}"
     rule_will_be_add_for_class: "%{timestamp}: Будет добавлено правило %{rule} для класса %{class}"

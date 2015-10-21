@@ -14,8 +14,8 @@ en:
     # validate and zip
     uses_gdb: "%{timestamp}: Uses geodatabase %{gdb}"
     n_rules_will_add:
-      one: "%{timestamp}: %{count} topology rule will be added"
-      other: "%{timestamp}: %{count} topology rules will be added"
+      one: "%{timestamp}: %{count} geometric correctness rule will be added"
+      other: "%{timestamp}: %{count} geometric correctness rules will be added"
     class_set: "%{timestamp}: Feature dataset %{class_set}"
     rule_will_be_add_for_classes: "%{timestamp}: Rule %{rule} for feature classes %{class1} and %{class2} ill be added"
     rule_will_be_add_for_class: "%{timestamp}: Rule %{rule} for feature class %{class} will be added"
