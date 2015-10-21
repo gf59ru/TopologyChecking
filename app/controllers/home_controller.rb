@@ -41,7 +41,7 @@ class HomeController < ApplicationController
         flash[:warning] = "#{t 'operation_types.request_fields_missed'}: #{errors.join(', ')}"
         render :request_new_operation_type
       else
-        CommonMailer.new_operation_type_request(current_user.nil? ? email : current_user, operation_name, description, steps).deliver_later
+        CommonMailer.new_operation_type_request(current_user.nil? ? email : current_user, operation_name, description, steps, params[:files]).deliver_later
         flash[:success] = t 'operation_types.request_delivered'
         redirect_to home_operation_types_help_url
       end

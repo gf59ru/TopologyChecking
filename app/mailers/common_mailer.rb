@@ -22,7 +22,7 @@ class CommonMailer < ApplicationMailer
     mail.deliver
   end
 
-  def new_operation_type_request(user_or_email, operation_name, description, steps)
+  def new_operation_type_request(user_or_email, operation_name, description, steps, files)
     user = user_or_email if user_or_email.is_a? User
     email = if user.nil?
               user_or_email
@@ -37,6 +37,9 @@ class CommonMailer < ApplicationMailer
       html_part do
         content_type 'text/html; charset=UTF-8'
         body ERB.new(File.read "#{Rails.root}/app/views/common_mailer/new_operation_type_request.html.erb").result(namespace.instance_eval { binding })
+      end
+      files.each do |file|
+        add_file :filename => file.original_filename, :content => file.tempfile
       end
     end
     mail.deliver

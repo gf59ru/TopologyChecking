@@ -1,6 +1,6 @@
 <h1><%= t 'operation_types.request_new_operation_type' %></h1>
 <hr/>
-<%= form_tag home_request_new_operation_type_path do %>
+<%= form_tag home_request_new_operation_type_path, {:multipart => true} do %>
     <div class="form-group">
       <%= label_tag :name, (t 'operation_types.new_name') %>
       <%= text_field_tag :name, nil, :class => 'form-control', :placeholder => (t 'operation_types.new_name_placeholder') %>
@@ -19,5 +19,9 @@
           <%= email_field_tag :email, nil, :class => 'form-control', :placeholder => (t 'operation_types.feedback_email_placeholder') %>
         </div>
     <% end %>
+    <p>
+      <%= label_tag 'files[]', (t 'operation_types.request_files') %>
+      <%= file_field_tag 'files[]', :multiple => true %>
+    </p>
     <%= submit_tag (t 'send'), :class => 'btn btn-primary' %>
 <% end %>

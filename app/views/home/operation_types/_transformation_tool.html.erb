@@ -2,7 +2,12 @@
 <p><%= t 'help.operation_types.transformation_tool.short_actions' %></p>
 <ul>
   <% 6.times do |i| %>
-      <li><%= t "help.operation_types.transformation_tool.action_#{(i+1).to_s}" %></li>
+      <li>
+        <%= t "help.operation_types.transformation_tool.action_#{(i+1).to_s}" %>
+        <% if i18n_set? "help.operation_types.transformation_tool.action_#{(i+1).to_s}_warning" %>
+            <p class="alert alert-danger"><%= t "help.operation_types.transformation_tool.action_#{(i+1).to_s}_warning" %></p>
+        <% end %>
+      </li>
   <% end %>
 </ul>
 <br/>

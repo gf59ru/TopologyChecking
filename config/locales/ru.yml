@@ -182,6 +182,7 @@ ru:
     feedback_email_placeholder: "Укажите свой e-mail, чтобы мы могли связаться с вами для уточнения требований или уведомить вас о готовности нового типа операции"
     request_fields_missed: "Пожалуйста, заполните поля"
     request_delivered: "Запрос на создание нового типа операции отправлен"
+    request_files: "Файлы (необязательно)"
   operations:
     operations:
       one: "%{count} операция"
