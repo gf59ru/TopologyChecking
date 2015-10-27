@@ -90,8 +90,10 @@ Rails.application.configure do
       # :domain => 'yandex.ru',
       :user_name => ENV['TOPOLOGY_CHECKING_SMTP_USERNAME'],
       :password => ENV['TOPOLOGY_CHECKING_SMTP_PASSWORD'],
-      :authentication => 'login',
-      :enable_starttls_auto => true
+      :authentication => :login,
+      :enable_starttls_auto => true,
+      :ssl => true,
+      :tls => true
   }
 
 end

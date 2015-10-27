@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   get 'home/request_new_operation_type'
   post 'home/request_new_operation_type'
 
-  devise_for :users, :controllers => {:omniauth_callbacks => 'users/omniauth_callbacks', :sessions => 'users/sessions', :registrations => 'users/registrations'}
+  devise_for :users, :controllers => {:omniauth_callbacks => 'users/omniauth_callbacks', :sessions => 'users/sessions', :registrations => 'users/registrations', :confirmations => 'users/confirmations'}
   devise_scope :user do
     # get 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session_path
     # get 'revoke_google_oauth', :to => 'users/omniauth_callbacks#revoke_google_oauth2', :as => 'revoke_google_oauth'

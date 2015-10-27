@@ -38,19 +38,38 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  config.web_console.whitelisted_ips = '192.168.1.111'
+
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
   config.action_mailer.default_url_options = {:host => 'www.example.com:3100'}
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.smtp_settings = {
       :address => ENV['TOPOLOGY_CHECKING_SMTP_ADDRESS'],
       :port => ENV['TOPOLOGY_CHECKING_SMTP_PORT'],
       :user_name => ENV['TOPOLOGY_CHECKING_SMTP_USERNAME'],
       :password => ENV['TOPOLOGY_CHECKING_SMTP_PASSWORD'],
-      :authentication => 'login',
-      :enable_starttls_auto => true
+      :authentication => :login,
+      :enable_starttls_auto => true,
+      :ssl => true,
+      :tls => true
   }
+
+  Mail.defaults do
+    delivery_method :smtp, {
+                             :address => ENV['TOPOLOGY_CHECKING_SMTP_ADDRESS'],
+                             :port => ENV['TOPOLOGY_CHECKING_SMTP_PORT'],
+                             :user_name => ENV['TOPOLOGY_CHECKING_SMTP_USERNAME'],
+                             :password => ENV['TOPOLOGY_CHECKING_SMTP_PASSWORD'],
+                             :authentication => :plain,
+                             :enable_starttls_auto => true,
+                             :ssl => true,
+                             :tls => true
+                         }
+  end
+
 
 end
