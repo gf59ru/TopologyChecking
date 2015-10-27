@@ -17,7 +17,7 @@ end
 def create
   begin
     super
-    Recharge.create :user => current_user, :sum => 100000, :date => Time.zone.now
+    # Recharge.create :user => current_user, :sum => 100000, :date => Time.zone.now
   rescue Exception => e
     puts "create registration error: #{e}"
     raise e
@@ -96,6 +96,7 @@ end
 
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)
-  #   super(resource)
+  #   # super(resource)
+  #   session['user_return_to'] || root_path
   # end
 end

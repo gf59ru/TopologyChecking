@@ -77,17 +77,21 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  Mail.defaults do
-    delivery_method :smtp, {
-                             :address => ENV['TOPOLOGY_CHECKING_SMTP_ADDRESS'],
-                             :port => ENV['TOPOLOGY_CHECKING_SMTP_PORT'],
-                             :user_name => ENV['TOPOLOGY_CHECKING_SMTP_USERNAME'],
-                             :password => ENV['TOPOLOGY_CHECKING_SMTP_PASSWORD'],
-                             :authentication => :plain,
-                             :enable_starttls_auto => true,
-                             :ssl => true,
-                             :tls => true
-                         }
-  end
+  config.action_mailer.default_url_options = {:host => 'spat-ops.com'}
+
+  #
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+      :address => ENV['TOPOLOGY_CHECKING_SMTP_ADDRESS'],
+      :port => ENV['TOPOLOGY_CHECKING_SMTP_PORT'],
+      # :domain => 'yandex.ru',
+      :user_name => ENV['TOPOLOGY_CHECKING_SMTP_USERNAME'],
+      :password => ENV['TOPOLOGY_CHECKING_SMTP_PASSWORD'],
+      :authentication => 'login',
+      :enable_starttls_auto => true
+  }
 
 end

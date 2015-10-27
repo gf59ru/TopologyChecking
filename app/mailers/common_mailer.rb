@@ -38,8 +38,9 @@ class CommonMailer < ApplicationMailer
         content_type 'text/html; charset=UTF-8'
         body ERB.new(File.read "#{Rails.root}/app/views/common_mailer/new_operation_type_request.html.erb").result(namespace.instance_eval { binding })
       end
+      files = JSON.parse files
       files.each do |file|
-        add_file :filename => file.original_filename, :content => file.tempfile
+        add_file :filename => file['filename'], :content => File.read(file['path'])
       end
     end
     mail.deliver
