@@ -1,7 +1,7 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def self.provider_human_name(provider)
-    case provider
+    case provider.to_sym
       when 'google_oauth2'.to_sym
         'google'
       else

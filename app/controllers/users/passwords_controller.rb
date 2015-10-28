@@ -5,9 +5,16 @@ class Users::PasswordsController < Devise::PasswordsController
   # end
 
   # POST /resource/password
-  # def create
-  #   super
-  # end
+  def create
+    user = User.find_first_by_auth_conditions :email => params[:user][:email]
+    if user.nil? || user.provider.nil?
+      super
+    else
+      CommonMailer.oauth_password_instructions(user.id).deliver_now
+      flash[:info] = I18n.t 'devise.passwords.send_instructions'
+      redirect_to new_user_session_path
+    end
+  end
 
   # GET /resource/password/edit?reset_password_token=abcdef
   # def edit

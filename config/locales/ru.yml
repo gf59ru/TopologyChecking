@@ -149,6 +149,8 @@ ru:
     new_password: "Новый пароль"
     confirm_new_password: "Подтверждение нового пароля"
     change_my_password: "Изменить пароль"
+    oauth_cannot_change_password: "К сожалению, вы не можете изменить пароль, потому что входите с помошью %{oauth_provider}"
+    sign_in_oauth: "Пожалуйста, войдите с помощью %{oauth_provider}"
     resend_confirmation_instructions: "Выслать инструкции по подтверждению"
     enter_address_for_confirmation: "Введите свой адрес e-mail, и мы вышлем вам инструкции по подтверждению"
     confirm_account_link_hint: "Чтобы подтвердить адрес e-mail вашей учётной записи, перейдите по следующей ссылке:"

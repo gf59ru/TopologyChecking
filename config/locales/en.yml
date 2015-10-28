@@ -135,6 +135,8 @@ en:
     new_password: "New password"
     confirm_new_password: "Confirm new password"
     change_my_password: "Change my password"
+    oauth_cannot_change_password: "Sorry but You can't change your password because of You are uses %{oauth_provider} for signing in"
+    sign_in_oauth: "Please sign in with %{oauth_provider}"
     resend_confirmation_instructions: "Resend confirmation instructions"
     enter_address_for_confirmation: "Enter your email address and we send You confirmation instructions"
     confirm_account_link_hint: "You can confirm your account email through the link below."
