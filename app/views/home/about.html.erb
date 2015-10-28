@@ -1,7 +1,20 @@
 <h1><%= t 'help.about.about' %></h1>
 <hr/>
 <h3><%= t 'help.about.description' %></h3>
-<h4><%= link_to (t 'help.about.here'), home_operation_types_help_path %> <%= t 'help.about.tools_info' %></h4>
+<h3><%= t 'help.operation_types.help' %></h3>
+<ul class="list-unstyled">
+  <li class="list-group-item-text">
+    <%= link_to (t 'help.operation_types.topology_validation.name'), home_operation_types_help_path(:operation_type => 'topology_validation'), id: 'help' %>
+  </li>
+  <li class="list-group-item-text">
+    <%= link_to (t 'help.operation_types.transformation_tool.name'), home_operation_types_help_path(:operation_type => 'transformation_tool'), id: 'help' %>
+  </li>
+</ul>
 <hr/>
 <h4><%= t 'help.operation_types.transformation_tool.description' %></h4>
 <%= link_to (t 'help.operation_types.transformation_tool.download'), '/SharedTools.zip', :class => 'btn btn-info' %>
+<hr/>
+<h3>
+  <%= t 'help.operation_types.want_new' %>
+  <%= link_to (t 'help.operation_types.request_new'), home_request_new_operation_type_path %>
+</h3>

@@ -7,7 +7,7 @@ ru:
     class_set_found:
       one: "%{timestamp}: Найден набор классов %{class_set}, содержащий %{count} класс"
       few: "%{timestamp}: Найден набор классов %{class_set}, содержащий %{count} класса"
-      many: "%{timestamp}: Найден набор классов %{class_set}, содержащий %{count} классов"
+      other: "%{timestamp}: Найден набор классов %{class_set}, содержащий %{count} классов"
     error_class_removing: "%{timestamp}: Ошибка удаления класса %{class}"
     error_class_set_removing: "%{timestamp}: Ошибка удаления набора классов %{class_set}"
     gdb_has_no_class_sets: "%{timestamp}: База не содержит наборов классов"
@@ -17,7 +17,7 @@ ru:
     n_rules_will_add:
       one: "%{timestamp}: Будет добавлено %{count} правило корректности геометрии"
       few: "%{timestamp}: Будет добавлено %{count} правила корректности геометрии"
-      many: "%{timestamp}: Будет добавлено %{count} правил корректности геометрии"
+      other: "%{timestamp}: Будет добавлено %{count} правил корректности геометрии"
     class_set: "%{timestamp}: Набор классов %{class_set}"
     rule_will_be_add_for_classes: "%{timestamp}: Будет добавлено правило %{rule} для классов %{class1} и %{class2}"
     rule_will_be_add_for_class: "%{timestamp}: Будет добавлено правило %{rule} для класса %{class}"

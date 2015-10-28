@@ -1,6 +1,6 @@
 en:
   help:
-    help: "Help"
+    help: "Information"
     about:
       about: "About service"
       description: "Service allows to process geometry - transformations, validation and other"
@@ -13,11 +13,12 @@ en:
       want_new: "Want another operation type?"
       request_new: "Request it!"
       transformation_tool:
-        name: "Geometry transform tool (still in development, only offset is available)"
+        name: "Geometry transform tool"
         description: "You can distort your geometry using transformation tool for prevent upload geometry explicitly, and after getting results You can remove distort in same tool."
         short_actions: "User selects geodatabase and transformation parameters. Distorted geometry is uploads to Spatial Operations service. After getting results runs reverse transformation tool, selects result geodatabase and same transformation parameters."
         actions_order: "Geometry transformation actions order"
         action_1: "Download transformation tool, open it in ArcGIS Desktop and run."
+        action_1_warning: "Tool is still in development, only offset is available!"
         action_2: "Select geodatabase for transformation, enter distorting parameters and run transformation."
         action_2_warning: "Warning! Remember entered transformation parameters! They will be needed for reverse transformation! Without them You can't return results to home state!"
         action_3: "Upload geodatabase with distorted geometry to Spatial operations service."

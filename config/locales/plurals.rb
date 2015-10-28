@@ -13,7 +13,7 @@
                          case n
                            when 1
                              :one
-                           when 2..3
+                           when 2..4
                              :few
                            else
                              :other

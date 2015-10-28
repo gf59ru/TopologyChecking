@@ -17,6 +17,7 @@ class HomeController < ApplicationController
   end
 
   def operation_types_help
+    @operation_type = params[:operation_type]
   end
 
   def about

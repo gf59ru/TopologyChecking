@@ -27,18 +27,18 @@ class User < ActiveRecord::Base
       user.skip_confirmation!
       # user.name = auth.info.name   # assuming the user model has a name
       # user.image = auth.info.image # assuming the user model has an image
-      Recharge.create :user => user, :sum => 100000, :date => Time.zone.now if is_new
+      Recharge.create :user => user, :sum => 10000, :date => Time.zone.now if is_new
     end
   end
 
   def balance
     recharges = self.recharges.sum('sum')
-    done_consumption = self.operations.where('state in (?) and cost > ?', [Operation::STATE_DONE.to_s], Operation::FREE_THRESHOLD).sum('cost')
+    done_consumption = self.operations.where('state in (?) and cost >= ?', [Operation::STATE_DONE.to_s], Operation::FREE_THRESHOLD).sum('cost')
     recharges - done_consumption - reserved
   end
 
   def reserved
-    self.operations.where('state in (?) and cost > ?', [Operation::STATE_STARTED.to_s, Operation::STATE_NEED_PAYMENT.to_s], Operation::FREE_THRESHOLD).sum('cost')
+    self.operations.where('state in (?) and cost >= ?', [Operation::STATE_STARTED.to_s, Operation::STATE_NEED_PAYMENT.to_s], Operation::FREE_THRESHOLD).sum('cost')
   end
 
   def requisites_files

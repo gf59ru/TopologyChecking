@@ -5,7 +5,7 @@
       <%= hidden_field_tag :tab, @tab %>
     <div class="form-group">
       <%= label_tag :sum, (t 'payment.sum') %>
-      <%= number_field_tag :sum, '', :class => 'form-control' %>
+      <%= number_field_tag :sum, '', :class => 'form-control', :min => 1 %>
     </div>
     <!--<div class="form-group">-->
       <!--<%= label_tag :currency, (t 'payment.currency') %>-->

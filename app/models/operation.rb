@@ -61,11 +61,11 @@ class Operation < ActiveRecord::Base
     if !cost.nil?
       case state.to_i
         when Operation::STATE_RULES_CREATING, Operation::STATE_RULES_ACCEPTING
-          cost > Operation::FREE_THRESHOLD ? "#{cost} (#{I18n.t 'operations.preliminary'})" : (I18n.t 'free')
+          cost >= Operation::FREE_THRESHOLD ? "#{cost} (#{I18n.t 'operations.preliminary'})" : (I18n.t 'free')
         when Operation::STATE_STARTED
-          cost > Operation::FREE_THRESHOLD ? "#{cost} (#{I18n.t 'operations.reserved'})" : (I18n.t 'free')
-        when Operation::STATE_DONE
-          cost > Operation::FREE_THRESHOLD ? cost : (I18n.t 'free')
+          cost >= Operation::FREE_THRESHOLD ? "#{cost} (#{I18n.t 'operations.reserved'})" : (I18n.t 'free')
+        when Operation::STATE_DONE, Operation::STATE_NEED_PAYMENT
+          cost >= Operation::FREE_THRESHOLD ? cost : (I18n.t 'free')
       end
     end
   end

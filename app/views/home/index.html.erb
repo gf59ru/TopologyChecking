@@ -26,37 +26,43 @@
         <% end %>
         <hr/>
     <% end %>
-    <h4><%= t 'operations.my_operations' %></h4>
-    <% if @operations.count > 0 %>
-        <table class="table table-striped table-bordered table-hover table-condensed">
-          <tr>
-            <th class="info"><%= t 'activerecord.attributes.operation.description' %></th>
-            <th class="info"><%= t 'activerecord.attributes.operation.state' %></th>
-            <th class="info"><%= t 'activerecord.attributes.operation.cost' %></th>
-            <th class="info"><%= t 'activerecord.attributes.operation.created_at' %></th>
-            <th class="info"></th>
-          </tr>
-          <% @operations.each do |operation| %>
-              <tr>
-                <td><%= link_to "#{operation.description == '' ? (t 'operations.open') : operation.description}", operation %></td>
-                <td><%= operation.state_name %></td>
-                <td>
-                  <%= operation.cost_description %>
-                </td>
-                <td><%= l operation.created_at %></td>
-                <td>
-                  <% if operation.can_remove %>
-                      <%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-trash', :title => (t 'operations.remove')), operation_path(:id => operation.id), :method => :delete, :data => {:confirm => (t 'are_you_sure')} %>
-                  <% elsif operation.state == Operation::STATE_DONE.to_s %>
-                      <%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-download', :title => (t 'operations.download_results')), download_operation_result_path(:operation => operation.id, :file_param_id => OperationParameter::PARAM_RESULT_ZIP_PATH) %>
-                  <% end %>
-                </td>
-              </tr>
-          <% end %>
-        </table>
-    <% else %>
-        <p><%= t 'operations.no_operations' %></p>
-    <% end %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t 'operations.my_operations' %></h3>
+      </div>
+      <% if @operations.count > 0 %>
+          <table class="table table-striped table-bordered table-hover table-condensed">
+            <tr>
+              <th class="info"><%= t 'activerecord.attributes.operation.description' %></th>
+              <th class="info"><%= t 'activerecord.attributes.operation.state' %></th>
+              <th class="info"><%= t 'activerecord.attributes.operation.cost' %></th>
+              <th class="info"><%= t 'activerecord.attributes.operation.created_at' %></th>
+              <th class="info"></th>
+            </tr>
+            <% @operations.each do |operation| %>
+                <tr>
+                  <td><%= link_to "#{operation.description == '' ? (t 'operations.open') : operation.description}", operation %></td>
+                  <td><%= operation.state_name %></td>
+                  <td>
+                    <%= operation.cost_description %>
+                  </td>
+                  <td><%= l operation.created_at %></td>
+                  <td>
+                    <% if operation.can_remove %>
+                        <%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-trash', :title => (t 'operations.remove')), operation_path(:id => operation.id), :method => :delete, :data => {:confirm => (t 'are_you_sure')} %>
+                    <% elsif operation.state == Operation::STATE_DONE.to_s %>
+                        <%= link_to (content_tag :span, nil, :class => 'glyphicon glyphicon-download', :title => (t 'operations.download_results')), download_operation_result_path(:operation => operation.id, :file_param_id => OperationParameter::PARAM_RESULT_ZIP_PATH) %>
+                    <% end %>
+                  </td>
+                </tr>
+            <% end %>
+          </table>
+      <% else %>
+          <div class="panel-body">
+            <%= t 'operations.no_operations' %>
+          </div>
+      <% end %>
+    </div>
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title"><%= t 'operations.create_new_operation' %></h3>

@@ -13,7 +13,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   def show
     super
     user = User.find_first_by_auth_conditions :confirmation_token => params[:confirmation_token]
-    Recharge.create :user => user, :sum => 100000, :date => Time.zone.now unless user.nil?
+    Recharge.create :user => user, :sum => 10000, :date => Time.zone.now unless user.nil?
   end
 
   # protected

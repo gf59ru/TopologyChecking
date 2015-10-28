@@ -266,7 +266,7 @@ class OperationsController < ApplicationController
         redirect_to root_url
       else
         if !current_user.nil? && current_user.id == operation.user_id
-          if current_user.balance < 0 && operation.cost > Operation::FREE_THRESHOLD
+          if current_user.balance < 0 && operation.cost >= Operation::FREE_THRESHOLD
             flash[:danger] = I18n.t 'operations.sorry_balance'
             redirect_to operation
           else
