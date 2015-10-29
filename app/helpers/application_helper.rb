@@ -24,4 +24,15 @@ module ApplicationHelper
     I18n.t key, :raise => true rescue false
   end
 
+  def flash_class_name(name)
+    case name
+      when 'notice'
+        'success'
+      when 'alert'
+        'danger'
+      else
+        name
+    end
+  end
+
 end

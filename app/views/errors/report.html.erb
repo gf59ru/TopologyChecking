@@ -1,0 +1,18 @@
+<h1><%= t 'errors.error_reporting' %></h1>
+<h3>
+  <%= t 'errors.internal_server_error_please' %>
+  <%= t 'errors.internal_server_error_report_us' %>
+  <%= t 'errors.internal_server_error_about_error' %>
+</h3>
+<%= form_tag errors_send_report_path do %>
+    <%= hidden_field_tag :class, @error_class %>
+    <%= hidden_field_tag :message, @error_message %>
+    <%= hidden_field_tag :time, @time %>
+    <%= hidden_field_tag :stacktrace, @stacktrace.to_json %>
+    <%= hidden_field_tag :user, @user %>
+    <div class="form-group">
+      <%= label_tag :description, (t 'errors.description') %>
+      <%= text_area_tag :description, '', :class => 'form-control' %>
+    </div>
+    <%= submit_tag (t 'send'), :class => 'btn btn-primary' %>
+<% end %>

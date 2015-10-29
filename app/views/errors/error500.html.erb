@@ -1,0 +1,19 @@
+<div class="alert alert-danger">
+  <h1><%= t 'errors.internal_server_error' %></h1>
+</div>
+<h3>
+  <%= t 'errors.internal_server_error_please' %>
+  <%= form_tag errors_report_path, :style => 'display: inline' do %>
+      <%= hidden_field_tag :class, $!.class.name %>
+      <%= hidden_field_tag :message, $!.message %>
+      <%= hidden_field_tag :stacktrace, $@.to_json %>
+      <%= hidden_field_tag :time, Time.zone.now %>
+      <% unless current_user.nil? %>
+          <%= hidden_field_tag :user, current_user.id %>
+      <% end %>
+      <%= submit_tag (t 'errors.internal_server_error_report_us'), :class => 'btn-link', :style => 'border: 0px; padding: 0px' %>
+  <% end %>
+  <%= t 'errors.internal_server_error_about_error' %>
+</h3>
+<hr/>
+<h4><%= t 'errors.internal_server_error_look_logs' %></h4>

@@ -42,7 +42,6 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
 end
 
-
 group :production do
   # gem 'mysql2'
   gem 'pg'
@@ -67,3 +66,5 @@ gem 'devise-async'
 gem 'omniauth-oauth2', '1.3.1'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
+
+# gem 'exception_handler'

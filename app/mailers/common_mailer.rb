@@ -7,6 +7,27 @@ class CommonMailer < ApplicationMailer
 
   default from: 'spatial.operations@yandex.ru'
 
+  def report_error(error_class, error_message, time, stacktrace, user_id, description)
+    user = User.find_by_id user_id
+    namespace = OpenStruct.new :error_class => error_class,
+                               :error_message => error_message,
+                               :time => time,
+                               :stacktrace => stacktrace,
+                               :user => user,
+                               :description => description,
+                               :from_server => root_url
+    mail = Mail.new do
+      from 'spatial.operations@yandex.ru'
+      to 'spatial.operations@yandex.ru'
+      subject 'Сообщение об ошибке'
+      html_part do
+        content_type 'text/html; charset=UTF-8'
+        body ERB.new(File.read "#{Rails.root}/app/views/common_mailer/report_error.html.erb").result(namespace.instance_eval { binding })
+      end
+    end
+    mail.deliver
+  end
+
   def oauth_password_instructions(user_id)
     user = User.find_by_id user_id
     provider = user.provider

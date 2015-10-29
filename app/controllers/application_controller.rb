@@ -7,6 +7,16 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  # unless ActionController::Base.consider_all_requests_local
+  #   rescue_from Exception do |exception|
+  #     redirect_to '/500'
+  #   end
+  #   # rescue_from ActiveRecord::RecordNotFound, :with => :render_not_found
+  #   # rescue_from ActionController::RoutingError, :with => :render_not_found
+  #   # rescue_from ActionController::UnknownController, :with => :render_not_found
+  #   # rescue_from ActionController::UnknownAction, :with => :render_not_found
+  # end
+
   def after_sign_in_path_for(resource)
     user_root_path
   end
@@ -19,7 +29,7 @@ class ApplicationController < ActionController::Base
     if current_user.nil?
       locale = params[:locale]
       unless locale.nil?
-        cookies[:locale] = locale
+        cookies.permanent[:locale] = locale
         I18n.locale = locale
         redirect_to :back
       end
@@ -29,11 +39,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  protected
+  private
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:account_update) << :locale
     devise_parameter_sanitizer.for(:sign_up) << :locale
+  end
+
+  def render_error(exception)
+    puts exception
+    render :template => '/error/error500.html.erb', :status => 500
   end
 
 end

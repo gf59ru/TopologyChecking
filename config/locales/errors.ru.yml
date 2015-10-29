@@ -1,0 +1,13 @@
+ru:
+  errors:
+    not_found: "Извините, запрашиваемый ресурс не найден"
+    resource_not_exists: "%{resource} с идентификатором %{id} не существует"
+    not_found_reason: "Возможно, ресурс удалили, или он ещё не был создан"
+    internal_server_error: "Извините, на сервере возникла неожиданная ошибка."
+    internal_server_error_please: "Пожалуйста, "
+    internal_server_error_report_us: "сообщите нам"
+    internal_server_error_about_error: " об ошибке."
+    internal_server_error_look_logs: "Если вы администратор приложения, проверьте логи."
+    error_reporting: "Отправка сообщения об ошибке"
+    description: "Пожалуйста, опишите ваши действия перед возникновением ошибки (необязательно)"
+    report_sent: "Ваше сообщение об ошибке отправлено."

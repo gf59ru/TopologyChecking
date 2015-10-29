@@ -1,0 +1,33 @@
+<h1>Сообщение об ошибке</h1>
+<% if user.nil? %>
+    <h3>Незарегистрированный пользователь прислал отчёт об ошибке с сервера <%= from_server %></h3>
+<% else %>
+    <h3>Пользователь <b><%= user.email %></b> прислал отчёт об ошибке с сервера <%= from_server %></h3>
+    <p>Язык пользователя <b><%= user.locale.nil? ? 'не выбран' : PersonsHelper::LOCALES[user.locale] %></b></p>
+<% end %>
+<hr/>
+<p>
+  <b>Класс ошибки: </b><%= error_class %>
+</p>
+<p>
+  <b>Сообщение об ошибке: </b><%= error_message %>
+</p>
+<p>
+  <b>Время возникновения ошибки: </b><%= time %>
+</p>
+<hr/>
+<p>
+  <b>Описание ошибки пользователем:</b>
+  <% if description.nil? || description == '' %>
+      Пользователь не добавил описание ошибки
+  <% else %>
+      <%= description %>
+  <% end %>
+</p>
+<hr/>
+<p>
+  <b>Стек вызовов:</b>
+  <% JSON.parse(stacktrace).each do |row| %>
+    <p><%= row %></p>
+<% end %>
+</p>

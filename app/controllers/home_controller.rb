@@ -50,7 +50,7 @@ class HomeController < ApplicationController
         end
         CommonMailer.new_operation_type_request(current_user.nil? ? email : current_user, operation_name, description, steps, files.to_json).deliver_later
         flash[:success] = t 'operation_types.request_delivered'
-        redirect_to home_operation_types_help_url
+        redirect_to home_about_url
       end
     end
   end

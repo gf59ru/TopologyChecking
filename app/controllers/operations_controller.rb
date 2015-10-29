@@ -4,6 +4,7 @@ require 'fileutils'
 # require 'zip'
 
 class OperationsController < ApplicationController
+  include ErrorsHelper
 
   JOB_IS_STILL_RUNNING = 1
 
@@ -204,7 +205,8 @@ class OperationsController < ApplicationController
   end
 
   def show
-    @operation = Operation.find_by_id params[:id]
+    id = params[:id]
+    @operation = (Operation.find_by_id id) or (not_found (t 'activerecord.models.operation.one').mb_chars.capitalize, id)
     if !current_user.nil? && current_user.id == @operation.user_id
       # if @operation.state == Operation::STATE_NEED_PAYMENT && current_user.balance >= 0
       #   @operation.state = Operation::STATE_DONE

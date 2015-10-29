@@ -1,0 +1,13 @@
+en:
+  errors:
+    not_found: "Sorry, but requested resource not found"
+    resource_not_exists: "%{resource} with id %{id} does not exists"
+    not_found_reason: "Possible resource has been deleted or was not created yet"
+    internal_server_error: "Sorry, something went wrong."
+    internal_server_error_please: "Please"
+    internal_server_error_report_us: "report us"
+    internal_server_error_about_error: "about error."
+    internal_server_error_look_logs: "If you are the application administrator check the logs by yourself."
+    error_reporting: "Reporting about error"
+    description: "Please describe your actions before error was occurred (optional)"
+    report_sent: "Your error report sent."
