@@ -37,6 +37,7 @@ class OperationsController < ApplicationController
     if !current_user.nil? && current_user.id == @operation.user_id
       step = @operation.step
       step = 0 if step.nil?
+      saved_rules_query = @operation.values OperationParameter::PARAM_RULE_JSON
       case step
         when 0
           gdb = params[:gdb]
@@ -72,7 +73,7 @@ class OperationsController < ApplicationController
           fc2 = params[:fc2]
           rule_order = params[:rule_order]
           if rule_order.nil?
-            rules_orders = (@operation.values OperationParameter::PARAM_RULE_JSON).maximum('value_order')
+            rules_orders = saved_rules_query.maximum('value_order')
             if rules_orders.nil?
               rule_order = 1
             else
@@ -98,7 +99,7 @@ class OperationsController < ApplicationController
           unless rule_type != '' && (saved_rule.nil? || rule_types[rule_type.to_i][:rule] == saved_rule['rule'])
             fc2 = nil
           end
-          is_filled = (@operation.values OperationParameter::PARAM_RULE_JSON).count == 0
+          is_filled = true # (@operation.values OperationParameter::PARAM_RULE_JSON).count == 0
           unless class_set == '' || class_set.nil?
             rule_str = OperationsController.helpers.rule_types[rule_type.to_i] unless rule_type.nil? || rule_type == ''
             rule = {
@@ -115,7 +116,7 @@ class OperationsController < ApplicationController
             @operation.set_value rule.to_json, OperationParameter::PARAM_RULE_JSON, rule_order
 
             if rule[:added]
-              rules = @operation.values OperationParameter::PARAM_RULE_JSON
+              rules = saved_rules_query
               rules.each do |saved_rule|
                 sr = saved_rule.value
                 unless sr.nil?
@@ -128,18 +129,139 @@ class OperationsController < ApplicationController
               end
             end
           end
+          unless params[:template].nil? || params[:template] == '' # Добавление правил из выбранного шаблона
+            added = 0
+            exists = 0
+            set_template = TopologyRulesSetTemplate.find_by_id params[:template]
+            unless set_template.nil?
+              class_sets = begin
+                JSON.parse(@operation.value OperationParameter::PARAM_CLASSES)
+              rescue
+                []
+              end
+              rules_orders = saved_rules_query.maximum('value_order')
+              if rules_orders.nil?
+                rule_order = 1
+              else
+                rule_order = rules_orders + 1
+              end
+              saved_rules = saved_rules_query.to_a.map { |rule| JSON.parse rule.value }
+              set_template.topology_rule_templates.each do |template|
+                same_saved_rules = saved_rules.select do |rule|
+                  rule['class_set'] == template.class_set &&
+                      rule['cluster_tolerance'] == template.cluster_tolerance &&
+                      rule['fc1'] == template.fc1 &&
+                      rule['rule'] == template.rule &&
+                      rule['fc2'] == template.fc2
+                end
+                if same_saved_rules.count > 0
+                  exists += 1
+                else
+                  suitable_class_sets = class_sets.select { |cs| cs['class_set'] == template.class_set }
+                  fcs = suitable_class_sets.first['fcs'] if suitable_class_sets.count > 0
+                  unless fcs.nil?
+                    suitable_classes = fcs.select { |fc| fc['fc'] == template.fc1 }
+                    type1 = suitable_classes.first['shapeType'] if suitable_classes.count > 0
+                    if type1 == template.type1
+                      unless fc2.nil?
+                        suitable_classes = fcs.select { |fc| fc['fc'] == template.fc2 }
+                        type2 = suitable_classes.first['shapeType'] if suitable_classes.count > 0
+                      end
+                      if type2 == template.type2
+                        rule = {
+                            :class_set => template.class_set,
+                            :cluster_tolerance => template.cluster_tolerance,
+                            :fc1 => template.fc1,
+                            :rule => template.rule,
+                            :fc2 => template.fc2
+                        }
+                        is_filled = rule_is_filled rule.to_json, false
+                        if is_filled
+                          rule.merge!({:added => true})
+                        end
+                        @operation.set_value rule.to_json, OperationParameter::PARAM_RULE_JSON, rule_order
+                        rule_order += 1
+                        added += 1
+                      end
+                    end
+                  end
+                end
+              end
+            end
+            if added > 0 # Если были добавлены правила, редактируемое надо переместить в конец
+              saved_rules_query.each do |saved_rule|
+                rule = JSON.parse saved_rule.value
+                if rule['added'].nil?
+                  @operation.set_value_order OperationParameter::PARAM_RULE_JSON, saved_rule.value_order, rule_order
+                  break
+                end
+              end
+            end
+            message = nil
+            message = (I18n.t 'operations.rules_added', :count => added) if added > 0
+            exists_message = (I18n.t 'operations.rules_already_exist', :count => exists) if exists > 0
+            message = message.nil? ? exists_message : "#{message}, #{exists_message}" unless exists_message.nil?
+            not_suitable = set_template.topology_rule_templates.count - added - exists
+            not_suitable_message = (I18n.t 'operations.rules_unsuitable', :count => not_suitable) if not_suitable > 0
+            message = message.nil? ? not_suitable_message : "#{message}, #{not_suitable_message}" unless not_suitable_message.nil?
+            flash[:success] = message
+          end
           unless params[:add_topology_rule].nil?
             if is_filled
-              rules_orders = (@operation.values OperationParameter::PARAM_RULE_JSON).maximum('value_order')
+              rules_orders = saved_rules_query.maximum('value_order')
               @operation.set_value({}.to_json, OperationParameter::PARAM_RULE_JSON, (rules_orders.nil? ? 1 : rules_orders + 1))
             else
               flash[:warning] = I18n.t 'operations.finish_rule_before_add_new'
             end
           end
           unless params[:force_next_step].nil?
-            rules = (@operation.values OperationParameter::PARAM_RULE_JSON).select('value')
+            rules = saved_rules_query.select('value')
             rules = rules.to_a.select { |rule| rule_is_filled rule.value }
             if rules.count > 0
+              TopologyRulesSetTemplate.delete_all :operation_id => @operation.id
+              unless params[:save_rules_set_as_template].nil? # Сохранение набора правил в шаблон
+                set_template = TopologyRulesSetTemplate.new
+                set_template.user = current_user
+                set_template.operation = @operation
+                set_template.name = params[:rules_set_template_name]
+                set_template.save
+                class_sets = begin
+                  JSON.parse(@operation.value OperationParameter::PARAM_CLASSES)
+                rescue
+                  []
+                end
+                rules.each do |rule|
+                  rule = JSON.parse rule.value
+                  class_set = rule['class_set']
+                  cluster_tolerance = rule['cluster_tolerance']
+                  fc1 = rule['fc1']
+                  fc2 = rule['fc2']
+                  rule = rule['rule']
+
+                  suitable_class_sets = class_sets.select { |cs| cs['class_set'] == class_set }
+                  fcs = suitable_class_sets.first['fcs'] if suitable_class_sets.count > 0
+                  unless fcs.nil?
+                    suitable_classes = fcs.select { |fc| fc['fc'] == fc1 }
+                    type1 = suitable_classes.first['shapeType'] if suitable_classes.count > 0
+                    unless fc2.nil?
+                      suitable_classes = fcs.select { |fc| fc['fc'] == fc2 }
+                      type2 = suitable_classes.first['shapeType'] if suitable_classes.count > 0
+                    end
+                    unless type1.nil?
+                      rule_template = TopologyRuleTemplate.new
+                      rule_template.topology_rules_set_template = set_template
+                      rule_template.class_set = class_set
+                      rule_template.cluster_tolerance = cluster_tolerance
+                      rule_template.fc1 = fc1
+                      rule_template.type1 = type1
+                      rule_template.rule = rule
+                      rule_template.fc2 = fc2
+                      rule_template.type2 = type2
+                      rule_template.save
+                    end
+                  end
+                end
+              end
               @operation.state = Operation::STATE_RULES_ACCEPTING
               @operation.step = 3
               @operation.save
@@ -151,7 +273,7 @@ class OperationsController < ApplicationController
         when 3
           if @operation.state == Operation::STATE_RULES_ACCEPTING.to_s
             if params[:return_rules_editing].nil?
-              rules = (@operation.values OperationParameter::PARAM_RULE_JSON).select('value')
+              rules = saved_rules_query.select('value')
               rules = rules.to_a.select { |rule| rule_is_filled rule.value }
               rules = rules.to_a.map { |rule| JSON.parse rule.value }
               run_op = run_operation OperationsController.validate_and_zip,
@@ -208,10 +330,6 @@ class OperationsController < ApplicationController
     id = params[:id]
     @operation = (Operation.find_by_id id) or (not_found (t 'activerecord.models.operation.one').mb_chars.capitalize, id)
     if !current_user.nil? && current_user.id == @operation.user_id
-      # if @operation.state == Operation::STATE_NEED_PAYMENT && current_user.balance >= 0
-      #   @operation.state = Operation::STATE_DONE
-      #   @operation.save
-      # end
       @operation_type = OperationType.find_by_id @operation.operation_type_id
     else
       flash[:danger] = I18n.t 'operations.only_owner_can_open'

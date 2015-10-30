@@ -27,3 +27,11 @@
     if c.indexOf(name) == 0
       return c.substring(name.length, c.length)
   return ''
+
+@checkBoxShowsOrHidesElement = (checkbox_id, element_id) ->
+  checked = $("##{checkbox_id}").is(':checked')
+  if checked
+    value = 'inline'
+  else
+    value = 'none'
+  $("##{element_id}").css('display', value)

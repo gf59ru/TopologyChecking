@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027061359) do
+ActiveRecord::Schema.define(version: 20151029130020) do
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
@@ -89,6 +89,27 @@ ActiveRecord::Schema.define(version: 20151027061359) do
     t.integer  "sum",        null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "topology_rule_templates", force: :cascade do |t|
+    t.integer  "topology_rules_set_template_id", null: false
+    t.string   "class_set",                      null: false
+    t.float    "cluster_tolerance"
+    t.string   "fc1",                            null: false
+    t.string   "type1",                          null: false
+    t.string   "rule",                           null: false
+    t.string   "fc2"
+    t.string   "type2"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  create_table "topology_rules_set_templates", force: :cascade do |t|
+    t.integer  "user_id",      null: false
+    t.integer  "operation_id", null: false
+    t.string   "name"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "user_files", force: :cascade do |t|

@@ -1,6 +1,7 @@
 class Operation < ActiveRecord::Base
   belongs_to :operation_type
   belongs_to :user
+  has_one :topology_rules_set_template, :dependent => :delete
 
   validates :description, :presence => true
 
@@ -105,6 +106,14 @@ class Operation < ActiveRecord::Base
     end
   end
 
+  def set_value_order(param_id, order, new_order)
+    value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ? and value_order = ?', id, param_id, order).first
+    unless value.nil?
+      value.value_order = new_order
+      value.save
+    end
+  end
+
   def value(param_id, order = nil)
     if order.nil?
       value = (OperationValue.where 'operation_id = ? and operation_parameter_id = ?', id, param_id).first
@@ -115,7 +124,7 @@ class Operation < ActiveRecord::Base
   end
 
   def values(param_types)
-    (OperationValue.where 'operation_id = ? and operation_parameter_id in (?)', id, param_types)
+    (OperationValue.where 'operation_id = ? and operation_parameter_id in (?)', id, param_types).order 'value_order'
   end
 
 end

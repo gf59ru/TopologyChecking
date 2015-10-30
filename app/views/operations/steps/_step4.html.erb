@@ -1,4 +1,3 @@
-<meta http-equiv="refresh" content="10">
 <% if @operation.state == Operation::STATE_RULES_ACCEPTING.to_s %>
     <%
        rules = (@operation.values OperationParameter::PARAM_RULE_JSON).select('value').to_a.select { |rule| rule_is_filled rule.value }
@@ -28,7 +27,7 @@
     <%= submit_tag (t 'return'), :class => 'btn btn-default', :name => 'return_rules_editing' %>
     <%= submit_tag (t 'topology_validation'), :class => 'btn btn-success', :data => {:confirm => (t 'are_you_sure')} %>
 <% else %>
-    <meta http-equiv="refresh" content="100">
+    <meta http-equiv="refresh" content="10">
     <h3><%= t 'operations.validating_and_results_preparing' %></h3>
     <%= button_tag (t 'check'), :class => 'btn btn-primary', :type => 'button', :onclick => 'location.reload();' %>
     <%

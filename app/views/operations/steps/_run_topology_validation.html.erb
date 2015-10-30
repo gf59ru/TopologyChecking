@@ -1,0 +1,24 @@
+<div class="form-inline">
+  <div class="checkbox">
+    <%= label_tag do %>
+        <%= check_box_tag :save_rules_set_as_template, nil, false, :onclick => 'checkBoxShowsOrHidesElement("save_rules_set_as_template", "rules_set_template_name");' %>
+        <%= t 'operations.save_rules_set_as_template' %>
+    <% end %>
+  </div>
+  <div class="form-group" id="rules_set_template_name" style="display: none">
+    <%= label_tag :rules_set_template_name, (t 'operations.rules_set_template_name'), :class => 'sr-only' %>
+    <div class="input-group">
+      <div class="input-group-addon"><%= t 'operations.rules_set_template_name' %></div>
+      <%
+         set_template_name = "#{(t 'activerecord.models.operation.one').mb_chars.capitalize}: #{@operation.description}"
+         gdb = @operation.value OperationParameter::PARAM_UPLOADED_GDB_PATH
+         unless gdb.nil?
+           gdb = gdb.split(/[\\, \/]/).last
+           set_template_name = "#{t 'activerecord.attributes.operation.gdb'}: #{gdb}; #{set_template_name}"
+         end
+      %>
+      <%= text_field_tag :rules_set_template_name, set_template_name, :class => 'form-control' %>
+    </div>
+  </div>
+  <%= submit_tag (t 'topology_validation'), :class => 'btn btn-primary', :name => 'force_next_step' %>
+</div>

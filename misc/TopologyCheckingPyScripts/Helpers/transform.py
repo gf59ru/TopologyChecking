@@ -5,6 +5,8 @@ import sys
 import traceback
 import re
 import json
+import math
+import numpy as np
 
 class LicenseError(Exception):
     pass
@@ -22,6 +24,10 @@ def create_point(x, y):
 
 if __name__ == '__main__':
     try:
+        a = [[1, 2], [3, 4]]
+        b = [[5, 6], [7, 8]]
+        arcpy.AddMessage(json.dumps(np.dot(a, b)))
+        exit(None, None)
         # Get the Parameters
         gdb = arcpy.GetParameterAsText(0)
         new_gdb_name = arcpy.GetParameterAsText(1)

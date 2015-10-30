@@ -175,9 +175,18 @@ en:
     operations:
       one: "%{count} operation"
       other: "%{count} operations"
+    rules:
+      one: "%{count} rule"
+      other: "%{count} rules"
     rules_added:
       one: "%{count} rule added"
       other: "%{count} rules added"
+    rules_already_exist:
+      one: "%{count} rule already added manually or from another template"
+      other: "%{count} rules already added manually or from another template"
+    rules_unsuitable:
+      one: "%{count} rule is unsuitable"
+      other: "%{count} rules are unsuitable"
     feature_classes_used:
       one: "Geometric correctness rules use one feature class"
       other: "Geometric correctness rules use %{count} feature classes"
@@ -205,13 +214,17 @@ en:
     gdb_unzipped_and_prepared: "Geodatabase unzipped and prepared to geometric correctness validating"
     topology_rules: "Geometric correctness rules"
     class_set: "Feature dataset"
+    use_rules_template: "You can use previously saved rules template"
     cluster_tolerance: "Coordinates comparing sensitivity"
+    select_rules_template: "Select saved template"
     cluster_tolerance_optional: "Coordinates comparing sensitivity (optional)"
     cluster_tolerance_warning: "Coordinates comparing sensitivity for feature dataset \"%{class_set}\" is already entered. Changing this value You will change coordinates comparing sensitivity in all rules for feature dataset \"%{class_set}\"."
     rule: "Rule"
     add_rule: "Add rule"
     finish_rule_before_add_new: "Please finish edit current rule before adding new rule or remove it"
     rules_ready: "Geometric correctness rules created"
+    save_rules_set_as_template: "Save rules set as template"
+    rules_set_template_name: "Template name"
     remove_rule: "Remove rule"
     no_rules_yet: "You operation has no geometric correctness rules yet"
     confirm_launch_topology_validation: "Your operation cost is %{cost}. Please confirm that You want to launch geometric correctness validation."

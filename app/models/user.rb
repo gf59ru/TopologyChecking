@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   has_many :operations, :dependent => :delete_all
   has_many :recharges, :dependent => :delete_all
   has_many :user_files, :dependent => :delete_all
+  has_many :topology_rules_set_templates, :dependent => :delete_all
 
   def self.from_omniauth(auth)
     is_new = where(provider: auth.provider, uid: auth.uid).count == 0

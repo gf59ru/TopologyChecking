@@ -10,6 +10,15 @@
     <th class="info"></th>
   </tr>
   <%
+     if current_user.topology_rules_set_templates.count > 0
+       templates = current_user.topology_rules_set_templates.select ['id, name']
+  %>
+      <div class="form-group">
+        <%= label_tag :template, (t 'operations.use_rules_template') %>
+        <%= select_tag :template, options_for_select(templates.to_a.map { |template| ["#{template.name} (#{t 'operations.rules', :count => template.topology_rule_templates.count})", template.id] }), {:include_blank => (t 'operations.select_rules_template'), :class => 'form-control', :onchange => '$("form").submit();'} %>
+      </div>
+  <% end %>
+  <%
      classes = begin
        JSON.parse(@operation.value OperationParameter::PARAM_CLASSES)
      rescue
@@ -106,7 +115,7 @@
           <% else %>
               <tr>
                 <td colspan="100%">
-                  <%= submit_tag (t 'topology_validation'), :class => 'btn btn-primary', :name => 'force_next_step' %>
+                  <%= render :partial => 'operations/steps/run_topology_validation' %>
                 </td>
               </tr>
               <%= hidden_field_tag :rule_order, saved_rule.value_order %>
@@ -152,7 +161,7 @@
   <% unless has_unfilled_rule %>
       <tr>
         <td colspan="100%">
-          <%= submit_tag (t 'topology_validation'), :class => 'btn btn-primary', :name => 'force_next_step' %>
+          <%= render :partial => 'operations/steps/run_topology_validation' %>
         </td>
       </tr>
   <% end %>
@@ -162,7 +171,6 @@
         <td colspan="100%" class="warning">
           <%= "#{t 'operations.no_rules_yet'} #{t 'please'}" %>
           <%= submit_tag (t 'imperative.add'), :name => 'add_topology_rule', :class => 'btn-link', :style => 'padding: 0; border: 0' %>
-          <%= t 'operations.add_at_least_one_rule' %>
         </td>
       </tr>
   <% else %>
