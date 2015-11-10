@@ -21,14 +21,14 @@ if __name__ == '__main__':
         gdb = arcpy.GetParameterAsText(0)
 
         arcpy.env.workspace = gdb
-        # Получение классов
+        # get feature classes
         data_sets = arcpy.ListDatasets('*', 'Feature')
 
         res = []
         total_count = 0
         for ds in data_sets:
 
-            # Перечисление классов
+            # feature classes enumeration
             fcs = arcpy.ListFeatureClasses('*', 'All', ds)
 
             res_ds = []

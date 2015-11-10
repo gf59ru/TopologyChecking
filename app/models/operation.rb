@@ -6,6 +6,7 @@ class Operation < ActiveRecord::Base
   validates :description, :presence => true
 
   STATE_CREATED = 0
+  STATE_PARSING = 1
   STATE_RULES_CREATING = 10
   STATE_RULES_ACCEPTING = 11
   STATE_STARTED = 30
@@ -34,8 +35,6 @@ class Operation < ActiveRecord::Base
         when Operation::STATE_FAILED
           I18n.t 'operations.state_failed'
         when Operation::STATE_CANCELLED
-          I18n.t 'operations.state_cancelled'
-        when STATE_RULES_CREATING
           I18n.t 'operations.state_cancelled'
       end
     end

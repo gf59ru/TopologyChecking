@@ -10,11 +10,11 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # end
 
   # GET /resource/confirmation?confirmation_token=abcdef
-  def show
-    super
-    user = User.find_first_by_auth_conditions :confirmation_token => params[:confirmation_token]
-    Recharge.create :user => user, :sum => 10000, :date => Time.zone.now unless user.nil?
-  end
+  # def show
+  #   super
+  #   user = User.find_first_by_auth_conditions :confirmation_token => params[:confirmation_token]
+  #   Recharge.create :user => user, :sum => 10000, :date => Time.zone.now unless user.nil?
+  # end
 
   # protected
 

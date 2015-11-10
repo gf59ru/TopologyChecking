@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
       user.skip_confirmation!
       # user.name = auth.info.name   # assuming the user model has a name
       # user.image = auth.info.image # assuming the user model has an image
-      Recharge.create :user => user, :sum => 10000, :date => Time.zone.now if is_new
+      # Recharge.create :user => user, :sum => 10000, :date => Time.zone.now if is_new
     end
   end
 

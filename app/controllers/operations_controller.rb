@@ -601,17 +601,21 @@ class OperationsController < ApplicationController
               end
             end
             cost = polygons_count + lines_count + points_count
-            operation.cost = case cost
-                               when 0..Operation::FREE_THRESHOLD - 1
-                                 0
-                               when Operation::FREE_THRESHOLD..999
-                                 10
-                               when 1000..9999
-                                 100
-                               when 10000..99999
-                                 1000
-                               else
-                                 10000
+            operation.cost = if Time.zone.now < (Date.new 2016, 1, 4) # Бонус до 1 апреля 2016 - операции с объектами до 100 000 вершин бесплатны
+                               cost < 100000 ? 0 : 10000
+                             else
+                               case cost
+                                 when 0..Operation::FREE_THRESHOLD - 1
+                                   0
+                                 when Operation::FREE_THRESHOLD..999
+                                   10
+                                 when 1000..9999
+                                   100
+                                 when 10000..99999
+                                   1000
+                                 else
+                                   10000
+                               end
                              end
             operation.step = 2
             operation.state = Operation::STATE_RULES_CREATING
