@@ -171,7 +171,7 @@ en:
     feedback_email_placeholder: "Enter your e-mail so we can clarify requirements and notify you of readiness"
     request_fields_missed: "Please fill "
     request_delivered: "Request for new operation type delivered"
-    request_files: "Files (optional)"
+    request_files: "Files (optional), total size of up to 100 Mb"
   operations:
     operations:
       one: "%{count} operation"

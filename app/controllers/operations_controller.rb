@@ -601,7 +601,7 @@ class OperationsController < ApplicationController
               end
             end
             cost = polygons_count + lines_count + points_count
-            operation.cost = if Time.zone.now < (Date.new 2016, 1, 4) # Бонус до 1 апреля 2016 - операции с объектами до 100 000 вершин бесплатны
+            operation.cost = if Time.zone.now < (Date.new 2016, 2, 4) # Бонус до 1 апреля 2016 включительно - операции с объектами до 100 000 вершин бесплатны
                                cost < 100000 ? 0 : 10000
                              else
                                case cost

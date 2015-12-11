@@ -1,5 +1,17 @@
 <h3><%= t 'operations.upload_zip_with_gdb' %></h3>
+<div class="alert alert-info">
+  <p>
+    <%= t 'help.operation_types.topology_validation.action_1_info' %>
+  </p>
+              <span>
+                <%= t 'help.operation_types.topology_validation.action_1_link_info' %>
+              </span>
+  <%= link_to (t 'help.operation_types.topology_validation.action_1_link_text'),
+              home_operation_types_help_path(:operation_type => (t 'help.operation_types.topology_validation.action_1_link')),
+              :class => 'text text-success' %>
+</div>
 <p>
   <%= label_tag :gdb, (t 'activerecord.attributes.operation.gdb') %>
   <%= file_field_tag :gdb %>
+  <!--<%= file_field_tag :gdb, :onchange => 'alert(this.files[0].size);' %>-->
 </p>

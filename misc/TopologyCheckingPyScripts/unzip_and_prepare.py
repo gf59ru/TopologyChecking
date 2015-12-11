@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 import arcpy
 import os
 import sys
@@ -24,7 +26,8 @@ def unzip(zipFileName, folder=None):
                 gdb_name = name[0:gdb_index]
                 break
         if not gdb_name:
-            arcpy.AddError('<i18n timestamp="{}">zip_archive_without_gdb</i18n>'.decode('utf-8').format(now(), zipFile))
+            arcpy.AddError('<i18n timestamp="{}">zip_archive_without_gdb</i18n>'.
+                           decode('utf-8').format(now(), zipFile))
             # raise Exception('{}: zip file has no gdb'.format(now()))
         zip.extractall(path)
         zip.close()
@@ -47,26 +50,29 @@ def now():
 if __name__ == '__main__':
     try:
         zipFile = arcpy.GetParameterAsText(0)
-        arcpy.AddMessage('<i18n timestamp="{}" file="{}">file_received_and_unpacking</i18n>'.decode('utf-8').format(now(), zipFile))
-        # Распаковка
+        arcpy.AddMessage('<i18n timestamp="{}" file="{}">file_received_and_unpacking</i18n>'.
+                         decode('utf-8').format(now(), os.path.basename(zipFile)))
+        # Р Р°СЃРїР°РєРѕРІРєР°
         gdb = unzip(zipFile)
         arcpy.SetParameterAsText(1, gdb)
         gdb = gdb.replace('/', '/')
         temp_gdb = unzip(zipFile, 'tmp')
         os.remove(zipFile)
 
-        arcpy.AddMessage('<i18n timestamp="{}" gdb="{}">gdb_unpacked</i18n>'.decode('utf-8').format(now(), gdb))
+        arcpy.AddMessage('<i18n timestamp="{}" gdb="{}">gdb_unpacked</i18n>'.
+                         decode('utf-8').format(now(), os.path.basename(gdb)))
 
         arcpy.env.workspace = temp_gdb
-        # Получение классов
+        # РџРѕР»СѓС‡РµРЅРёРµ РєР»Р°СЃСЃРѕРІ
         data_sets = arcpy.ListDatasets('*', 'Feature')
 
         res = []
         for ds in data_sets:
 
-            # Перечисление классов
+            # РџРµСЂРµС‡РёСЃР»РµРЅРёРµ РєР»Р°СЃСЃРѕРІ
             fcs = arcpy.ListFeatureClasses('*', 'All', ds)
-            arcpy.AddMessage('<i18n timestamp="{}" class_set="{}" count="{}">class_set_found</i18n>'.decode('utf-8').format(now(), ds, len(fcs)))
+            arcpy.AddMessage('<i18n timestamp="{}" class_set="{}" count="{}">class_set_found</i18n>'.
+                             decode('utf-8').format(now(), ds, len(fcs)))
 
             res_ds = []
             for fc in fcs:
@@ -105,24 +111,34 @@ if __name__ == '__main__':
                 try:
                     arcpy.Delete_management(fc)
                 except:
-                    arcpy.AddWarning('<i18n timestamp="{}" class="{}">error_class_removing</i18n>'.format(now(), fc).decode('utf-8'))
+                    arcpy.AddWarning('<i18n timestamp="{}" class="{}">error_class_removing</i18n>'.
+                                     format(now(), fc).decode('utf-8'))
 
                 del fc
                 del desc
 
-            res.append({'class_set': ds.encode('utf-8'), 'fcs': res_ds})
+            desc = arcpy.Describe(str(gdb) + os.sep + ds)
+            res.append({
+                'class_set': ds.encode('utf-8'),
+                'tolerance': desc.spatialReference.XYTolerance,
+                'fcs': res_ds
+            })
+
+            del desc
 
             try:
                 arcpy.Delete_management(ds)
             except:
-                arcpy.AddWarning('<i18n timestamp="{}" class_set="{}"></i18n>'.format(now(), ds).decode('utf-8'))
+                arcpy.AddWarning('<i18n timestamp="{}" class_set="{}"></i18n>'.
+                                 format(now(), ds).decode('utf-8'))
             del fcs
             del ds
 
         if len(res) > 0:
             arcpy.SetParameterAsText(2, json.dumps(res))
         else:
-            arcpy.AddWarning('<i18n timestamp="{}">gdb_has_no_class_sets</i18n>'.format(now()).decode('utf-8'))
+            arcpy.AddWarning('<i18n timestamp="{}">gdb_has_no_class_sets</i18n>'.
+                             format(now()).decode('utf-8'))
 
         del data_sets
 
@@ -130,7 +146,8 @@ if __name__ == '__main__':
             arcpy.Delete_management(temp_gdb)
             os.removedirs(os.path.dirname(zipFile) + '/' + 'tmp')
         except:
-            arcpy.AddWarning('<i18n timestamp="{}" gdb="{}">error_gdb_removing</i18n>'.format(now(), temp_gdb).decode('utf-8'))
+            arcpy.AddWarning('<i18n timestamp="{}" gdb="{}">error_gdb_removing</i18n>'.
+                             format(now(), os.path.basename(temp_gdb)).decode('utf-8'))
 
         del temp_gdb
         del gdb

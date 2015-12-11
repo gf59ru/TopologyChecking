@@ -2,6 +2,19 @@
 <p><%= t 'help.operation_types.topology_validation.short_actions' %></p>
 <ul>
   <% 17.times do |i| %>
-      <li><%= t "help.operation_types.topology_validation.action_#{(i+1).to_s}" %></li>
+      <li>
+        <%= t "help.operation_types.topology_validation.action_#{(i+1).to_s}" %>
+        <% if i18n_set? "help.operation_types.topology_validation.action_#{(i+1).to_s}_info" %>
+            <div class="alert alert-info">
+              <p>
+                <%= t "help.operation_types.topology_validation.action_#{(i+1).to_s}_info" %>
+              </p>
+              <span>
+                <%= t "help.operation_types.topology_validation.action_#{(i+1).to_s}_link_info" %>
+              </span>
+              <%= link_to (t "help.operation_types.topology_validation.action_#{(i+1).to_s}_link_text"), home_operation_types_help_path(:operation_type => (t "help.operation_types.topology_validation.action_#{(i+1).to_s}_link")), :class => 'text text-success' %>
+            </div>
+        <% end %>
+      </li>
   <% end %>
 </ul>

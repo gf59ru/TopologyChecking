@@ -6,7 +6,7 @@ class HomeController < ApplicationController
   def index
     unless current_user.nil?
       @operation_types = OperationType.all
-      @operations = current_user.operations
+      @operations = current_user.operations.order :created_at => :desc
     end
   end
 
@@ -21,6 +21,9 @@ class HomeController < ApplicationController
   end
 
   def about
+  end
+
+  def terms_of_use
   end
 
   def request_new_operation_type

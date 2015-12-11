@@ -1,6 +1,6 @@
 <div class="<%= is_expanded ? 'collapse in' : 'collapse' %>" id="<%= id %>">
   <p><%= "#{t 'state'}: #{t "job_state_#{value}"}" %></p>
-  <% unless job_url.nil? %>
+  <% if Rails.env.development? && !job_url.nil? %>
       <p><%= link_to (t 'operations.look_job_directly'), job_url, :target => '_blank' %></p>
   <% end %>
   <p>
@@ -23,14 +23,11 @@
                    end
             %>
                     <%= t translation_template, translation_params %>
-                <%
-                   end
-                   else
-                %>
-                <%= message.value %>
+                    <br/>
+                <% end %>
+                <!--%= message.value %-->
             <% end %>
           </small>
-          <br/>
       <% end %>
   <% end %>
   </p>

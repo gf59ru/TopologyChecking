@@ -17,7 +17,7 @@ en:
         password_confirmation: "Confirm password"
         remember_me: "Remember me"
       operation:
-        gdb: "Archive with geodatabase"
+        gdb: "Archive with geodatabase (up to 100 Mb)"
         description: "Description"
         state: "State"
         cost: "Cost"

@@ -61,26 +61,33 @@ def zipws(path, zip, keep):
 
 
 def validate_topology(topology):
-    arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_is_validating</i18n>'.decode('utf-8').format(now(), topology))
+    arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_is_validating</i18n>'.
+                     decode('utf-8').format(now(), os.path.basename(topology)))
     arcpy.ValidateTopology_management(topology)
-    arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_validated</i18n>'.decode('utf-8').format(now(), topology))
+    arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_validated</i18n>'.
+                     decode('utf-8').format(now(), os.path.basename(topology)))
 
 
-def export_topology_results(topology, fcs, gdb):
-    arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_validating_results_exporting</i18n>'.decode('utf-8').format(now(), topology))
+def export_topology_results(topology, feature_classes, gdb):
+    arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_validating_results_exporting</i18n>'.
+                     decode('utf-8').format(now(), os.path.basename(topology)))
     try:
-        arcpy.ExportTopologyErrors_management(gdb + '/' + fcs + '/' + topology, fcs, topology)
-        arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_validating_results_exported</i18n>'.decode('utf-8').format(now(), topology))
+        arcpy.ExportTopologyErrors_management(gdb + '/' + feature_classes + '/' + topology, feature_classes, topology)
+        arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_validating_results_exported</i18n>'.
+                         decode('utf-8').format(now(), os.path.basename(topology)))
     except:
-        arcpy.AddWarning('<i18n timestamp="{}" topology="{}">cannot_export_topology_validating_results</i18n>'.decode('utf-8').format(now(), topology))
+        arcpy.AddWarning('<i18n timestamp="{}" topology="{}">cannot_export_topology_validating_results</i18n>'.
+                         decode('utf-8').format(now(), os.path.basename(topology)))
 
 
-def add_class_to_topology(topo, fc):
+def add_class_to_topology(topology, feature_class):
     try:
-        arcpy.AddFeatureClassToTopology_management(topo, fc)
-        arcpy.AddMessage('<i18n timestamp="{}" class="{}">class_added</i18n>'.decode('utf-8').format(now(), fc))
+        arcpy.AddFeatureClassToTopology_management(topology, feature_class)
+        arcpy.AddMessage('<i18n timestamp="{}" class="{}">class_added</i18n>'.
+                         decode('utf-8').format(now(), feature_class))
     except:
-        arcpy.AddMessage('<i18n timestamp="{}" class="{}">class_is_already_exists</i18n>'.decode('utf-8').format(now(), fc))
+        arcpy.AddMessage('<i18n timestamp="{}" class="{}">class_is_already_exists</i18n>'.
+                         decode('utf-8').format(now(), feature_class))
 
 
 def create_topology(class_set_name, topology_name, cluster_tolerance=None):
@@ -89,10 +96,12 @@ def create_topology(class_set_name, topology_name, cluster_tolerance=None):
             topology = arcpy.CreateTopology_management(class_set_name, topology_name, cluster_tolerance)
         else:
             topology = arcpy.CreateTopology_management(class_set_name, topology_name)
-        arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_created</i18n>'.decode('utf-8').format(now(), topology))
+        arcpy.AddMessage('<i18n timestamp="{}" topology="{}">topology_created</i18n>'.
+                         decode('utf-8').format(now(), topology))
         return topology
     except:
-        arcpy.AddWarning('<i18n timestamp="{}" class_set="{}">class_set_already_has_topology</i18n>'.decode('utf-8').format(now(), class_set_name))
+        arcpy.AddWarning('<i18n timestamp="{}" class_set="{}">class_set_already_has_topology</i18n>'.
+                         decode('utf-8').format(now(), class_set_name))
         return class_set_name + '/' + topology_name
 
 
@@ -102,11 +111,13 @@ if __name__ == '__main__':
         in_gdb = arcpy.GetParameterAsText(0)
         in_rules = arcpy.GetParameterAsText(1)
 
-        arcpy.AddMessage('<i18n timestamp="{}" gdb="{}">uses_gdb</i18n>'.decode('utf-8').format(now(), in_gdb))
+        arcpy.AddMessage('<i18n timestamp="{}" gdb="{}">uses_gdb</i18n>'.
+                         decode('utf-8').format(now(), os.path.basename(in_gdb)))
         arcpy.env.workspace = in_gdb
 
         topology_rules = json.loads(in_rules)
-        arcpy.AddMessage('<i18n timestamp="{}" count="{}">n_rules_will_add</i18n>'.decode('utf-8').format(now(), len(topology_rules)))
+        arcpy.AddMessage('<i18n timestamp="{}" count="{}">n_rules_will_add</i18n>'.
+                         decode('utf-8').format(now(), len(topology_rules)))
         created_topologies = []
         for tr in topology_rules:
 
@@ -120,17 +131,23 @@ if __name__ == '__main__':
             if 'cluster_tolerance' in tr:
                 cs_cluster_tolerance = tr['cluster_tolerance']
 
-            arcpy.AddMessage('<i18n timestamp="{}" class_set="{}">class_set</i18n>'.decode('utf-8').format(now(), class_set))
+            arcpy.AddMessage('<i18n timestamp="{}" class_set="{}">class_set</i18n>'.
+                             decode('utf-8').format(now(), class_set))
 
             if fc2:
-                arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class1="{}" class2="{}">rule_will_be_add_for_classes</i18n>'.decode('utf-8').format(now(), rule, fc1, fc2))
+                arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class1="{}" class2="{}">\
+rule_will_be_add_for_classes</i18n>'.
+                                 decode('utf-8').format(now(), rule, fc1, fc2))
             else:
-                arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class="{}">rule_will_be_add_for_class</i18n>'.decode('utf-8').format(now(), rule, fc1))
+                arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class="{}">rule_will_be_add_for_class</i18n>'.
+                                 decode('utf-8').format(now(), rule, fc1))
 
             if cs_cluster_tolerance:
-                arcpy.AddMessage('<i18n timestamp="{}" cluster_tolerance="{}">cluster_tolerance_value</i18n>'.decode('utf-8').format(now(), cs_cluster_tolerance))
+                arcpy.AddMessage('<i18n timestamp="{}" cluster_tolerance="{}">cluster_tolerance_value</i18n>'.
+                                 decode('utf-8').format(now(), cs_cluster_tolerance))
             else:
-                arcpy.AddMessage('<i18n timestamp="{}">cluster_tolerance_default</i18n>'.decode('utf-8').format(now()))
+                arcpy.AddMessage('<i18n timestamp="{}">cluster_tolerance_default</i18n>'.
+                                 decode('utf-8').format(now()))
 
             cs_name = in_gdb + '/' + class_set
 
@@ -146,20 +163,30 @@ if __name__ == '__main__':
 
             if fc2:
                 try:
-                    arcpy.AddRuleToTopology_management(new_topology, rule, cs_name + '/' + fc1, None, cs_name + '/' + fc2)
-                    arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class1="{}" class2="{}" class_set="{}">rule_added_for_classes</i18n>'.decode('utf-8').format(now(), rule, fc1, fc2, class_set))
+                    arcpy.AddRuleToTopology_management(new_topology, rule, cs_name + '/' + fc1,
+                                                       None, cs_name + '/' + fc2)
+                    arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class1="{}" class2="{}" class_set="{}">\
+rule_added_for_classes</i18n>'.
+                                     decode('utf-8').format(now(), rule, fc1, fc2, class_set))
                 except:
-                    arcpy.AddError('<i18n timestamp="{}" rule="{}" class1="{}" class2="{}" class_set="{}">cannot_add_rule_for_classes</i18n>'.decode('utf-8').format(now(), rule, fc1, fc2, class_set, traceback.format_exc()))
+                    arcpy.AddError('<i18n timestamp="{}" rule="{}" class1="{}" class2="{}" class_set="{}">\
+cannot_add_rule_for_classes</i18n>'.
+                                   decode('utf-8').format(now(), rule, fc1, fc2, class_set, traceback.format_exc()))
 
             else:
                 try:
                     arcpy.AddRuleToTopology_management(new_topology, rule, cs_name + '/' + fc1)
-                    arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class="{}" class_set="{}">rule_added_for_class</i18n>'.decode('utf-8').format(now(), rule, fc1, class_set))
+                    arcpy.AddMessage('<i18n timestamp="{}" rule="{}" class="{}" class_set="{}">\
+rule_added_for_class</i18n>'.
+                                     decode('utf-8').format(now(), rule, fc1, class_set))
                 except:
-                    arcpy.AddError('<i18n timestamp="{}" rule="{}" class="{}" class_set="{}">cannot_add_rule_for_class</i18n>'.decode('utf-8').format(now(), fc1, class_set, traceback.format_exc()))
+                    arcpy.AddError('<i18n timestamp="{}" rule="{}" class="{}" class_set="{}">\
+cannot_add_rule_for_class</i18n>'.
+                                   decode('utf-8').format(now(), fc1, class_set, traceback.format_exc()))
 
         if len(created_topologies) > 0:
-            arcpy.AddMessage('<i18n timestamp="{}" count="{}">n_topologies_will_validate_and_export</i18n>'.decode('utf-8').format(now(), len(created_topologies)))
+            arcpy.AddMessage('<i18n timestamp="{}" count="{}">n_topologies_will_validate_and_export</i18n>'.
+                             decode('utf-8').format(now(), len(created_topologies)))
             path = os.path.dirname(in_gdb)
             basename = os.path.basename(in_gdb)
             name, ext = os.path.splitext(basename)
@@ -175,26 +202,35 @@ if __name__ == '__main__':
                     try:
                         arcpy.CreateFeatureDataset_management(result_gdb_path, class_set, in_gdb + '/' + class_set)
                     except:
-                        arcpy.AddMessage('<i18n timestamp="{}" class_set="{}">class_set_already_exists_in_results_gdb</i18n>'.decode('utf-8').format(now(), class_set))
+                        arcpy.AddMessage('<i18n timestamp="{}" class_set="{}">\
+class_set_already_exists_in_results_gdb</i18n>'.decode('utf-8').format(now(), class_set))
                 full_topo_name = in_gdb + '/' + class_set + '/' + topo
                 validate_topology(full_topo_name)
                 export_topology_results(topo, class_set, in_gdb)
-                arcpy.AddMessage('<i18n timestamp="{}" topology="{}">exporting_validating_results</i18n>'.decode('utf-8').format(now(), topo))
-                arcpy.Copy_management(full_topo_name + '_line', result_gdb_path + '/' + class_set + '/' + topo + '_line')
-                arcpy.Copy_management(full_topo_name + '_poly', result_gdb_path + '/' + class_set + '/' + topo + '_poly')
-                arcpy.Copy_management(full_topo_name + '_point', result_gdb_path + '/' + class_set + '/' + topo + '_point')
-                arcpy.AddMessage('<i18n timestamp="{}" topology="{}">validating_results_exported</i18n>'.decode('utf-8').format(now(), topo))
+                arcpy.AddMessage('<i18n timestamp="{}" topology="{}">exporting_validating_results</i18n>'.
+                                 decode('utf-8').format(now(), topo))
+                arcpy.Copy_management(full_topo_name + '_line',
+                                      result_gdb_path + '/' + class_set + '/' + topo + '_line')
+                arcpy.Copy_management(full_topo_name + '_poly',
+                                      result_gdb_path + '/' + class_set + '/' + topo + '_poly')
+                arcpy.Copy_management(full_topo_name + '_point',
+                                      result_gdb_path + '/' + class_set + '/' + topo + '_point')
+                arcpy.AddMessage('<i18n timestamp="{}" topology="{}">validating_results_exported</i18n>'.
+                                 decode('utf-8').format(now(), topo))
 
             zip_path = result_gdb_path + '.zip'
-            arcpy.AddMessage('<i18n timestamp="{}">packing_validating_results</i18n>'.decode('utf-8').format(now()))
+            arcpy.AddMessage('<i18n timestamp="{}">packing_validating_results</i18n>'.
+                             decode('utf-8').format(now()))
             zipUpFolder(result_gdb_path, zip_path)
-            arcpy.AddMessage('<i18n timestamp="{}" file="{}">validating_results_packed_to</i18n>'.decode('utf-8').format(now(), zip_path))
+            arcpy.AddMessage('<i18n timestamp="{}" file="{}">validating_results_packed_to</i18n>'.
+                             decode('utf-8').format(now(), os.path.basename(zip_path)))
             arcpy.SetParameterAsText(2, zip_path)
 
             try:
                 arcpy.Delete_management(result_gdb_path)
             except:
-                arcpy.AddWarning('<i18n timestamp="{}" gdb="{}">cannot_remove_temp_gdb</i18n>'.decode('utf-8').format(now(), result_gdb))
+                arcpy.AddWarning('<i18n timestamp="{}" gdb="{}">cannot_remove_temp_gdb</i18n>'.
+                                 decode('utf-8').format(now(), os.path.basename(result_gdb)))
 
         else:
             arcpy.AddMessage('<i18n timestamp="{}">no_results</i18n>'.decode('utf-8').format(now()))
@@ -203,7 +239,8 @@ if __name__ == '__main__':
         try:
             arcpy.Delete_management(in_gdb)
         except:
-            arcpy.AddWarning('<i18n timestamp="{}" gdb="{}">cannot_remove_temp_gdb</i18n>'.decode('utf-8').format(now(), in_gdb))
+            arcpy.AddWarning('<i18n timestamp="{}" gdb="{}">cannot_remove_temp_gdb</i18n>'.
+                             decode('utf-8').format(now(), os.path.basename(in_gdb)))
 
 
     except:

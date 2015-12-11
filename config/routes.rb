@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   get 'home/index'
   get 'home/about'
+  get 'home/terms_of_use'
   get 'home/contacts'
   get 'home/service_info'
   get 'home/operation_types_help'

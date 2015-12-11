@@ -60,7 +60,13 @@
                end
              end
              if cluster_tolerance.nil?
-               cluster_tolerance = clustered_tolerances[selected_class_set].nil? ? 0.001 : clustered_tolerances[selected_class_set]
+               suitable_class_sets = classes.select { |cs| cs['class_set'] == selected_class_set }
+               default_tolerance = if suitable_class_sets.count == 1
+                                     suitable_class_sets[0]['tolerance']
+                                   else
+                                     0.001
+                                   end
+               cluster_tolerance = clustered_tolerances[selected_class_set].nil? ? default_tolerance : clustered_tolerances[selected_class_set]
              end
              selected_rule = rule['rule'] unless rule.nil?
              selected_fc1 = rule['fc1'] unless rule.nil?
