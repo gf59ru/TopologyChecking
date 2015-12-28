@@ -1,0 +1,17 @@
+<h1><%= t 'feedback.feedback' %></h1>
+<hr/>
+<%= form_tag home_feedback_path, {:multipart => true} do %>
+    <div class="form-group">
+      <%= label_tag :question, (t 'feedback.question') %>
+      <%= text_area_tag :question, nil, :class => 'form-control', :placeholder => (t 'feedback.question_placeholder') %>
+    </div>
+    <div class="form-group">
+      <%= label_tag :operation, (t 'feedback.operations') %>
+      <%= select_tag :operation, options_for_select(current_user.operations.select { |operation| [operation.description, operation.id]}.map{ |operation| [operation.description, operation.id] }, @selected_operation), {:include_blank => @selected_operation.nil?, :class => 'form-control'} %>
+    </div>
+    <p>
+      <%= label_tag 'files[]', (t 'feedback.files') %>
+      <%= file_field_tag 'files[]', :multiple => true %>
+    </p>
+    <%= submit_tag (t 'send'), :class => 'btn btn-primary' %>
+<% end %>

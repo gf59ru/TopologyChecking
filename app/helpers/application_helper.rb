@@ -35,4 +35,8 @@ module ApplicationHelper
     end
   end
 
+  def clear_return_to
+    session[:return_to] = nil
+  end
+
 end

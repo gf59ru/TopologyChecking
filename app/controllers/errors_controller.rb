@@ -1,5 +1,8 @@
 class ErrorsController < ApplicationController
 
+  include ApplicationHelper
+  before_action :clear_return_to
+
   def error404
     render :status => :not_found
   end

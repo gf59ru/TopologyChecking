@@ -82,10 +82,37 @@ class CommonMailer < ApplicationMailer
       end
       files = JSON.parse files
       files.each do |file|
-        add_file :filename => file['filename'], :content => File.read(file['path'])
+        add_file :filename => file['filename'], :content => (CommonMailer::file_read file['path'])
       end
     end
     mail.deliver
+  end
+
+  def support_request(user, question, operation, files)
+    namespace = OpenStruct.new :user => user,
+                               :email => user.email,
+                               :question => question,
+                               :link => operation.nil? ? nil : (link_to operation.description, operation_url(:id => operation.id))
+    mail = Mail.new do
+      from 'spatial.operations@yandex.ru'
+      to 'spatial.operations@yandex.ru'
+      subject 'Запрос в поддержку'
+      html_part do
+        content_type 'text/html; charset=UTF-8'
+        body ERB.new(File.read "#{Rails.root}/app/views/common_mailer/support_request.html.erb").result(namespace.instance_eval { binding })
+      end
+      files = JSON.parse files
+      files.each do |file|
+        add_file :filename => file['filename'], :content => (CommonMailer::file_read file['path'])
+      end
+    end
+    mail.deliver
+  end
+
+  private
+
+  def self.file_read(path)
+    File.binread path
   end
 
 end

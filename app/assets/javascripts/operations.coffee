@@ -35,9 +35,3 @@
   else
     value = 'none'
   $("##{element_id}").css('display', value)
-
-@update = () ->
-  location.reload()
-
-@autoUpdate = () ->
-  setInterval(update, 10000)

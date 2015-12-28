@@ -27,7 +27,7 @@
     <%= submit_tag (t 'return'), :class => 'btn btn-default', :name => 'return_rules_editing' %>
     <%= submit_tag (t 'topology_validation'), :class => 'btn btn-success', :data => {:confirm => (t 'are_you_sure')} %>
 <% else %>
-    <%= javascript_tag 'autoUpdate()' %>
+    <%= javascript_tag "setInterval('location.reload();', 10000)" %>
     <h3><%= t 'operations.validating_and_results_preparing' %></h3>
     <%= button_tag (t 'check'), :class => 'btn btn-primary', :type => 'button', :onclick => 'location.reload();' %>
     <%

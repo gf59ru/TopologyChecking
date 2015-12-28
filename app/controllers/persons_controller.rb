@@ -1,7 +1,7 @@
 class PersonsController < ApplicationController
   include ApplicationHelper
 
-  before_action :set_locale
+  before_action :clear_return_to, :set_locale
 
   def profile
     if current_user.nil?

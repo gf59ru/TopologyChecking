@@ -50,6 +50,13 @@
     <% else %>
         <%= render 'operations/steps/step5' %>
     <% end %>
+    <% if step > 1 %>
+        <hr/>
+        <div>
+          <%= t 'feedback.problem_with_operation' %>
+          <%= link_to (t 'feedback.contact_support'), home_feedback_path(:operation_id => @operation.id) %>
+        </div>
+    <% end %>
     <!-- Конец дубового режима -->
 
 

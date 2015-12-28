@@ -3,7 +3,7 @@ ru:
     # unzip and prepare
     zip_archive_without_gdb: "%{timestamp}: Архив не содержит базы геоданных"
     file_received_and_unpacking: "%{timestamp}: Файл %{file} получен и распаковывается"
-    gdb_unpacked: "%{timestamp}: Распакована база геоданных %{gdb}, идёт анализ"
+    gdb_unpacked: "%{timestamp}: База геоданных %{gdb} распакована, идёт анализ"
     class_set_found:
       one: "%{timestamp}: Найден набор классов %{class_set}, содержащий %{count} класс"
       few: "%{timestamp}: Найден набор классов %{class_set}, содержащий %{count} класса"
@@ -13,7 +13,7 @@ ru:
     gdb_has_no_class_sets: "%{timestamp}: База не содержит наборов классов"
     error_gdb_removing: "%{timestamp}: Ошибка удаления базы геоданных %{gdb}"
     # validate and zip
-    uses_gdb: "%{timestamp}: Используется база %{gdb}"
+    uses_gdb: "%{timestamp}: Используется база геоданных %{gdb}"
     n_rules_will_add:
       one: "%{timestamp}: Будет добавлено %{count} правило корректности геометрии"
       few: "%{timestamp}: Будет добавлено %{count} правила корректности геометрии"
@@ -40,7 +40,7 @@ ru:
       one: "%{timestamp}: %{count} топология будет проверена и экспортирована"
       few: "%{timestamp}: %{count} топологии будут проверены и экспортированы"
       many: "%{timestamp}: %{count} топологий будет проверено и экспортировано"
-    creating_results_gdb: "%{timestamp}: Содаётся база геоданных для экспорта результатов"
+    creating_results_gdb: "%{timestamp}: Создаётся база геоданных для экспорта результатов"
     results_gdb_created: "%{timestamp}: База геоданных для экспорта результатов создана"
     class_set_already_exists_in_results_gdb: "%{timestamp}: Набор классов %{class_set} уже создан в экспортной базе геоданных"
     exporting_validating_results: "%{timestamp}: Результаты проверки топологии %{topology} копируются в экспортную базу геоданных"

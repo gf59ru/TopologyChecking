@@ -3,6 +3,8 @@
     <h4 class="alert alert-info">
       <b class="text text-success"><%= t 'promo' %></b>
       <%= t 'promo_bonus' %>
+      <br/>
+      <small><%= t 'promo_limit' %></small>
     </h4>
     <% if false && current_user.is_admin? %>
         <h4><%= t 'operations.operation_types' %></h4>
@@ -88,9 +90,12 @@
     <h2><%= t 'hello_unregistered' %></h2>
     <h3><%= t 'welcome_unregistered' %></h3>
     <h3><%= t 'help.about.description' %></h3>
+    <%= raw @wiki.to_html %>
     <h4 class="alert alert-info">
       <b class="text text-success"><%= t 'promo' %></b>
       <%= t 'promo_bonus' %>
+      <br/>
+      <small><%= t 'promo_limit' %></small>
       <!--<%= link_to (t 'promo_register'), new_user_registration_path %>-->
       <!--<span class="text text-success"><%= t 'promo_bonus_for_register' %></span>-->
     </h4>

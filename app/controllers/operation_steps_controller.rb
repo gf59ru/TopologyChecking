@@ -1,7 +1,7 @@
 class OperationStepsController < ApplicationController
   include ApplicationHelper
 
-  before_action :set_locale
+  before_action :clear_return_to, :set_locale
 
   def show
   end

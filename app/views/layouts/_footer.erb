@@ -2,16 +2,23 @@
 <footer class="footer">
   <small>
   </small>
-  <nav>
-    <ul class="list-inline">
-      <!--<li><a href="http://mobile-geo.ru/">-->
-      <!--<%= t 'jsc_mobile' %>-->
-      <!--</a></li>-->
-      <!--<li></li>-->
-      <!--li><%= link_to (t 'contacts.contacts'), home_contacts_path %></li-->
-      <!--li><%= link_to (t 'services.services_info'), home_service_info_path %></li-->
-    </ul>
-  </nav>
+  <span class="pull-left">
+  <ul class="list-inline">
+    <!--<li><a href="http://mobile-geo.ru/">-->
+    <!--<%= t 'jsc_mobile' %>-->
+    <!--</a></li>-->
+    <!--<li></li>-->
+    <!--li><%= link_to (t 'contacts.contacts'), home_contacts_path %></li-->
+    <!--li><%= link_to (t 'services.services_info'), home_service_info_path %></li-->
+    <li><%= link_to (t 'help.terms_of_use.terms_of_use'), home_terms_of_use_path %></li>
+    <li><%= link_to (t 'help.privacy_policy.privacy_policy'), home_privacy_policy_path %></li>
+  </ul>
+  </span>
+  <span class="pull-right">
+  <ul class="list-inline">
+    <li><%= link_to (t 'help.about.about'), home_about_path %></li>
+  </ul>
+  </span>
 </footer>
 <% if root_url.include? 'spat-ops.com' %>
     <!– Yandex.Metrika counter –>

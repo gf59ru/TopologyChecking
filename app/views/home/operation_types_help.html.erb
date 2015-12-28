@@ -2,7 +2,8 @@
   <!--%= t 'help.operation_types.help' %-->
   <%= t "help.operation_types.#{@operation_type}.name" %>
 </h1>
-<%= render "home/operation_types/#{@operation_type}" %>
+<%= raw @wiki.to_html %>
+<!--%= render "home/operation_types/#{@operation_type}" %-->
 <!--<hr/>-->
 <ul class="list-group">
   <!--% %w(transformation_tool topology_validation).each do |operation| %-->

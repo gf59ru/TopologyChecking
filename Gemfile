@@ -61,10 +61,14 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'delayed_job_active_record'
 
+gem 'mail', '2.6.3'
+
 gem 'devise'
 gem 'devise-async'
 gem 'omniauth-oauth2', '1.3.1'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
+
+gem 'wikicloth'
 
 # gem 'exception_handler'

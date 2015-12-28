@@ -18,6 +18,7 @@ class Users::SessionsController < Devise::SessionsController
 # POST /resource/sign_in
   def create
     begin
+      session[:return_to] ||= request.referer
       super
     rescue Exception => e
       puts "create session error: #{e}"

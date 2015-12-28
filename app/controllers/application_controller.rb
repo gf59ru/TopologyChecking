@@ -18,10 +18,12 @@ class ApplicationController < ActionController::Base
   # end
 
   def after_sign_in_path_for(resource)
+    clear_return_to
     user_root_path
   end
 
   def after_sign_out_path_for(resource_or_scope)
+    clear_return_to
     request.referrer
   end
 
@@ -31,7 +33,12 @@ class ApplicationController < ActionController::Base
       unless locale.nil?
         cookies.permanent[:locale] = locale
         I18n.locale = locale
-        redirect_to :back
+        back = session.delete(:return_to)
+        if back.nil?
+          redirect_to :back
+        else
+          redirect_to back
+        end
       end
     else
       flash[:info] = 'Signed in users can select language in their profile settings and save it'

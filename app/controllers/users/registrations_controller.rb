@@ -1,5 +1,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   include Users::OmniauthCallbacksHelper
+  include ApplicationHelper
+  before_action :clear_return_to
 # before_filter :configure_sign_up_params, only: [:create]
 # before_filter :configure_account_update_params, only: [:update]
 
@@ -16,6 +18,7 @@ end
 # POST /resource
 def create
   begin
+    session[:return_to] ||= request.referer
     super
     # Recharge.create :user => current_user, :sum => 100000, :date => Time.zone.now
   rescue Exception => e

@@ -1,10 +1,16 @@
 class HomeController < ApplicationController
   include ApplicationHelper
 
+  before_action :clear_return_to
   before_action :set_locale
 
   def index
-    unless current_user.nil?
+    if current_user.nil?
+      @wiki = WikiCloth::Parser.new({
+                                        :data => I18n.t('help.about.full_description'),
+                                        :noedit => true
+                                    })
+    else
       @operation_types = OperationType.all
       @operations = current_user.operations.order :created_at => :desc
     end
@@ -18,16 +24,36 @@ class HomeController < ApplicationController
 
   def operation_types_help
     @operation_type = params[:operation_type]
+    @wiki = WikiCloth::Parser.new({
+                                      :data => I18n.t("help.operation_types.#{@operation_type}.text"),
+                                      :noedit => true
+                                  })
   end
 
   def about
+    @wiki = WikiCloth::Parser.new({
+                                      :data => I18n.t('help.about.text'),
+                                      :noedit => true
+                                  })
   end
 
   def terms_of_use
+    @wiki = WikiCloth::Parser.new({
+                                      :data => I18n.t('help.terms_of_use.text'),
+                                      :noedit => true
+                                  })
+  end
+
+  def privacy_policy
+    @wiki = WikiCloth::Parser.new({
+                                      :data => I18n.t('help.privacy_policy.text'),
+                                      :noedit => true
+                                  })
   end
 
   def request_new_operation_type
     if request.method == 'POST'
+      session[:return_to] ||= request.referer
       operation_name = params[:name]
       description = params[:description]
       errors = Array.new
@@ -52,8 +78,31 @@ class HomeController < ApplicationController
           end
         end
         CommonMailer.new_operation_type_request(current_user.nil? ? email : current_user, operation_name, description, steps, files.to_json).deliver_later
-        flash[:success] = t 'operation_types.request_delivered'
+        flash[:success] = t 'operation_types.request_sent'
         redirect_to home_about_url
+      end
+    end
+  end
+
+  def feedback
+    if current_user.nil?
+      redirect_to home_about_url
+    else
+      if request.method == 'POST'
+        session[:return_to] ||= request.referer
+        question = params[:question]
+        operation = Operation.find_by_id params[:operation]
+        files = Array.new
+        unless params[:files].nil?
+          params[:files].each do |file|
+            files << {:filename => file.original_filename, :path => file.tempfile.path}
+          end
+        end
+        CommonMailer.support_request(current_user, question, operation, files.to_json).deliver_later
+        flash[:success] = t 'feedback.request_sent'
+        redirect_to root_url
+      else
+        @selected_operation = params[:operation_id]
       end
     end
   end

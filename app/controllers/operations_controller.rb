@@ -5,6 +5,9 @@ require 'fileutils'
 
 class OperationsController < ApplicationController
   include ErrorsHelper
+  include ApplicationHelper
+
+  before_action :clear_return_to, :set_locale
 
   JOB_IS_STILL_RUNNING = 1
 
@@ -286,6 +289,7 @@ class OperationsController < ApplicationController
               @operation.set_value job_id, OperationParameter::PARAM_VALIDATE_JOB_ID
               @operation.set_value "#{OperationsController.validate_and_zip}/jobs/#{job_id}", OperationParameter::PARAM_VALIDATE_JOB_URL
               @operation.state = Operation::STATE_STARTED
+              @operation.launched = Time.zone.now
               @operation.save
               flash[:success] = I18n.t 'operations.topology_rules_accepted'
               Delayed::Job.enqueue ValidateAndZipJob.new(@operation.id)
@@ -451,6 +455,7 @@ class OperationsController < ApplicationController
             flash[:warning] = t 'payment.balance_low'
           else
             @operation.state = Operation::STATE_DONE
+            @operation.completed = Time.zone.now
             @operation.save
             flash[:success] = t 'payment.operation_paid'
           end
@@ -601,21 +606,30 @@ class OperationsController < ApplicationController
               end
             end
             cost = polygons_count + lines_count + points_count
+            op_cost = case cost
+                        when 0..Operation::FREE_THRESHOLD - 1
+                          0
+                        when Operation::FREE_THRESHOLD..999
+                          10
+                        when 1000..9999
+                          100
+                        when 10000..99999
+                          1000
+                        else
+                          10000
+                      end
             operation.cost = if Time.zone.now < (Date.new 2016, 2, 4) # Бонус до 1 апреля 2016 включительно - операции с объектами до 100 000 вершин бесплатны
-                               cost < 100000 ? 0 : 10000
-                             else
-                               case cost
-                                 when 0..Operation::FREE_THRESHOLD - 1
-                                   0
-                                 when Operation::FREE_THRESHOLD..999
-                                   10
-                                 when 1000..9999
-                                   100
-                                 when 10000..99999
-                                   1000
+                               if cost > Operation::FREE_THRESHOLD
+                                 now = Time.zone.now
+                                 operations = operation.user.operations.where(:launched => now - 1.day..now, :state => [Operation::STATE_DONE, Operation::STATE_STARTED]) # between ? and ? and state in (?)', now, now - 1.day, [Operation::STATE_DONE, Operation::STATE_STARTED]
+                                 if operations.count < 3
+                                   cost < 100000 ? 0 : 10000
                                  else
-                                   10000
+                                   op_cost
+                                 end
                                end
+                             else
+                               op_cost
                              end
             operation.step = 2
             operation.state = Operation::STATE_RULES_CREATING
@@ -624,12 +638,10 @@ class OperationsController < ApplicationController
             operation.step = 0
             operation.state = Operation::STATE_CREATED
             operation.save
-          # flash[:danger] = I18n.t 'operations.can_not_unzip_and_prepare'
           when 'esriJobCancelling', 'esriJobCancelled'
             operation.step = 0
             operation.state = Operation::STATE_CREATED
             operation.save
-          # flash[:warning] = I18n.t 'operations.unzip_and_prepare_cancelled'
           else
             OperationsController::JOB_IS_STILL_RUNNING
         end
@@ -653,17 +665,14 @@ class OperationsController < ApplicationController
           operation.set_value job_result['results_values']['zip_path'], OperationParameter::PARAM_RESULT_ZIP_PATH
           operation.step = 4
           operation.state = operation.cost < Operation::FREE_THRESHOLD ? Operation::STATE_DONE : Operation::STATE_NEED_PAYMENT
-          # operation.state = (operation.user.balance >= 0 || operation.cost < Operation::FREE_THRESHOLD) ? Operation::STATE_DONE : Operation::STATE_NEED_PAYMENT
+          operation.completed = Time.zone.now
           operation.save
-        # flash[:success] = I18n.t 'operations.topology_validated'
         when 'esriJobFailed'
           operation.state = Operation::STATE_FAILED
           operation.save
-        # flash[:danger] = I18n.t 'operations.can_not_validate_topology'
         when 'esriJobCancelling', 'esriJobCancelled'
           operation.state = Operation::STATE_CANCELLED
           operation.save
-        # flash[:warning] = I18n.t 'operations.topology_validation_cancelled'
         else
           OperationsController::JOB_IS_STILL_RUNNING
       end

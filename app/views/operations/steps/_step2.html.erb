@@ -1,4 +1,4 @@
-<%= javascript_tag 'autoUpdate()' %>
+<%= javascript_tag "setInterval('location.reload();', 10000)" %>
 <h3><%= t 'operations.unzipping_and_preparing' %></h3>
 <%= button_tag (t 'check'), :class => 'btn btn-primary', :type => 'button', :onclick => 'location.reload();' %>
 <%

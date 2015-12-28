@@ -26,11 +26,14 @@ Rails.application.routes.draw do
   get 'home/index'
   get 'home/about'
   get 'home/terms_of_use'
+  get 'home/privacy_policy'
   get 'home/contacts'
   get 'home/service_info'
   get 'home/operation_types_help'
   get 'home/request_new_operation_type'
   post 'home/request_new_operation_type'
+  get 'home/feedback'
+  post 'home/feedback'
 
   devise_for :users, :controllers => {
                        :omniauth_callbacks => 'users/omniauth_callbacks',
