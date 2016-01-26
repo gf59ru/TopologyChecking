@@ -10,7 +10,7 @@
     <p><%= t 'operations.operations', :count => current_user.operations.count %></p>
     <p><%= t 'person.signed_in_count', :count => current_user.sign_in_count %></p>
     <p><%= "#{t 'person.last_sign_in'}: #{l current_user.last_sign_in_at}" %></p>
-    <p><%= "#{t 'person.language'}: #{current_user.locale.nil? ? (t 'does_not_selected') : PersonsHelper::LOCALES[current_user.locale]}" %></p>
+    <p><%= "#{t 'person.language'}: #{current_locale_human false}" %></p>
     <% if current_user.user_files.count > 0 %>
         <h3><%= t 'person.user_files' %></h3>
         <table class="table table-bordered table-condensed table-striped table-hover">

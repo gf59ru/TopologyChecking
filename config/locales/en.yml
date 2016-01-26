@@ -19,6 +19,8 @@ en:
     support_email_value: "sample-support@email.email" # "support@mobile-geo.ru"
     phone_value: "phone will be here" # "+7 (342) 2-362-782"
     fax_value: "fax will be here" # "+7 (342) 2-362-782 ext.3"
+  admin:
+    admin: "Administration"
   about: "About"
   promo: ""
   promo_bonus: "Geometry validation operations with up to 100 000 vertices are free until April 1, 2016!"
@@ -185,6 +187,11 @@ en:
     reviews: "Reviews"
     files: "Files (optional), total size of up to 100 Mb"
     request_sent: "Your support request was sent"
+  common_info:
+    welcome: "Welcome"
+    about: "About service"
+    terms_of_use: "Terms of use"
+    privacy_policy: "Privacy policy"
   operations:
     operations:
       one: "%{count} operation"
@@ -303,7 +310,7 @@ en:
     emulate_failure: "Emulate payment failure"
     payment_requisites_for_bank_transfer: "Payment requisites for bank transfer"
     payment_requisites_will_be_here: "Payment requisites will be here"
-    no_requisites_yet_must_upload_requisites_file: "you have no requisites yet and must upload requisites file"
+    no_requisites_yet_must_upload_requisites_file: "You have no requisites yet. Please upload requisites file"
     has_one_requisites_file: "You already uploaded requisites file and can use it or upload new"
     has_requisites_files: "You already uploaded requisites files and can select one of them or upload new"
     use_existing_requisites: "Use existing requisites file"

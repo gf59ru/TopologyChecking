@@ -26,6 +26,8 @@ ru:
     support_email_value: "sample-support@email.email" # "support@mobile-geo.ru"
     phone_value: "Здесь будет телефон" # "+7 (342) 2-362-782"
     fax_value: "Здесь будет факс" # "+7 (342) 2-362-782 доб.3"
+  admin:
+    admin: "Администрирование"
   about: "О нас"
   promo: ""
   promo_register: "Зарегистрируйтесь"
@@ -199,6 +201,11 @@ ru:
     reviews: "Отзывы"
     files: "Файлы (необязательно), общим объёмом не более 100 Мб"
     request_sent: "Запрос в поддержку отправлен"
+  common_info:
+    welcome: "Добро пожаловать"
+    about: "О сервисе"
+    terms_of_use: "Условия использования"
+    privacy_policy: "Политика конфиденциальности"
   operations:
     operations:
       one: "%{count} операция"
@@ -323,7 +330,7 @@ ru:
     emulate_failure: "Имитировать провальную оплату"
     payment_requisites_for_bank_transfer: "Платёжные реквизиты для банковского перевода"
     payment_requisites_will_be_here: "Здесь будет квитанция с реквизитами"
-    no_requisites_yet_must_upload_requisites_file: "У нас пока нет ваших реквизитов, и вы должны загрузить файл с реквизитами"
+    no_requisites_yet_must_upload_requisites_file: "У нас пока нет ваших реквизитов. Пожалуйста, загрузите файл с реквизитами"
     has_one_requisites_file: "Вы уже загружали файл с реквизитами, и можете использовать его или загрузить новые реквизиты"
     has_requisites_files: "Вы уже загружали файлы с реквизитами. Можете выбрать один из них или загрузить новый"
     use_existing_requisites: "Использовать загруженный файл с реквизитами"

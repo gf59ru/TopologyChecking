@@ -17,17 +17,22 @@
               <small class="text text-danger"><%= t 'project_name_beta' %></small>
           <% end %>
         </li>
+        <% if !current_user.nil? && current_user.is_admin? %>
+            <li>
+              <%= link_to (t 'admin.admin'), rails_admin_path, :class => 'navbar-brand'%>
+            </li>
+        <% end %>
         <li id="fat-menu" class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <%= t 'help.help' %> <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><%= link_to (t 'help.about.about'), home_about_path %></li>
-            <li><%= link_to (t 'help.terms_of_use.terms_of_use'), home_terms_of_use_path %></li>
-            <li><%= link_to (t 'help.privacy_policy.privacy_policy'), home_privacy_policy_path %></li>
+            <li><%= link_to (t 'help.about'), home_about_path %></li>
+            <li><%= link_to (t 'help.terms_of_use'), home_terms_of_use_path %></li>
+            <li><%= link_to (t 'help.privacy_policy'), home_privacy_policy_path %></li>
             <li role="separator" class="divider"></li>
-            <li><%= link_to (t 'help.operation_types.topology_validation.name'), home_operation_types_help_path(:operation_type => 'topology_validation') %></li>
-            <li><%= link_to (t 'help.operation_types.transformation_tool.name'), home_operation_types_help_path(:operation_type => 'transformation_tool') %></li>
+            <li><%= link_to (t 'help.operation_types.topology_validation.name'), home_operation_types_help_path(:operation_type => OperationTypeInfo::TOPOLOGY_VALIDATING) %></li>
+            <li><%= link_to (t 'help.operation_types.transformation_tool.name'), home_operation_types_help_path(:operation_type => OperationTypeInfo::GEOMETRY_TRANSFORMATION) %></li>
             <li role="separator" class="divider"></li>
             <li><%= link_to (t 'help.request_new_operation_type'), home_request_new_operation_type_path %></li>
           </ul>

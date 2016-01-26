@@ -59,6 +59,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # gem 'rubyzip'
 
+# gem 'haml-rails'
+
 gem 'delayed_job_active_record'
 
 gem 'mail', '2.6.3'
@@ -70,5 +72,7 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
 
 gem 'wikicloth'
+
+gem 'rails_admin'
 
 # gem 'exception_handler'

@@ -1,15 +1,27 @@
 class HomeController < ApplicationController
   include ApplicationHelper
+  include PersonsHelper
 
   before_action :clear_return_to
   before_action :set_locale
 
+  def render_wiki
+    render :json => {:wiki => wiki(params[:text])}
+  end
+
+  def wiki(text)
+    wiki = WikiCloth::Parser.new({
+                                     :data => text,
+                                     :noedit => true
+                                 })
+    wiki.to_html
+  end
+
   def index
     if current_user.nil?
-      @wiki = WikiCloth::Parser.new({
-                                        :data => I18n.t('help.about.full_description'),
-                                        :noedit => true
-                                    })
+      info = CommonInfo.where('locale = ? and info_type = ?', current_locale, CommonInfo::WELCOME).first
+      text = info.nil? ? nil : info.text
+      @wiki = wiki text
     else
       @operation_types = OperationType.all
       @operations = current_user.operations.order :created_at => :desc
@@ -24,31 +36,27 @@ class HomeController < ApplicationController
 
   def operation_types_help
     @operation_type = params[:operation_type]
-    @wiki = WikiCloth::Parser.new({
-                                      :data => I18n.t("help.operation_types.#{@operation_type}.text"),
-                                      :noedit => true
-                                  })
+    info = OperationTypeInfo.where('locale = ? and operation_type = ?', current_locale, @operation_type).first
+    text = info.nil? ? nil : info.text
+    @wiki = wiki text
   end
 
   def about
-    @wiki = WikiCloth::Parser.new({
-                                      :data => I18n.t('help.about.text'),
-                                      :noedit => true
-                                  })
+    info = CommonInfo.where('locale = ? and info_type = ?', current_locale, CommonInfo::ABOUT).first
+    text = info.nil? ? nil : info.text
+    @wiki = wiki text
   end
 
   def terms_of_use
-    @wiki = WikiCloth::Parser.new({
-                                      :data => I18n.t('help.terms_of_use.text'),
-                                      :noedit => true
-                                  })
+    info = CommonInfo.where('locale = ? and info_type = ?', current_locale, CommonInfo::TERMS_OF_USE).first
+    text = info.nil? ? nil : info.text
+    @wiki = wiki text
   end
 
   def privacy_policy
-    @wiki = WikiCloth::Parser.new({
-                                      :data => I18n.t('help.privacy_policy.text'),
-                                      :noedit => true
-                                  })
+    info = CommonInfo.where('locale = ? and info_type = ?', current_locale, CommonInfo::PRIVACY_POLICY).first
+    text = info.nil? ? nil : info.text
+    @wiki = wiki text
   end
 
   def request_new_operation_type

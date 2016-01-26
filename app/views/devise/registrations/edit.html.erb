@@ -3,7 +3,7 @@
 <%= form_tag persons_update_path do %>
     <div class="form-group">
       <%= label_tag :locale, (t 'person.language') %>
-      <%= select_tag :locale, options_for_select(PersonsHelper::LOCALES.map { |locale| [locale[1], locale[0]] }, current_user.locale), autofocus: true, :class => 'form-control' %>
+      <%= select_tag :locale, options_for_select(locales_for_combobox, current_user.locale), autofocus: true, :class => 'form-control' %>
     </div>
 
     <%= submit_tag (t 'save'), :class => 'btn btn-primary' %>

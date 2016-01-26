@@ -89,8 +89,7 @@
 <% else %>
     <h2><%= t 'hello_unregistered' %></h2>
     <h3><%= t 'welcome_unregistered' %></h3>
-    <h3><%= t 'help.about.description' %></h3>
-    <%= raw @wiki.to_html %>
+    <%= raw @wiki %>
     <h4 class="alert alert-info">
       <b class="text text-success"><%= t 'promo' %></b>
       <%= t 'promo_bonus' %>

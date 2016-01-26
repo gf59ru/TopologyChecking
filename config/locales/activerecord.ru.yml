@@ -40,6 +40,7 @@ ru:
             email:
               blank: "не должен быть пустым"
               invalid: "неверный"
+              can_not_change_when_oauth: "нельзя изменять для внешних учётных записей"
             password:
               blank: "не должен быть пустым"
               too_short: "слишком короткий"

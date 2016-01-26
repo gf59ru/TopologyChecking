@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
 
+  namespace :admin do
+  get 'home/index'
+  end
+
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   get 'errors/error404'
 
   get '/auth/:action/callback' => 'sessions#create'
@@ -34,6 +39,7 @@ Rails.application.routes.draw do
   post 'home/request_new_operation_type'
   get 'home/feedback'
   post 'home/feedback'
+  post 'home/render_wiki'
 
   devise_for :users, :controllers => {
                        :omniauth_callbacks => 'users/omniauth_callbacks',
@@ -55,6 +61,10 @@ Rails.application.routes.draw do
   delete 'persons/destroy_user_file', :to => 'persons#destroy_user_file', :as => 'delete_user_file'
 
   # Rails.application.routes.draw do
+  namespace :admin do
+  get 'home/index'
+  end
+
   #   get 'errors/error404'
   #   match '/404' => 'errors#error404', :via => [:get, :post, :patch, :delete]
   # end

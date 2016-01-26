@@ -29,4 +29,10 @@ en:
       user_file:
         file_type: "File type"
         description: "Description"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              can_not_change_when_oauth: "can't change for OAuth accounts"
 

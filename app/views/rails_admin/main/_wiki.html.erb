@@ -1,0 +1,20 @@
+<%
+   value = field.form_value
+   wiki = WikiCloth::Parser.new({
+                                        :data => value,
+                                        :noedit => true
+                                })
+%>
+<%= javascript_include_tag 'application' %>
+<%=
+    form.text_area field.method_name,
+                   field.html_attributes.reverse_merge(
+                           :cols => 150,
+                           :rows => 10,
+                           :data => { :richtext => 'ckeditor' },
+                           :oninput => "render_wiki($('##{field.properties.model.model_name.element}_#{field.properties.property.name}')[0].value, 'rendered');"
+                   ).reverse_merge({value: value})
+%>
+<div id="rendered">
+<%= raw wiki.to_html %>
+</div>

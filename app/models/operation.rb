@@ -5,8 +5,75 @@ class Operation < ActiveRecord::Base
 
   validates :description, :presence => true
 
+  rails_admin do
+    object_label_method :description
+
+    list do
+      field :user
+      field :description
+      field :state do
+        formatted_value do
+          Operation.state_name(value)
+        end
+      end
+      field :cost
+    end
+
+    show do
+      field :user
+      field :description
+      field :created
+      field :launched
+      field :completed
+      field :step
+      field :state do
+        formatted_value do
+          Operation.state_name(value)
+        end
+      end
+      field :cost
+    end
+
+    edit do
+      field :user do
+        read_only true
+      end
+      field :description
+      field :created do
+        read_only true
+      end
+      field :launched do
+        read_only true
+      end
+      field :completed do
+        read_only true
+      end
+      field :step
+      field :state, :enum do
+        enum do
+          [
+              STATE_CREATED,
+              # STATE_PARSING,
+              STATE_RULES_CREATING,
+              STATE_RULES_ACCEPTING,
+              STATE_STARTED,
+              STATE_DONE,
+              STATE_NEED_PAYMENT,
+              STATE_FAILED,
+              STATE_CANCELLED
+          ].map do |state|
+            [Operation.state_name(state), state]
+          end
+        end
+      end
+      field :cost do
+        read_only true
+      end
+    end
+  end
+
   STATE_CREATED = 0
-  STATE_PARSING = 1
+  # STATE_PARSING = 1
   STATE_RULES_CREATING = 10
   STATE_RULES_ACCEPTING = 11
   STATE_STARTED = 30
@@ -17,7 +84,7 @@ class Operation < ActiveRecord::Base
 
   FREE_THRESHOLD = 10
 
-  def state_name
+  def self.state_name(state)
     if state.nil?
       I18n.t 'operations.state_created'
     else
@@ -38,6 +105,10 @@ class Operation < ActiveRecord::Base
           I18n.t 'operations.state_cancelled'
       end
     end
+  end
+
+  def state_name
+    Operation.state_name(state)
   end
 
   def state_css_class

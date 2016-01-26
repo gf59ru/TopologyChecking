@@ -1,6 +1,6 @@
 <div class="<%= is_expanded ? 'collapse in' : 'collapse' %>" id="<%= id %>">
   <p><%= "#{t 'state'}: #{t "job_state_#{value}"}" %></p>
-  <% if Rails.env.development? && !job_url.nil? %>
+  <% if !current_user.nil? && current_user.is_admin? && !job_url.nil? %>
       <p><%= link_to (t 'operations.look_job_directly'), job_url, :target => '_blank' %></p>
   <% end %>
   <p>

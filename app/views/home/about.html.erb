@@ -1,13 +1,13 @@
-<%= raw @wiki.to_html %>
+<%= raw @wiki %>
 <!--<hr/>-->
 
 <!--<h3><%= t 'help.operation_types.help' %></h3>-->
 <!--<ul class="list-unstyled">-->
   <!--<li class="list-group-item-text">-->
-    <!--<%= link_to (t 'help.operation_types.topology_validation.name'), home_operation_types_help_path(:operation_type => 'topology_validation'), id: 'help' %>-->
+    <!--<%= link_to (t 'help.operation_types.topology_validation.name'), home_operation_types_help_path(:operation_type => OperationTypeInfo::TOPOLOGY_VALIDATING), id: 'help' %>-->
   <!--</li>-->
   <!--<li class="list-group-item-text">-->
-    <!--<%= link_to (t 'help.operation_types.transformation_tool.name'), home_operation_types_help_path(:operation_type => 'transformation_tool'), id: 'help' %>-->
+    <!--<%= link_to (t 'help.operation_types.transformation_tool.name'), home_operation_types_help_path(:operation_type => OperationTypeInfo::GEOMETRY_TRANSFORMATION), id: 'help' %>-->
   <!--</li>-->
 <!--</ul>-->
 <!--<hr/>-->

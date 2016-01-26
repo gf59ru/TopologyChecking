@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151029130020) do
+ActiveRecord::Schema.define(version: 20160115060902) do
+
+  create_table "common_infos", force: :cascade do |t|
+    t.integer  "info_type",  null: false
+    t.string   "locale",     null: false
+    t.string   "text",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "common_infos", ["info_type", "locale"], name: "index_common_infos_on_info_type_and_locale", unique: true
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
@@ -49,6 +59,17 @@ ActiveRecord::Schema.define(version: 20151029130020) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
   end
+
+  create_table "operation_type_infos", force: :cascade do |t|
+    t.integer  "operation_type", null: false
+    t.string   "locale",         null: false
+    t.string   "name",           null: false
+    t.string   "text",           null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "operation_type_infos", ["operation_type", "locale"], name: "index_operation_type_infos_on_operation_type_and_locale", unique: true
 
   create_table "operation_types", force: :cascade do |t|
     t.string   "name",           null: false

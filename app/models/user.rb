@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+
+  validate :email_with_oauth
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable,
@@ -15,13 +18,88 @@ class User < ActiveRecord::Base
              :linkedin
          ]
 
+  rails_admin do
+    object_label_method :email
+
+    list do
+      field :email
+      field :provider do
+        label 'OAuth provider'
+        formatted_value do
+          (Users::OmniauthCallbacksController.provider_human_name value).capitalize unless value.nil?
+        end
+      end
+      field :locale do
+        formatted_value do
+          PersonsHelper::LOCALES[value]
+        end
+      end
+      field :is_admin do
+        label 'Administrator'
+      end
+    end
+
+    show do
+      field :email
+      field :provider do
+        label 'OAuth provider'
+        formatted_value do
+          (Users::OmniauthCallbacksController.provider_human_name value).capitalize unless value.nil?
+        end
+      end
+      field :sign_in_count do
+        label 'Signed in times'
+      end
+      field :current_sign_in_at do
+        label 'Signed in at'
+      end
+      field :last_sign_in_at do
+        label 'Last signed in at'
+      end
+      field :current_sign_in_ip do
+        label 'Signed in from IP'
+      end
+      field :last_sign_in_ip do
+        label 'Last signed from IP'
+      end
+      field :is_admin do
+        label 'Administrator'
+      end
+      field :locale do
+        formatted_value do
+          PersonsHelper::LOCALES[value]
+        end
+      end
+      field :user_files
+    end
+
+    edit do
+      field :email
+      field :provider do
+        label 'OAuth provider'
+        read_only true
+        formatted_value do
+          (Users::OmniauthCallbacksController.provider_human_name value).capitalize unless value.nil?
+        end
+      end
+      field :is_admin do
+        label 'Administrator'
+      end
+      field :locale, :enum do
+        enum do
+          PersonsHelper::LOCALES.map { |locale| [locale[1], locale[0]] }
+        end
+      end
+    end
+  end
+
   has_many :operations, :dependent => :delete_all
   has_many :recharges, :dependent => :delete_all
   has_many :user_files, :dependent => :delete_all
   has_many :topology_rules_set_templates, :dependent => :delete_all
 
   def self.from_omniauth(auth)
-    is_new = where(provider: auth.provider, uid: auth.uid).count == 0
+    # is_new = where(provider: auth.provider, uid: auth.uid).count == 0
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]
@@ -44,6 +122,14 @@ class User < ActiveRecord::Base
 
   def requisites_files
     user_files.where 'file_type = ?', UserFile::FILE_TYPE_REQUISITES
+  end
+
+  protected
+
+  def email_with_oauth
+    if email_changed? && !provider.nil? && persisted?
+      errors.add :email, :can_not_change_when_oauth
+    end
   end
 
 end

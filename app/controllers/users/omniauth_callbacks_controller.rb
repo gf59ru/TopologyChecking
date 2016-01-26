@@ -20,7 +20,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def oauth(provider)
-    if user = User.from_omniauth(request.env['omniauth.auth'])
+    user = User.from_omniauth(request.env['omniauth.auth'])
+    if user
       if User.where('email = ? and (provider is null or provider <> ?)', user.email, provider).count > 0
         cookies["#{provider}_approval_prompt"] = 'force'
         flash[:danger] = I18n.t('devise.omniauth_callbacks.failure', kind: provider, reason: (t 'devise.failure.email_already_exists'))

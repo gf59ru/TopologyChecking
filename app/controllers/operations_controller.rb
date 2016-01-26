@@ -333,7 +333,7 @@ class OperationsController < ApplicationController
   def show
     id = params[:id]
     @operation = (Operation.find_by_id id) or (not_found (t 'activerecord.models.operation.one').mb_chars.capitalize, id)
-    if !current_user.nil? && current_user.id == @operation.user_id
+    if !current_user.nil? && current_user.is_admin? || current_user.id == @operation.user_id
       @operation_type = OperationType.find_by_id @operation.operation_type_id
     else
       flash[:danger] = I18n.t 'operations.only_owner_can_open'
