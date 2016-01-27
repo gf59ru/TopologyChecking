@@ -5,16 +5,30 @@ class Operation < ActiveRecord::Base
 
   validates :description, :presence => true
 
+  def self.states_enum
+    [
+        STATE_CREATED,
+        # STATE_PARSING,
+        STATE_RULES_CREATING,
+        STATE_RULES_ACCEPTING,
+        STATE_STARTED,
+        STATE_DONE,
+        STATE_NEED_PAYMENT,
+        STATE_FAILED,
+        STATE_CANCELLED
+    ].map do |state|
+      [Operation.state_name(state), state]
+    end
+  end
+
   rails_admin do
     object_label_method :description
 
     list do
       field :user
       field :description
-      field :state do
-        formatted_value do
-          Operation.state_name(value)
-        end
+      field :state, :enum do
+        enum_method :states_enum
       end
       field :cost
     end
@@ -50,21 +64,7 @@ class Operation < ActiveRecord::Base
       end
       field :step
       field :state, :enum do
-        enum do
-          [
-              STATE_CREATED,
-              # STATE_PARSING,
-              STATE_RULES_CREATING,
-              STATE_RULES_ACCEPTING,
-              STATE_STARTED,
-              STATE_DONE,
-              STATE_NEED_PAYMENT,
-              STATE_FAILED,
-              STATE_CANCELLED
-          ].map do |state|
-            [Operation.state_name(state), state]
-          end
-        end
+        enum_method :states_enum
       end
       field :cost do
         read_only true
@@ -196,5 +196,8 @@ class Operation < ActiveRecord::Base
   def values(param_types)
     (OperationValue.where 'operation_id = ? and operation_parameter_id in (?)', id, param_types).order 'value_order'
   end
+
+  protected
+
 
 end

@@ -23,16 +23,14 @@ class User < ActiveRecord::Base
 
     list do
       field :email
-      field :provider do
+      field :provider, :enum do
         label 'OAuth provider'
-        formatted_value do
-          (Users::OmniauthCallbacksController.provider_human_name value).capitalize unless value.nil?
+        enum do
+          User.omniauth_providers.map { |provider| [provider.to_s.humanize, provider.to_s] }
         end
       end
-      field :locale do
-        formatted_value do
-          PersonsHelper::LOCALES[value]
-        end
+      field :locale, :enum do
+        enum_method :locales_enum
       end
       field :is_admin do
         label 'Administrator'
@@ -86,9 +84,7 @@ class User < ActiveRecord::Base
         label 'Administrator'
       end
       field :locale, :enum do
-        enum do
-          PersonsHelper::LOCALES.map { |locale| [locale[1], locale[0]] }
-        end
+        enum_method :locales_enum
       end
     end
   end
@@ -130,6 +126,10 @@ class User < ActiveRecord::Base
     if email_changed? && !provider.nil? && persisted?
       errors.add :email, :can_not_change_when_oauth
     end
+  end
+
+  def self.locales_enum
+    PersonsHelper::LOCALES.map { |locale| [locale[1], locale[0]] }
   end
 
 end

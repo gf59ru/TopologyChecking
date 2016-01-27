@@ -16,15 +16,11 @@ class CommonInfo < ActiveRecord::Base
     object_label_method :info_title
 
     list do
-      field :info_type do
-        formatted_value do
-          CommonInfo.info_type_name value
-        end
+      field :info_type, :enum do
+        enum_method :info_types_enum
       end
-      field :locale do
-        formatted_value do
-          PersonsHelper::LOCALES[value.to_sym]
-        end
+      field :locale, :enum do
+        enum_method :locales_enum
       end
     end
 
@@ -52,23 +48,16 @@ class CommonInfo < ActiveRecord::Base
 
     edit do
       field :info_type, :enum do
-        enum do
-          [
-              WELCOME,
-              ABOUT,
-              TERMS_OF_USE,
-              PRIVACY_POLICY
-          ].map do |type|
-            [CommonInfo.info_type_name(type), type]
-          end
+        enum_method do
+          :info_types_enum
         end
       end
       field :locale, :enum do
-        enum do
-          PersonsHelper::LOCALES.map { |locale| [locale[1], locale[0]] }
+        enum_method do
+          :locales_enum
         end
       end
-      field :text do
+      field :text, :ck_editor do
         partial 'wiki'
       end
     end
@@ -99,6 +88,23 @@ class CommonInfo < ActiveRecord::Base
       when CommonInfo::PRIVACY_POLICY
         I18n.t 'help.privacy_policy'
     end
+  end
+
+  protected
+
+  def self.info_types_enum
+    [
+        WELCOME,
+        ABOUT,
+        TERMS_OF_USE,
+        PRIVACY_POLICY
+    ].map do |type|
+      [CommonInfo.info_type_name(type), type]
+    end
+  end
+
+  def self.locales_enum
+    PersonsHelper::LOCALES.map { |locale| [locale[1], locale[0]] }
   end
 
 end

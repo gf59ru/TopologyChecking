@@ -4,17 +4,27 @@
                                         :data => value,
                                         :noedit => true
                                 })
+   js_data = {
+           jspath: field.location ? field.location : field.base_location + "ckeditor.js",
+           base_location: field.base_location,
+           options: {
+                   customConfig: field.config_js ? field.config_js : field.base_location + "config.js"
+           }
+   }
 %>
 <%= javascript_include_tag 'application' %>
+<h4>Wiki markup</h4>
 <%=
     form.text_area field.method_name,
                    field.html_attributes.reverse_merge(
-                           :cols => 150,
-                           :rows => 10,
-                           :data => { :richtext => 'ckeditor' },
+                           :data => {
+                                   :richtext => 'ckeditor',
+                                   :options => js_data.to_json
+                           },
                            :oninput => "render_wiki($('##{field.properties.model.model_name.element}_#{field.properties.property.name}')[0].value, 'rendered');"
                    ).reverse_merge({value: value})
 %>
-<div id="rendered">
-<%= raw wiki.to_html %>
+<h4>Preview</h4>
+<div id="rendered" class="well" style="max-height: 400px; overflow-y: scroll">
+  <span><%= raw wiki.to_html %></span>
 </div>
